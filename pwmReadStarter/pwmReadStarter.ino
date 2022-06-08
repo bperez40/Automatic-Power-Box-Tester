@@ -71,12 +71,12 @@ public:
 
 /* Sample ADC
  *  Will sample signal connected to pin "pwmIn" for a length of MAXSAMPLES
+ *  Optionally, after sampling, stores values of voltage measurements to eeprom
 */
-void pwmADC(){
+void pwmADC(bool eepromStore){
   linked_list ll;
   int numSamples = 0;
   unsigned long last_us = 0;
-  digitalWrite(pwmOut, 1); // !! Strictly for testing purposes !!
   Serial.println("Starting sampling");
   while (numSamples < MAXSAMPLES){ // Inspiration from https://forum.arduino.cc/t/set-a-constant-adc-sampling-rate/449126/6
     if(micros()-last_us > PERIOD){
@@ -96,10 +96,13 @@ void pwmADC(){
   int result = 0;
   while(result != -1){
     result = ll.get_node_voltage(sp);
+    if(eepromStore == true){
+      EEPROM.write(sp, result);
+    }
     Serial.println(result);
     sp++;
   }
-  Serial.println("Finished!");
+  Serial.println("Sampling finished!");
 }
 
 void halt(){
@@ -113,14 +116,24 @@ void setup() {
   Serial.begin(115200);
   pinMode(pwmIn, INPUT);
   pinMode(pwmOut, OUTPUT);
+  Serial.println("Main start");
 }
 
 //Put it here b/c scope problems
 
 void loop() {
   // put your main code here, to run repeatedly:
+  bool ADC_EEPROM_Write_Enable = false; // Change this to indicate whether you'll be storing and reading values from eeprom or not
+  bool ADC_EEPROM_Read_Enable = true;
+  digitalWrite(pwmOut, 1); // !! Strictly for testing purposes !!
   if (analogRead(pwmIn) > 50){
-    pwmADC();
+    pwmADC(ADC_EEPROM_Write_Enable);
+    if(ADC_EEPROM_Read_Enable == true){
+      Serial.println("Printing contents of EEPROM");
+      for(int i = 0; i < EEPROM.length(); i++){
+        Serial.println(EEPROM.read(i));
+      }
+    }
     halt();
   }
 }
