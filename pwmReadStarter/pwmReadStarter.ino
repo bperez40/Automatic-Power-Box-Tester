@@ -69,22 +69,11 @@ public:
    }
 };
 
-void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(115200);
-  pinMode(pwmIn, INPUT);
-  pinMode(pwmOut, OUTPUT);
-}
-
-//Put it here b/c scope problems
-linked_list ll;
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
-  /* Sample ADC
-   *  Will sample signal connected to pin "pwmIn" for a length of MAXSAMPLES
-  */
+/* Sample ADC
+ *  Will sample signal connected to pin "pwmIn" for a length of MAXSAMPLES
+*/
+void pwmADC(){
+  linked_list ll;
   int numSamples = 0;
   unsigned long last_us = 0;
   digitalWrite(pwmOut, 1); // !! Strictly for testing purposes !!
@@ -92,7 +81,9 @@ void loop() {
   while (numSamples < MAXSAMPLES){ // Inspiration from https://forum.arduino.cc/t/set-a-constant-adc-sampling-rate/449126/6
     if(micros()-last_us > PERIOD){
       last_us += PERIOD;
-      sample();
+      dTime++;
+      Serial.println("Sampling...");
+      ll.add_node(analogRead(pwmIn), dTime);
       numSamples++;
     }
   }
@@ -109,12 +100,27 @@ void loop() {
     sp++;
   }
   Serial.println("Finished!");
+}
+
+void halt(){
+  Serial.println("Halting");
   while(true){
   }
 }
 
-void sample(){
-    dTime++;
-    Serial.println("Sampling...");
-    ll.add_node(analogRead(pwmIn), dTime);
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(115200);
+  pinMode(pwmIn, INPUT);
+  pinMode(pwmOut, OUTPUT);
+}
+
+//Put it here b/c scope problems
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  if (analogRead(pwmIn) > 50){
+    pwmADC();
+    halt();
+  }
 }
