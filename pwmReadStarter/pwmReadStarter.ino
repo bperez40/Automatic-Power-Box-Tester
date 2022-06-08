@@ -1,9 +1,12 @@
+#include <EEPROM.h>
+
 /*
  * Set up global variables and defines here
  */
 #define PERIOD 100 // Period in microseconds of sample rate
 #define MAXSAMPLES 100 // Number of samples we want to take while measuring PWM
-int pwmPin = 54;
+int pwmIn = 54;
+int pwmOut = 2;
 int dTime = -1;
 
 /* Definition of a node
@@ -17,6 +20,7 @@ struct node{
 
 /* Linked list implementation
  *  TODO: Create library in seperate file
+ *  Inspired from https://www.codesdope.com/blog/article/c-linked-lists-in-c-singly-linked-list/
  */
 class linked_list
 {
@@ -68,7 +72,8 @@ public:
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  pinMode(pwmPin, INPUT);
+  pinMode(pwmIn, INPUT);
+  pinMode(pwmOut, OUTPUT);
 }
 
 //Put it here b/c scope problems
@@ -76,16 +81,25 @@ linked_list ll;
 
 void loop() {
   // put your main code here, to run repeatedly:
+
+  /* Sample ADC
+   *  Will sample signal connected to pin "pwmIn" for a length of MAXSAMPLES
+  */
   int numSamples = 0;
   unsigned long last_us = 0;
+  digitalWrite(pwmOut, 1); // !! Strictly for testing purposes !!
   Serial.println("Starting sampling");
-  while (numSamples < MAXSAMPLES){
+  while (numSamples < MAXSAMPLES){ // Inspiration from https://forum.arduino.cc/t/set-a-constant-adc-sampling-rate/449126/6
     if(micros()-last_us > PERIOD){
       last_us += PERIOD;
       sample();
       numSamples++;
     }
   }
+
+  /*
+  * Retrieve PWM information from linked list
+  */ 
   node *tmp = new node;
   int sp = 0;
   int result = 0;
@@ -102,5 +116,5 @@ void loop() {
 void sample(){
     dTime++;
     Serial.println("Sampling...");
-    ll.add_node(analogRead(pwmPin), dTime);
+    ll.add_node(analogRead(pwmIn), dTime);
 }
