@@ -71,9 +71,10 @@ public:
 
 /* Sample ADC
  *  Will sample signal connected to pin "pwmIn" for a length of MAXSAMPLES
+ *  Returns pointer to array where samples are stored in the heap
  *  Optionally, after sampling, stores values of voltage measurements to eeprom
 */
-void pwmADC(bool eepromStore){
+int pwmADC(bool eepromStore){
   linked_list ll;
   int numSamples = 0;
   unsigned long last_us = 0;
@@ -82,11 +83,11 @@ void pwmADC(bool eepromStore){
     if(micros()-last_us > PERIOD){
       last_us += PERIOD;
       dTime++;
-      Serial.println("Sampling...");
       ll.add_node(analogRead(pwmIn), dTime);
       numSamples++;
     }
   }
+  Serial.println("Sampling finished!");
 
   /*
   * Retrieve PWM information from linked list
@@ -104,7 +105,6 @@ void pwmADC(bool eepromStore){
     Serial.println(x[sp]);
     sp++;
   }
-  Serial.println("Sampling finished!");
 }
 
 void halt(){
