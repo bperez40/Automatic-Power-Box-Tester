@@ -94,7 +94,7 @@ void pwmADC(bool eepromStore){
   node *tmp = new node;
   int sp = 0;
   int result = 0;
-  while(result != -1){
+  while(ll.get_node_voltage(sp) != -1){
     result = ll.get_node_voltage(sp);
     if(eepromStore == true){
       EEPROM.write(sp, result);
@@ -111,6 +111,15 @@ void halt(){
   }
 }
 
+void PrintEEPROM(bool doPrint){
+  if(doPrint == true){
+    Serial.println("Printing contents of EEPROM");
+    for(int i = 0; i < EEPROM.length(); i++){
+      Serial.println(EEPROM.read(i));
+    }
+  } 
+}
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
@@ -124,16 +133,10 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   bool ADC_EEPROM_Write_Enable = false; // Change this to indicate whether you'll be storing and reading values from eeprom or not
-  bool ADC_EEPROM_Read_Enable = true;
-  digitalWrite(pwmOut, 1); // !! Strictly for testing purposes !!
+  bool Serial_EEPROM_Read_Enable = false; // Change this to have EEPROM read and outputted to Serial
   if (analogRead(pwmIn) > 50){
     pwmADC(ADC_EEPROM_Write_Enable);
-    if(ADC_EEPROM_Read_Enable == true){
-      Serial.println("Printing contents of EEPROM");
-      for(int i = 0; i < EEPROM.length(); i++){
-        Serial.println(EEPROM.read(i));
-      }
-    }
-    halt();
+    PrintEEPROM(Serial_EEPROM_Read_Enable); 
+    halt(); // Sticks the program in an infinite loop where it does nothing
   }
 }
