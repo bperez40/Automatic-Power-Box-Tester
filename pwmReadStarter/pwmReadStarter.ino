@@ -3,8 +3,8 @@
 /*
  * Set up global variables and defines here
  */
-#define PERIOD .001 // Period in microseconds of sample rate
-#define MAXSAMPLES 10000 // Number of samples we want to take while measuring PWM
+#define PERIOD 100 // Period in microseconds of sample rate
+#define MAXSAMPLES 5000 // Number of samples we want to take while measuring PWM
 int pwmIn = 54;
 int pwmOut = 2;
 
@@ -66,46 +66,49 @@ public:
         }
      }
    }
+   node* get_head(){
+      return head;
+   }
 };
 
 /* Sample ADC
  *  Will sample signal connected to pin "pwmIn" for a length of MAXSAMPLES
- *  Returns pointer to array where samples are stored in the heap
  *  Optionally, after sampling, stores values of voltage measurements to eeprom
 */
-int pwmADC(bool eepromStore){
-  //linked_list ll;
+void pwmADC(bool eepromStore){
+  linked_list ll;
   int numSamples = 0;
-  int *x = new int[MAXSAMPLES]; // Allocate MAXSAMPLES of integer sized space in memory
   unsigned long last_us = 0;
   Serial.println("Starting sampling");
   while (numSamples < MAXSAMPLES){ // Inspiration from https://forum.arduino.cc/t/set-a-constant-adc-sampling-rate/449126/6
     if(micros()-last_us > PERIOD){
-      last_us += PERIOD;
-      x[numSamples] = analogRead(pwmIn);
+      ll.add_node(analogRead(pwmIn), numSamples);
+      //Serial.println(analogRead(pwmIn));
       numSamples++;
-      //ll.add_node(analogRead(pwmIn), numSamples);
+      last_us += micros();
     }
   }
   Serial.println("Sampling finished!");
-}
-
+  node *tmp = ll.get_head();
+  for (int i = 0; i < MAXSAMPLES; i++){
+    Serial.println(tmp->voltage);
+    tmp=tmp->next;
+  }
   /*
   * Retrieve PWM information from linked list
-  *
+  
   node *tmp = new node;
   int sp = 0;
   int result = 0;
   while(ll.get_node_voltage(sp) != -1){
     result = ll.get_node_voltage(sp);
-    x[sp] = result;
     if(eepromStore == true){
       EEPROM.write(sp, result);
     }
     sp++;
   }
+  */ 
 }
-*/
 
 void halt(){
   Serial.println("Halting");
