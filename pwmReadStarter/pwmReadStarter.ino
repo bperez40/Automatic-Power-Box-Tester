@@ -94,12 +94,14 @@ void pwmADC(bool eepromStore){
   node *tmp = new node;
   int sp = 0;
   int result = 0;
+  int *x = new int[MAXSAMPLES]; // Allocate MAXSAMPLES of integer sized space in memory
   while(ll.get_node_voltage(sp) != -1){
     result = ll.get_node_voltage(sp);
+    x[sp] = result;
     if(eepromStore == true){
       EEPROM.write(sp, result);
     }
-    Serial.println(result);
+    Serial.println(x[sp]);
     sp++;
   }
   Serial.println("Sampling finished!");
