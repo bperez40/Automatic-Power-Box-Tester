@@ -7,7 +7,7 @@ void setup() {
 }
 
 void loop() {
-  analogWrite(pwmOUT, 125);
+  analogWrite(pwmOUT, 170);
   while(true){
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
     delay(1000);                       // wait for a second
