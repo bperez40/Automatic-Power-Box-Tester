@@ -2,7 +2,7 @@
 #define MAXSAMPLES 1000
 #include <avr/pgmspace.h>
 
-const unsigned long samplePeriod = .0001; // Sampling rate of 1 millisecond. May require adjusting depending on the highest frequency component of the PWM.
+const unsigned long samplePeriod = 1; // Sampling rate of 1 millisecond. May require adjusting depending on the highest frequency component of the PWM.
 
 void delaySamplePeriod() {
   static unsigned long lastTime = 0;
@@ -39,7 +39,7 @@ void halt(){
 
 void pwmMeasure(int x_in[]){
   for(int i = 0; i < MAXSAMPLES; i++){
-    delaySamplePeriod();
+    //delaySamplePeriod();
     x_in[i] = analogRead(IN1);
   }
 }
