@@ -8,9 +8,6 @@ void setup() {
 
 void loop() {
   analogWrite(pwmOUT, 125);
-  while(millis() < 5000){
-  }
-  digitalWrite(pwmOUT, LOW);
   while(true){
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
     delay(1000);                       // wait for a second
