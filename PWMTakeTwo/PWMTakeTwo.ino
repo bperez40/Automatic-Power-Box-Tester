@@ -59,6 +59,9 @@ double calcDutyCycle(int x_in[]){
       min_val = x_in[i];
     }
   }
+
+  static const double coef = 0.01*(max_val-min_val); // !! Smoothing coefficient meant to reduce the effect of noisy signal. Really important for real signals !!
+                                                   // Adjust the numerical constant (0.9, 0.75, 0.01, etc...) to increase the leniency of the variation.
  // Find the low time
   static int dtimer = 0;
   static double low_time = 0;
@@ -75,10 +78,10 @@ double calcDutyCycle(int x_in[]){
         dtimer_start = true;
         dtimer+=1;
       }
-      if (dtimer_start == true && x_in[i] <= min_val+5){
+      if (dtimer_start == true && x_in[i] <= min_val+coef){
         dtimer+=1;
       }
-      else if (dtimer_start == true && x_in[i] >= min_val+5){
+      else if (dtimer_start == true && x_in[i] >= min_val+coef){
         low_time = dtimer;
         break;
       }
@@ -99,10 +102,10 @@ double calcDutyCycle(int x_in[]){
       if (x_in[i] == max_val && dtimer_start == false){
         dtimer_start = true;
       }
-      if (dtimer_start == true && x_in[i] >= max_val-5){
+      if (dtimer_start == true && x_in[i] >= max_val - coef){
         dtimer+=1;
       }
-      else if (dtimer_start == true && x_in[i] <= max_val-5){
+      else if (dtimer_start == true && x_in[i] <= max_val-coef){
         high_time = dtimer;
         break;
       }
@@ -123,10 +126,10 @@ double calcDutyCycle(int x_in[]){
       if (x_in[i] != min_val && dtimer_start == false){
         dtimer_start = true;
       }
-      if (dtimer_start == true && x_in[i] <= max_val - 5){
+      if (dtimer_start == true && x_in[i] <= max_val - coef){
         dtimer+=1;
       }
-      else if (dtimer_start == true && x_in[i] >= max_val - 5){
+      else if (dtimer_start == true && x_in[i] >= max_val - coef){
         rise_time = dtimer;
         break;
       }
@@ -147,10 +150,10 @@ double calcDutyCycle(int x_in[]){
       if (x_in[i] != max_val && dtimer_start == false){
         dtimer_start = true;
       }
-      if (dtimer_start == true && x_in[i] != min_val){
+      if (dtimer_start == true && x_in[i] >= min_val + coef){
         dtimer+=1;
       }
-      else if (dtimer_start == true && x_in[i] <= min_val + 5){
+      else if (dtimer_start == true && x_in[i] <= min_val + coef){
         fall_time = dtimer;
         break;
       }
