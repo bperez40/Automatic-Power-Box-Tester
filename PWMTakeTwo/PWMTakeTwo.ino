@@ -2,7 +2,16 @@
 #define MAXSAMPLES 1000
 #include <avr/pgmspace.h>
 
-const unsigned long samplePeriod = 1; // Sampling rate of 1 millisecond. May require adjusting depending on the highest frequency component of the PWM.
+#define FASTADC 1
+// defines for setting and clearing register bits
+#ifndef cbi
+#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+#endif
+#ifndef sbi
+#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+#endif
+
+const unsigned long samplePeriod = .0001; // Sampling rate of 1 millisecond. May require adjusting depending on the highest frequency component of the PWM.
 
 void delaySamplePeriod() {
   static unsigned long lastTime = 0;
@@ -39,7 +48,7 @@ void halt(){
 
 void pwmMeasure(int x_in[]){
   for(int i = 0; i < MAXSAMPLES; i++){
-    //delaySamplePeriod();
+    delaySamplePeriod();
     x_in[i] = analogRead(IN1);
   }
 }
@@ -170,6 +179,12 @@ void setup() {
 }
 
 void loop() {
+  #if FASTADC
+  // set prescale to 16
+  sbi(ADCSRA,ADPS2) ;
+  cbi(ADCSRA,ADPS1) ;
+  cbi(ADCSRA,ADPS0) ;
+  #endif
   int* x = new int[MAXSAMPLES];
   Serial.println("Starting");
   pwmMeasure(x);
@@ -180,7 +195,7 @@ void loop() {
   printXInPMemContents(x_p);
   */
   printXContents(x);
-  double duty = calcDutyCycle(x);
+  //double duty = calcDutyCycle(x);
   //Serial.println(duty);
   Serial.println("Halting");
   halt();
