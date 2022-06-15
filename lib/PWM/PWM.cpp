@@ -1,7 +1,8 @@
 #include "Arduino.h"
-#include "PWM_h.hpp"
+#include "PWM.hpp"
 using namespace std;
 
+// Defines the sampling rate. Adjust this for better definition (but a shorter period)
 const unsigned long samplePeriod = .0001;
 
 PWM::PWM(int pin, int ms)
