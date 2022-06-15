@@ -10,7 +10,7 @@
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
-PWM pwminst(54);
+PWM pwminst(ADC_pin, MAXSAMPLES);
 
 void setup() {
   Serial.begin(115200);
@@ -26,12 +26,6 @@ void loop() {
   int* x = new int[MAXSAMPLES];
   Serial.println("Starting");
   pwminst.pwmMeasure(x);
-  /*
-  int x_len = sizeof(x)/sizeof(x[0]);
-  void *x_p_void = memcpy_P(0, x, x_len);
-  int *x_p = (int*)x_p_void;
-  printXInPMemContents(x_p);
-  */
   //printXContents(x);
   double duty = pwminst.calcDutyCycle(x);
   Serial.println(duty);
