@@ -1,5 +1,24 @@
 #include <PWM.hpp>
-#define ADC_pin 54
+/*
+* Pin definitions. Should be left as is because these are constrained by the hardware.
+*/
+#define ADCPIN 69
+#define SVALVECTRL 8
+#define THCALLCTRL 9
+#define DHWCALLCTRL 10
+#define PUMPCTRL 11
+#define BTNILLCTRL 12
+#define BSKTCTRL 13
+#define BTNSIG  54
+#define RBSKTSIG 55
+#define LBSKTSIG 56
+#define ALARMSIG 57
+#define BLPWRSIG 58
+#define SVALVESIG 59
+#define PMPWRSIG 60
+#define PONSIG  61
+#define GASVALVESIG 62
+#define BLCTRLPWRSIG 63
 
 /*
 * Defines how many samples the ADC should collect when sampling. 
@@ -22,7 +41,7 @@
 /*
 * Instantiates PWM class for utilizing PWM abilities.
 */
-PWM pwminst(ADC_pin, MAXSAMPLES);
+PWM pwminst(ADCPIN, MAXSAMPLES);
 
 void setup() {
   Serial.begin(115200);
@@ -38,6 +57,7 @@ void loop() {
   cbi(ADCSRA,ADPS1) ;
   cbi(ADCSRA,ADPS0) ;
   #endif
+
 
   int* x = new int[MAXSAMPLES];
   Serial.println("Starting");
