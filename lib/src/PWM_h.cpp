@@ -1,7 +1,8 @@
-#define IN1 54
-#define MAXSAMPLES 1000
+#include "Arduino.h"
 #include <avr/pgmspace.h>
+#include "PWM_h.hpp"
 
+#define MAXSAMPLES 1000
 #define FASTADC 1
 // defines for setting and clearing register bits
 #ifndef cbi
@@ -11,50 +12,54 @@
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
-const unsigned long samplePeriod = .0001; // Sampling rate of 1 millisecond. May require adjusting depending on the highest frequency component of the PWM.
+const unsigned long samplePeriod = .0001;
 
-void delaySamplePeriod() {
-  static unsigned long lastTime = 0;
-  if (millis() - lastTime > samplePeriod) {
+PWM::PWM(int pin)
+{
+    pinMode(pin, INPUT);
+    IN1 = pin;
+}
+
+void PWM::delaySamplePeriod(){
+    static unsigned long lastTime = 0;
+    if (millis() - lastTime > samplePeriod) {
     lastTime = millis();
-  } else {
+    } else {
     while (millis() - lastTime < samplePeriod) {
-      //wait
-      yield();
+        //wait
+        yield();
     }
     lastTime += samplePeriod;
-  }
+    }
 }
 
 void printXInPMemContents(int *xAddr){
-  Serial.println("Printing results");
-  for(int i = 0; i < MAXSAMPLES; i++){
-    Serial.println(xAddr[i]);
-  }
+    Serial.println("Printing results");
+    for(int i = 0; i < MAXSAMPLES; i++){
+        Serial.println(xAddr[i]);
+    }
 }
 
 void printXContents(int xAddr[]){
-  Serial.println("Printing results");
-  for(int i = 0; i < MAXSAMPLES; i++){
-    Serial.println(xAddr[i]);
-  }
+    Serial.println("Printing results");
+    for(int i = 0; i < MAXSAMPLES; i++){
+        Serial.println(xAddr[i]);
+    }
 }
-
 
 void halt(){
-  while(true){
-  }
+    while(true){
+    }
 }
-
 void pwmMeasure(int x_in[]){
-  for(int i = 0; i < MAXSAMPLES; i++){
-    delaySamplePeriod();
-    x_in[i] = analogRead(IN1);
-  }
+    for(int i = 0; i < MAXSAMPLES; i++){
+        delaySamplePeriod();
+        x_in[i] = analogRead(IN1);
+    }
 }
 
 double calcDutyCycle(int x_in[]){
-  // Find the max value
+ // Find the max value
   static int max_val = 0;
   for(int i = 0; i < MAXSAMPLES; i++){
     if(x_in[i] > max_val){
@@ -173,30 +178,3 @@ double calcDutyCycle(int x_in[]){
   return duty_cycle;
 }
 
-void setup() {
-  pinMode(IN1, INPUT);
-  Serial.begin(115200);
-}
-
-void loop() {
-  #if FASTADC
-  // set prescale to 16
-  sbi(ADCSRA,ADPS2) ;
-  cbi(ADCSRA,ADPS1) ;
-  cbi(ADCSRA,ADPS0) ;
-  #endif
-  int* x = new int[MAXSAMPLES];
-  Serial.println("Starting");
-  pwmMeasure(x);
-  /*
-  int x_len = sizeof(x)/sizeof(x[0]);
-  void *x_p_void = memcpy_P(0, x, x_len);
-  int *x_p = (int*)x_p_void;
-  printXInPMemContents(x_p);
-  */
-  //printXContents(x);
-  double duty = calcDutyCycle(x);
-  Serial.println(duty);
-  Serial.println("Halting");
-  halt();
-}
