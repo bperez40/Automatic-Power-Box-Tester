@@ -26,9 +26,9 @@ void loop() {
   int* x = new int[MAXSAMPLES];
   Serial.println("Starting");
   pwminst.pwmMeasure(x);
-  //printXContents(x);
+  pwminst.printXContents(x);
   double duty = pwminst.calcDutyCycle(x);
-  Serial.println(duty);
+  //Serial.println(duty);
   Serial.println("Halting");
   pwminst.halt();
 }
