@@ -1,4 +1,4 @@
-#include <PWM_h.hpp>
+#include "lib/include/PWM_h.hpp"
 #define ADC_pin 54
 #define MAXSAMPLES 1000
 #define FASTADC 1
@@ -23,15 +23,9 @@ void loop() {
   cbi(ADCSRA,ADPS1) ;
   cbi(ADCSRA,ADPS0) ;
   #endif
-  int* x = new int[MAXSAMPLES];
+  int* x = new int[pwminst.max_samples];
   Serial.println("Starting");
   pwminst.pwmMeasure(x);
-  /*
-  int x_len = sizeof(x)/sizeof(x[0]);
-  void *x_p_void = memcpy_P(0, x, x_len);
-  int *x_p = (int*)x_p_void;
-  printXInPMemContents(x_p);
-  */
   //printXContents(x);
   double duty = pwminst.calcDutyCycle(x);
   Serial.println(duty);

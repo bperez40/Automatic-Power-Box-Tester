@@ -1,14 +1,10 @@
-#ifndef PWM_h
-#define PWM_h
-
 #include "Arduino.h"
-#include <avr/pgmspace.h>
 
 class PWM
 {
     public:
+        PWM(int pin);
         void delaySamplePeriod();
-        void printXInPMemContents(int *xAddr);
         void printXContents(int xAddr[]);
         void halt();
         void pwmMeasure(int x_in[]);
@@ -16,7 +12,6 @@ class PWM
 
 
     private:
+        int _pin;
 
 };
-
-#endif
