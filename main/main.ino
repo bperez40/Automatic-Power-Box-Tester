@@ -1,24 +1,5 @@
 #include <PWM.hpp>
-/*
-* Pin definitions. Should be left as is because these are constrained by the hardware.
-*/
-#define ADCPIN 69
-#define SVALVECTRL 8
-#define THCALLCTRL 9
-#define DHWCALLCTRL 10
-#define PUMPCTRL 11
-#define BTNILLCTRL 12
-#define BSKTCTRL 13
-#define BTNSIG  54
-#define RBSKTSIG 55
-#define LBSKTSIG 56
-#define ALARMSIG 57
-#define BLPWRSIG 58
-#define SVALVESIG 59
-#define PMPWRSIG 60
-#define PONSIG  61
-#define GASVALVESIG 62
-#define BLCTRLPWRSIG 63
+#include <iodefs.hpp>
 
 /*
 * Defines how many samples the ADC should collect when sampling. 
@@ -45,6 +26,7 @@ PWM pwminst(ADCPIN, MAXSAMPLES);
 
 void setup() {
   Serial.begin(115200);
+  initPins();
 }
 
 void loop() {
@@ -52,12 +34,13 @@ void loop() {
   * !DO NOT TOUCH! Correctly sets up ADC for fast sampling.
   */
   #if FASTADC
-  // set prescale to 16
-  sbi(ADCSRA,ADPS2) ;
-  cbi(ADCSRA,ADPS1) ;
-  cbi(ADCSRA,ADPS0) ;
+  sbi(ADCSRA,ADPS2) ;   // set prescale to 16
+  cbi(ADCSRA,ADPS1) ;   //
+  cbi(ADCSRA,ADPS0) ;   //
   #endif
-
+  /*
+  * End of ADC Setup
+  */
 
   int* x = new int[MAXSAMPLES];
   Serial.println("Starting");

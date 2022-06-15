@@ -7,7 +7,6 @@ const unsigned long samplePeriod = .0001;
 
 PWM::PWM(int pin, int ms)
 {
-    pinMode(pin, INPUT);
     _pin = pin;
     _max_samples = ms;
 }

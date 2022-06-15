@@ -1,0 +1,29 @@
+#include "iodefs.hpp"
+
+void initPins(){
+    pinMode(INPUT, ADCPIN);
+    pinMode(OUTPUT, SVALVECTRL);
+    pinMode(OUTPUT, THCALLCTRL);
+    pinMode(OUTPUT, DHWCALLCTRL);
+    pinMode(OUTPUT, PUMPCTRL);
+    pinMode(OUTPUT, BTNILLCTRL);
+    pinMode(OUTPUT, BSKTCTRL);
+    pinMode(INPUT, BTNSIG);
+    pinMode(INPUT, RBSKTSIG);
+    pinMode(INPUT, LBSKTSIG);
+    pinMode(INPUT, ALARMSIG);
+    pinMode(INPUT, BLPWRSIG);
+    pinMode(INPUT, SVALVESIG);
+    pinMode(INPUT, PMPWRSIG);
+    pinMode(INPUT, PONSIG);
+    pinMode(INPUT, GASVALVESIG);
+    pinMode(INPUT, BLCTRLPWRSIG);
+    pinMode(OUTPUT, RST);
+    pinMode(OUTPUT, INT);
+    pinMode(INPUT, SPACTIVE);
+    pinMode(INPUT, YP);
+    pinMode(INPUT, YN);
+    pinMode(INPUT, XN);
+    pinMode(INPUT, XP);
+    pinMode(OUTPUT, LITE);
+}
