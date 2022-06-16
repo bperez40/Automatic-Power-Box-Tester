@@ -8,11 +8,16 @@
 #define MAXSAMPLES 1000 
 
 /*
+* Defines the number of times loop should repeat and obtain a duty cycle within the defined range. 
+* May required adjusting.
+*/
+#define CYCLES 5 
+
+/*
 * !DO NOT TOUCH! Correctly sets up ADC for fast sampling.
 */
 #define FASTADC 1
-// defines for setting and clearing register bits
-#ifndef cbi
+#ifndef cbi // defines for setting and clearing register bits
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
 #ifndef sbi
@@ -42,12 +47,51 @@ void loop() {
   * End of ADC Setup
   */
 
+ /*
+ * Actual start of loop
+ */
+ Serial.println("Starting main");
+
+ /*
+ * Nothing too complicated here. When test start button is pushed,
+ * start the test. Otherwise, remain idle.
+ */
+ bool test_start = false;
+ while (!test_start){
+  if (digitalRead(BTNSIG) == HIGH){
+    test_start = true;
+    Serial.println("Test started");
+  }
+ }
+
+ digitalWrite(THCALLCTRL, HIGH); // Call for heat
+
+/*
+* Check for blower power. Otherwise, wait.
+*/
+  bool blower_powered = false;
+  while(!blower_powered){
+    if(digitalRead(BLPWRSIG) == LOW){ // "Inverted" logic here b/c hardware configuration is open drain
+      blower_powered = true;
+      Serial.println("Blower is powered");
+    }
+  }
+
+  bool pwm_low = false;
   int* x = new int[MAXSAMPLES];
-  Serial.println("Starting");
-  pwminst.pwmMeasure(x);
-  pwminst.printXContents(x);
-  double duty = pwminst.calcDutyCycle(x);
-  //Serial.println(duty);
+  double duty = 0;
+  int duty_count = 0;
+  Serial.println("Starting ADC measurements");
+  while(!pwm_low){
+    pwminst.pwmMeasure(x); // Take a thousand samples at frequency defined in the PWM library and store them to array x
+    duty = pwminst.calcDutyCycle(x); // Caculate duty cycle from acquired samples
+    if (duty <= 25 && duty >= 15){  // Requires duty cycle to be between 15% and 25% inclusive
+      duty_count += 1;
+    }
+    if (duty_count == CYCLES){
+      pwm_low == true;
+    }
+  }
   Serial.println("Halting");
   pwminst.halt();
 }
