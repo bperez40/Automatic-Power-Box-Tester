@@ -46,7 +46,7 @@ void loop() {
   double duty = 0;
   Serial.println("Starting ADC measurements");
   pwminst.pwmMeasure(x);
-  pwminst.printXContents();
+  pwminst.printXContents(x);
   Serial.println("Ending ADC measurements");
   Serial.println("Halting");
   pwminst.halt();

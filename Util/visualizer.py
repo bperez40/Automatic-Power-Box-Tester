@@ -1,17 +1,24 @@
 import matplotlib.pyplot as plt
 import numpy as np
 logging = False
-adc_data = [0]*1000
+N = 1
+xx = np.arange(0, 1000, N)
+yy = [0]*1000
 loop_count = 0
-with open("putty.log" 'r') as f:
+with open("util\putty.log", "r") as f:
     for line in f:
-        if "Starting ADC measurements":
+        if line.strip() == "Starting ADC measurements":
             logging = True
-        if "Ending ADC measurements":
+            print("Logging enabled")
+        elif line.strip() == "Ending ADC measurements":
             logging = False
-        if logging == True:
-            adc_data[loop_count] = line
+            print("Logging disabled")
+        elif logging == True:
+            yy[loop_count] = line.strip()
             loop_count+=1
-            
-plt.plot(loop_count, adc_data)
+i = 0
+while(i<len(yy)):
+    print(yy[i])
+    i+=1
+plt.plot(xx, yy)
 plt.show()

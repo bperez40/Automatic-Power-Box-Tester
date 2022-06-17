@@ -25,7 +25,6 @@ void PWM::delaySamplePeriod(){
 }
 
 void PWM::printXContents(int xAddr[]){
-    Serial.println("Printing results");
     for(int i = 0; i < _max_samples; i++){
         Serial.println(xAddr[i]);
     }
