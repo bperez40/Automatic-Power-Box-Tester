@@ -48,7 +48,7 @@ void dutyCheck(double low_threshold, double high_threshold){
         pwminst.pwmMeasure(x);           // Take a thousand samples at frequency defined in the PWM library and store them to array x
         duty = pwminst.calcDutyCycle(x); // Caculate duty cycle from acquired samples
         if (duty <= high_threshold && duty >= low_threshold)
-        { // Requires duty cycle to be between 15% and 25% inclusive
+        {
             duty_count += 1;
         }
         if (duty_count >= CYCLES)
@@ -56,7 +56,7 @@ void dutyCheck(double low_threshold, double high_threshold){
             pwm_met == true;
         }
     }
-    delete(x); // Delete allocated array to prevent memory leaks
+    delete(x); // Delete allocated memory to prevent memory leaks
 }
 
 void runCheck()
