@@ -47,3 +47,16 @@ pip install {package-name}
 If you get an error running a python script, chances are you're missing a package. Read the terminal output to see what exactly the error is.
 
 Whenever you're done working in the virtual environment, type deactivate.
+
+# Logging Arduino output data using PuTTY
+If you want to log the Arduino's output data when it's connected over USB, you can do so using PuTTY.
+
+First, install PuTTY, yadda yadda yadda
+
+Match all the proper settings in the session tab, such as COM port, baud rate, so on so forth.
+
+In the logging tab, set session logging to "All session output." Name the file whatever you like and configure putty to store putty.log or whatever you want to call it in the util folder of the workspace.
+
+When you start a session, PuTTY will then create a log in the util folder.
+
+You can run the visualizer python script to then visualize the file's output, if you want to analyze ADC data in particular.
