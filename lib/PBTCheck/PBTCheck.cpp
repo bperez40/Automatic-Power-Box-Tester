@@ -23,6 +23,42 @@ void ADCSetup()
      * End of ADC Setup
      */
 }
+/*
+* Recommend "inverted" logic for event b/c hardware configuration is open drain.
+* If you so desire to switch the event trigger to HIGH you can.
+*/
+void waitUntilTriggered(int pin, int event = LOW){
+    bool event_triggered = false;
+    while (!event_triggered)
+    {
+        if (digitalRead(pin) == event)
+        {
+            event_triggered = true;
+        }
+    }
+}
+
+void dutyCheck(double low_threshold, double high_threshold){
+    bool pwm_met = false;
+    int *x = new int[MAXSAMPLES];
+    double duty = 0;
+    int duty_count = 0;
+    while (!pwm_met)
+    {
+        pwminst.pwmMeasure(x);           // Take a thousand samples at frequency defined in the PWM library and store them to array x
+        duty = pwminst.calcDutyCycle(x); // Caculate duty cycle from acquired samples
+        if (duty <= high_threshold && duty >= low_threshold)
+        { // Requires duty cycle to be between 15% and 25% inclusive
+            duty_count += 1;
+        }
+        if (duty_count >= CYCLES)
+        {
+            pwm_met == true;
+        }
+    }
+    delete(x); // Delete allocated array to prevent memory leaks
+}
+
 void runCheck()
 {
     /*
@@ -46,36 +82,23 @@ void runCheck()
     /*
      * Check for blower power. Otherwise, wait.
      */
-    bool blower_powered = false;
-    while (!blower_powered)
-    {
-        if (digitalRead(BLPWRSIG) == LOW)
-        { // "Inverted" logic here b/c hardware configuration is open drain
-            blower_powered = true;
-            Serial.println("Blower is powered");
-        }
-    }
+    waitUntilTriggered(BLPWRSIG);
+    Serial.println("Blower powered");
 
-    bool pwm_low = false;
-    int *x = new int[MAXSAMPLES];
-    double duty = 0;
-    int duty_count = 0;
-    Serial.println("Starting ADC measurements");
-    while (!pwm_low)
-    {
-        pwminst.pwmMeasure(x);           // Take a thousand samples at frequency defined in the PWM library and store them to array x
-        duty = pwminst.calcDutyCycle(x); // Caculate duty cycle from acquired samples
-        if (duty <= 0.25 && duty >= 0.15)
-        { // Requires duty cycle to be between 15% and 25% inclusive
-            duty_count += 1;
-        }
-        if (duty_count >= CYCLES)
-        {
-            pwm_low == true;
-        }
-    }
+    Serial.println("Starting low duty ADC measurements");
+    dutyCheck(0.15, 0.25);
+    Serial.println("Ending low duty ADC measurements");
 
-    Serial.println("Ending ADC measurements");
+    waitUntilTriggered(GASVALVESIG);
+    Serial.println("Gas valve is activated");
+
+    waitUntilTriggered(SPACTIVE);
+    Serial.println("Spark detected");
+
+    Serial.println("Starting high duty ADC measurements");
+    dutyCheck(0.55, 0.70);
+    Serial.println("Ending high duty ADC measurements");
+
     Serial.println("Halting");
     pwminst.halt();
 }

@@ -14,4 +14,6 @@
  */
 #define CYCLES 5
 void ADCSetup();
+void waitUntilTriggered(int pin, int event = LOW);
+void dutyCheck(double low_threshold, double high_threshold);
 void runCheck();
