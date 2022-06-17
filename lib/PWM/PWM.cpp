@@ -2,25 +2,23 @@
 #include "PWM.hpp"
 using namespace std;
 
-// Defines the sampling rate. Adjust this for better definition (but a shorter period)
-const unsigned long samplePeriod = .0001;
-
-PWM::PWM(int pin, int ms)
+PWM::PWM(int pin, int ms, int sp)
 {
     _pin = pin;
     _max_samples = ms;
+    _sample_period = sp;
 }
 
 void PWM::delaySamplePeriod(){
     static unsigned long lastTime = 0;
-    if (millis() - lastTime > samplePeriod) {
+    if (millis() - lastTime > _sample_period) {
     lastTime = millis();
     } else {
-    while (millis() - lastTime < samplePeriod) {
+    while (millis() - lastTime < _sample_period) {
         //wait
         yield();
     }
-    lastTime += samplePeriod;
+    lastTime += _sample_period;
     }
 }
 

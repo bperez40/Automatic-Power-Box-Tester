@@ -5,7 +5,8 @@
 * Defines how many samples the ADC should collect when sampling. 
 * Adjust this value if so desired.
 */
-#define MAXSAMPLES 1000 
+#define MAXSAMPLES 1024
+#define SAMPLEPERIOD 1 // How fast you want to sample in ms. Recommended value is .0001
 
 /*
 * Defines the number of times loop should repeat and obtain a duty cycle within the defined range. 
@@ -27,7 +28,7 @@
 /*
 * Instantiates PWM class for utilizing PWM abilities.
 */
-PWM pwminst(ADCPIN, MAXSAMPLES);
+PWM pwminst(ADCPIN, MAXSAMPLES, SAMPLEPERIOD);
 
 void setup() {
   Serial.begin(115200);
@@ -53,16 +54,10 @@ void loop() {
  Serial.println("Starting main");
 
  /*
+ * TODO: Add manual test start back in
  * Nothing too complicated here. When test start button is pushed,
  * start the test. Otherwise, remain idle.
  */
- bool test_start = false;
- while (!test_start){
-  if (digitalRead(BTNSIG) == HIGH){
-    test_start = true;
-    Serial.println("Test started");
-  }
- }
 
  digitalWrite(THCALLCTRL, HIGH); // Call for heat
 

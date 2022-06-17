@@ -4,8 +4,10 @@
 /*
 * Defines how many samples the ADC should collect when sampling. 
 * Adjust this value if so desired.
+* Sample period in ms
 */
-#define MAXSAMPLES 1000 
+#define MAXSAMPLES 1024
+#define SAMPLEPERIOD 1
 
 /*
 * !DO NOT TOUCH! Correctly sets up ADC for fast sampling.
@@ -21,7 +23,7 @@
 /*
 * Instantiates PWM class for utilizing PWM abilities.
 */
-PWM pwminst(ADCPIN, MAXSAMPLES);
+PWM pwminst(ADCPIN, MAXSAMPLES, SAMPLEPERIOD);
 
 void setup() {
   Serial.begin(115200);
