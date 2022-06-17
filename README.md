@@ -19,4 +19,31 @@ To run the script, either double click on setup.bat, or in the terminal, move to
 
 To compile and upload, select your target board type, the programmer and the communication port. In the command palette, type "Arduino: Upload" and press enter.
 
+# Running Python Scripts
+This part assumes you're running Windows.
 
+If you don't have it installed, install Python.
+
+Once Python is installed, open a terminal in VSCode. 
+
+In the workspace folder, run python -m venv .venv
+.venv is gitignored by default, but if you want to name it something else, change the gitignore to reflect whatever you call it.
+
+VSCode should give a prompt that it has detected a new virtual environment. Confirm the prompt.
+
+Select the proper virtual environment interpreter by opening the command pallette and selecting it using >Python: Select Interpreter
+
+In Windows, run the activate script to use your virtual environment. You could use the
+global environment instead, but that's icky:
+{wherever-venv-is}\.venv\scripts\activate
+
+If using the debugger, you might need to activate it again in the new terminal that pops up.
+
+If you get the message "Activate.ps1" is not digitally signed, run:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+
+Once the virtual environment is activated, install whatever packages you want using
+pip install {package-name}
+If you get an error running a python script, chances are you're missing a package. Read the terminal output to see what exactly the error is.
+
+Whenever you're done working in the virtual environment, type deactivate.
