@@ -92,6 +92,7 @@ void loop() {
       pwm_low == true;
     }
   }
+  Serial.println("Ending ADC measurements");
   Serial.println("Halting");
   pwminst.halt();
 }
