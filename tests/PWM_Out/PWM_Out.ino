@@ -3,5 +3,5 @@ void setup(){
 }
 
 void loop(){
-    analogWrite(4, 126);
+    analogWrite(4, 125);
 }
