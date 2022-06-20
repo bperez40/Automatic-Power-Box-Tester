@@ -1,5 +1,6 @@
 #include <PBTCheck.hpp>
 #include <iodefs.hpp>
+#include <Adafruit_RA8875.h>
 
 void setup() {
   Serial.begin(115200);
@@ -8,7 +9,9 @@ void setup() {
 
 
 void loop() {
+  // Function to setup fast ADC sampling
   ADCSetup();
+
   /*
     * Actual start of loop
     */
@@ -25,6 +28,7 @@ void loop() {
     * Check for blower power. Otherwise, wait.
     */
   waitUntilTriggered(BLPWRSIG);
+
   Serial.println("Blower powered");
 
   Serial.println("Starting low duty ADC measurements");
