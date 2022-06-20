@@ -1,4 +1,8 @@
 #include "PBTCheck.hpp"
+/*
+* Instantiates PWM class for utilizing PWM abilities.
+*/
+PWM pwminst(ADCPIN, MAXSAMPLES, SAMPLEPERIOD); // ADCPIN defined in iodefs.hpp, others in PBTCheck.hpp
 void ADCSetup()
 {
 /*
@@ -61,11 +65,6 @@ void dutyCheck(double low_threshold, double high_threshold){
 
 void runCheck()
 {
-    /*
-     * Instantiates PWM class for utilizing PWM abilities.
-     */
-    PWM pwminst(ADCPIN, MAXSAMPLES, SAMPLEPERIOD); // ADCPIN defined in iodefs.hpp, others in PBTCheck.hpp
-
     /*
      * Actual start of loop
      */
