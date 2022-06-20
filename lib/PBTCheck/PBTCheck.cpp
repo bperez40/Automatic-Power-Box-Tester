@@ -1,7 +1,7 @@
 #include "PBTCheck.hpp"
 /*
-* Instantiates PWM class for utilizing PWM abilities.
-*/
+ * Instantiates PWM class for utilizing PWM abilities.
+ */
 PWM pwminst(ADCPIN, MAXSAMPLES, SAMPLEPERIOD); // ADCPIN defined in iodefs.hpp, others in PBTCheck.hpp
 void ADCSetup()
 {
@@ -28,10 +28,11 @@ void ADCSetup()
      */
 }
 /*
-* Recommend "inverted" logic for event b/c hardware configuration is open drain.
-* If you so desire to switch the event trigger to HIGH you can.
-*/
-void waitUntilTriggered(int pin, int event = LOW){
+ * Recommend "inverted" logic for event b/c hardware configuration is open drain.
+ * If you so desire to switch the event trigger to HIGH you can.
+ */
+void waitUntilTriggered(int pin, int event = LOW)
+{
     bool event_triggered = false;
     while (!event_triggered)
     {
@@ -42,7 +43,8 @@ void waitUntilTriggered(int pin, int event = LOW){
     }
 }
 
-void dutyCheck(double low_threshold, double high_threshold){
+void dutyCheck(double low_threshold, double high_threshold)
+{
     bool pwm_met = false;
     int *x = new int[MAXSAMPLES];
     double duty = 0;
@@ -60,7 +62,7 @@ void dutyCheck(double low_threshold, double high_threshold){
             pwm_met == true;
         }
     }
-    delete(x); // Delete allocated memory to prevent memory leaks
+    delete (x); // Delete allocated memory to prevent memory leaks
 }
 
 void runCheck()
