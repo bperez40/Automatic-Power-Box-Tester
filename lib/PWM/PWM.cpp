@@ -28,11 +28,6 @@ void PWM::printXContents(int xAddr[]){
     }
 }
 
-void PWM::halt(){
-    while(true){
-    }
-}
-
 void PWM::pwmMeasure(int x_in[]){
     for(int i = 0; i < _max_samples; i++){
         delaySamplePeriod();

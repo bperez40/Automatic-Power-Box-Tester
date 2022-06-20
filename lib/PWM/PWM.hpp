@@ -7,7 +7,6 @@ public:
     PWM(int pin, int ms, int sp);
     void delaySamplePeriod();
     void printXContents(int xAddr[]);
-    void halt();
     void pwmMeasure(int x_in[]);
     double calcDutyCycle(int x_in[]);
 
