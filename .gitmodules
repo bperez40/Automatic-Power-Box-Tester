@@ -1,0 +1,3 @@
+[submodule "lib/Adafruit_RA8875"]
+	path = lib/Adafruit_RA8875
+	url = https://github.com/bperez40/Adafruit_RA8875.git
