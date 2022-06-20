@@ -60,3 +60,8 @@ In the logging tab, set session logging to "All session output." Name the file w
 When you start a session, PuTTY will then create a log in the util folder.
 
 You can run the visualizer python script to then visualize the file's output, if you want to analyze ADC data in particular.
+
+# Creating images for the LCD display
+When displaying something on the LCD display, we have to use functions that directly translate some bytes into pixel locations. There's a neat project made by someone who had this exact intention in mind, and even supports Arduino and Adafruit formats. It's called image2cpp and can be found here: https://javl.github.io/image2cpp/.
+
+To create images, I would advise using GIMP or Photoshop, then exporting them into the image2cpp tool to convert them into the proper format for use.

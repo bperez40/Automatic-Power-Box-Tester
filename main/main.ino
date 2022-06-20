@@ -1,6 +1,5 @@
 #include <PBTCheck.hpp>
 #include <iodefs.hpp>
-#include <Adafruit_RA8875.h>
 #include <SPI.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_RA8875.h>
