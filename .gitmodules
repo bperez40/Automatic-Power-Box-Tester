@@ -1,3 +1,9 @@
+[submodule "lib/Adafruit-GFX-Library"]
+	path = lib/Adafruit-GFX-Library
+	url = https://github.com/adafruit/Adafruit-GFX-Library.git
+[submodule "lib/Adafruit_BusIO"]
+	path = lib/Adafruit_BusIO
+	url = https://github.com/adafruit/Adafruit_BusIO.git
 [submodule "lib/Adafruit_RA8875"]
 	path = lib/Adafruit_RA8875
 	url = https://github.com/bperez40/Adafruit_RA8875.git
