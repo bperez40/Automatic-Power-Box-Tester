@@ -9,12 +9,10 @@
 
 Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
 uint16_t tx, ty;
+int option = -1; // Not an option
 
-void setup()
+void initDisplay()
 {
-  Serial.begin(115200);
-  initPins();
-
   /*
    * Start main menu.
    * Display setup and open to main menu. Should have it go here when our program
@@ -28,18 +26,20 @@ void setup()
     while (1)
       ;
   }
-
   Serial.println("Found RA8875");
   tft.displayOn(true);
   tft.GPIOX(true);                              // Enable TFT - display enable tied to GPIOX
   tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
   tft.PWM1out(255);
+}
 
+void drawMainMenu()
+{
   tft.graphicsMode();           // Probably not necessary
   tft.fillScreen(0x0);          // If you don't do this, expect glitches galore
   tft.fillScreen(RA8875_WHITE); // ^
   // With hardware acceleration this is instant
-  tft.fillScreen(DARKRED);      // Dark red border
+  tft.fillScreen(DARKRED);                               // Dark red border
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // White background
 
   // Boxes
@@ -52,12 +52,6 @@ void setup()
   tft.textEnlarge(1);          // Make text larger
   tft.textTransparent(RA8875_WHITE);
   tft.textWrite("Start Test");
-
-  tft.touchEnable(true);
-  Serial.print("Status: ");
-  Serial.println(tft.readStatus(), HEX);
-  Serial.println("Waiting for touch events ...");
-
   /*
    *
    * End main menu
@@ -65,14 +59,12 @@ void setup()
    */
 }
 
-void loop()
+void mainMenuTouchCheck()
 {
-
   float xScale = 1024.0F / tft.width();
   float yScale = 1024.0F / tft.height();
 
   bool option_selected = false;
-  int option = -1; // Not an option
   /* Wait around for touch events */
   while (!option_selected)
   {
@@ -93,18 +85,71 @@ void loop()
       // tft.fillCircle((uint16_t)(tx / xScale), (uint16_t)(ty / yScale), 4, RA8875_WHITE);
     }
   }
+}
 
+void drawPreTestMenu()
+{
+  tft.graphicsMode();
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Could make the background a different color
+  tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK);   // Outline for PIM progress box
+  tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_YELLOW);  // PIM progress box pre completion
+  tft.fillRoundRect(310, 280, 160, 160, 15, RA8875_BLACK);  // Outline for filter progress box
+  tft.fillRoundRect(315, 285, 150, 150, 15, RA8875_YELLOW); // Filter progress box pre completion
+  tft.fillRoundRect(580, 280, 160, 160, 15, RA8875_BLACK);  // Outline for filter progress box
+  tft.fillRoundRect(585, 285, 150, 150, 15, RA8875_YELLOW); // Filter progress box pre completion
+  tft.textMode();
+  tft.textSetCursor(200, 100); // Location of text title text
+  tft.textEnlarge(2);          // Make text larger
+  tft.textTransparent(RA8875_BLACK);
+  tft.textWrite("Test In Progress");
+  tft.textSetCursor(55, 340);
+  tft.textEnlarge(1);
+  tft.textWrite("PIM Test");
+  tft.textSetCursor(345, 330);
+  tft.textWrite("Filter");
+  tft.textSetCursor(360, 360);
+  tft.textWrite("Test");
+  tft.textSetCursor(610, 330);
+  tft.textWrite("Basket");
+  tft.textSetCursor(625, 360);
+  tft.textWrite("Test");
+}
+
+void drawPostTestMenu(){
+    // Redraw screen for test completion
+    tft.graphicsMode();
+    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
+    tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
+    tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
+    tft.textMode();
+    tft.textSetCursor(230, 100); // Location of text title text
+    tft.textEnlarge(2);          // Make text larger
+    tft.textTransparent(RA8875_BLACK);
+    tft.textWrite("Test Completed");
+    tft.textSetCursor(55, 340);
+    tft.textEnlarge(1);
+    tft.textWrite("PIM Test");
+    tft.textSetCursor(165, 150); // Location of text title text
+    tft.textEnlarge(1);
+    tft.textWrite("(Tap on boxes for more info)");
+}
+
+void setup()
+{
+  Serial.begin(115200);
+  initPins();
+  initDisplay();
+  drawMainMenu();
+  tft.touchEnable(true);
+}
+
+void loop()
+{
+  mainMenuTouchCheck();
   switch (option)
   {
   case 1:
-    tft.graphicsMode();
-    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_YELLOW);
-    tft.textMode();
-    tft.textSetCursor(200, 100); // Location of text in first box
-    tft.textEnlarge(2);          // Make text larger
-    tft.textTransparent(RA8875_BLACK);
-    tft.textWrite("Test In Progress");
-
+    drawPreTestMenu();
     // Function to setup fast ADC sampling
     ADCSetup();
 
@@ -112,11 +157,6 @@ void loop()
      * Start of PIM check
      */
     Serial.println("Starting PBT Check");
-    /*
-     * TODO: Add manual test start back in
-     * Nothing too complicated here. When test start button is pushed,
-     * start the test. Otherwise, remain idle.
-     */
 
     digitalWrite(THCALLCTRL, HIGH); // Call for heat
 
@@ -140,16 +180,25 @@ void loop()
     Serial.println("Starting high duty ADC measurements");
     dutyCheck(0.55, 0.70);
     Serial.println("Ending high duty ADC measurements");
-    /*
-    *
-    * End of PIM check
-    *
-    */
 
-   /*
-   * Pump motor check
-   */
+    /*
+     *
+     * End of PIM check
+     *
+     */
+
+    tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
+    tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
+
+    /*
+     * Filter electronics check
+     */
     
+
+    /*
+     * Basket lift check
+     */
+    drawPostTestMenu();
 
     Serial.println("Halting");
     halt();
