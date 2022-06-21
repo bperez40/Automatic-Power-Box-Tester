@@ -5,6 +5,7 @@
 #include <Adafruit_RA8875.h>
 
 #define NAVYBLUE 0b0011100011101111
+#define DARKRED 0b0111100011100011
 
 Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
 uint16_t tx, ty;
@@ -38,7 +39,7 @@ void setup()
   tft.fillScreen(0x0);          // If you don't do this, expect glitches galore
   tft.fillScreen(RA8875_WHITE); // ^
   // With hardware acceleration this is instant
-  tft.fillScreen(NAVYBLUE);                              // Blue border
+  tft.fillScreen(DARKRED);      // Dark red border
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // White background
 
   // Boxes
@@ -96,11 +97,19 @@ void loop()
   switch (option)
   {
   case 1:
+    tft.graphicsMode();
+    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_YELLOW);
+    tft.textMode();
+    tft.textSetCursor(200, 100); // Location of text in first box
+    tft.textEnlarge(2);          // Make text larger
+    tft.textTransparent(RA8875_BLACK);
+    tft.textWrite("Test In Progress");
+
     // Function to setup fast ADC sampling
     ADCSetup();
 
     /*
-     * Actual start of loop
+     * Start of PIM check
      */
     Serial.println("Starting PBT Check");
     /*
@@ -131,6 +140,16 @@ void loop()
     Serial.println("Starting high duty ADC measurements");
     dutyCheck(0.55, 0.70);
     Serial.println("Ending high duty ADC measurements");
+    /*
+    *
+    * End of PIM check
+    *
+    */
+
+   /*
+   * Pump motor check
+   */
+    
 
     Serial.println("Halting");
     halt();
