@@ -21,9 +21,4 @@ void initPins(){
     pinMode(OUTPUT, RST);
     pinMode(OUTPUT, INT);
     pinMode(INPUT, SPACTIVE);
-    pinMode(INPUT, YP);
-    pinMode(INPUT, YN);
-    pinMode(INPUT, XN);
-    pinMode(INPUT, XP);
-    pinMode(OUTPUT, LITE);
 }
