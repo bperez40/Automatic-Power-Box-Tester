@@ -262,7 +262,7 @@ void loop()
 
     // Function to setup fast ADC sampling
     ADCSetup();
-    test_status = true; // Test is unsuccessful by default. Every test start, reset var
+    test_status = false; // Test is unsuccessful by default. Every test start, reset var
     /*
      * Start of PIM check
      */
@@ -299,22 +299,28 @@ void loop()
     /*
      * Filter electronics check
      */
+    Serial.println("Driving pump control high");
     digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
+    Serial.println("Waiting of pump power signal to trigger");
     waitUntilTriggered(PMPWRSIG); // Wait to see if the pump motor would receive power
+    Serial.println("Pump power signal triggered");
     if(digitalRead(SVALVESIG) == LOW){
       /* Test failed, this shouldn't be active without us driving it */
       drawPostTestMenu(test_status);
       setActiveMenu(POSTTEST);
       break; // Breaking early here will present a test failed screen
     }
+    Serial.println("Solenoid valve signal not active too early");
     /* If this part succeeds, test will progress */
     digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
     waitUntilTriggered(SVALVESIG); // Now, if it is triggered, it is active
+    Serial.println("Solenoid valve signal active");
 
     /*
      * Basket lift check
      */
 
+    test_status = true;
     drawPostTestMenu(test_status);
     setActiveMenu(POSTTEST);
     break;
