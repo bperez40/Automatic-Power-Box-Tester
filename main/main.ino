@@ -91,17 +91,20 @@ void drawPreTestMenu()
 {
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Could make the background a different color
+  /*
   tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK);   // Outline for PIM progress box
   tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_YELLOW);  // PIM progress box pre completion
   tft.fillRoundRect(310, 280, 160, 160, 15, RA8875_BLACK);  // Outline for filter progress box
   tft.fillRoundRect(315, 285, 150, 150, 15, RA8875_YELLOW); // Filter progress box pre completion
   tft.fillRoundRect(580, 280, 160, 160, 15, RA8875_BLACK);  // Outline for filter progress box
   tft.fillRoundRect(585, 285, 150, 150, 15, RA8875_YELLOW); // Filter progress box pre completion
+  */
   tft.textMode();
   tft.textSetCursor(200, 100); // Location of text title text
   tft.textEnlarge(2);          // Make text larger
   tft.textTransparent(RA8875_BLACK);
   tft.textWrite("Test In Progress");
+  /*
   tft.textSetCursor(55, 340);
   tft.textEnlarge(1);
   tft.textWrite("PIM Test");
@@ -113,25 +116,49 @@ void drawPreTestMenu()
   tft.textWrite("Basket");
   tft.textSetCursor(625, 360);
   tft.textWrite("Test");
+  */
 }
 
 void drawPostTestMenu(){
-    // Redraw screen for test completion
-    tft.graphicsMode();
-    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
-    tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
-    tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
-    tft.textMode();
-    tft.textSetCursor(230, 100); // Location of text title text
-    tft.textEnlarge(2);          // Make text larger
-    tft.textTransparent(RA8875_BLACK);
-    tft.textWrite("Test Completed");
-    tft.textSetCursor(55, 340);
-    tft.textEnlarge(1);
-    tft.textWrite("PIM Test");
-    tft.textSetCursor(165, 150); // Location of text title text
-    tft.textEnlarge(1);
-    tft.textWrite("(Tap on boxes for more info)");
+  tft.graphicsMode();
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Could make the background a different color
+  tft.textMode();
+  tft.textSetCursor(230, 100); // Location of text title text
+  tft.textEnlarge(2);          // Make text larger
+  tft.textTransparent(RA8875_BLACK);
+  tft.textWrite("Test Completed");
+
+    // Boxes
+  tft.fillRoundRect(295, 287, 210, 60, 25, DARKRED);  // This is the box's border
+  tft.fillRoundRect(300, 292, 200, 50, 25, 0b0000000000000000); // This is the main box
+
+  // Write text in boxes
+  tft.textMode();              // Switch from graphics mode to text mode
+  tft.textSetCursor(344, 300); // Location of text in results box
+  tft.textEnlarge(1);          // Make text larger
+  tft.textTransparent(RA8875_WHITE);
+  tft.textWrite("Results");
+}
+
+void drawResultsMenu(){
+  tft.graphicsMode();
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Could make the background a different color
+  // Redraw screen for test completion
+  tft.graphicsMode();
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
+  tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
+  tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
+  tft.textMode();
+  tft.textSetCursor(230, 100); // Location of text title text
+  tft.textEnlarge(2);          // Make text larger
+  tft.textTransparent(RA8875_BLACK);
+  tft.textWrite("Test Completed");
+  tft.textSetCursor(55, 340);
+  tft.textEnlarge(1);
+  tft.textWrite("PIM Test");
+  tft.textSetCursor(165, 150); // Location of text title text
+  tft.textEnlarge(1);
+  tft.textWrite("(Tap on boxes for more info)");
 }
 
 void setup()
@@ -149,7 +176,7 @@ void loop()
   switch (option)
   {
   case 1:
-    drawPreTestMenu();
+    drawPostTestMenu();
     // Function to setup fast ADC sampling
     ADCSetup();
 
@@ -186,9 +213,6 @@ void loop()
      * End of PIM check
      *
      */
-
-    tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
-    tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
 
     /*
      * Filter electronics check
