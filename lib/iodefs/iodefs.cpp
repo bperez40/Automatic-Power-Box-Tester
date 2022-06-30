@@ -15,7 +15,13 @@ void initPins(){
     pinMode(INPUT, PONSIG);
     pinMode(INPUT, GASVALVESIG);
     pinMode(INPUT, BLCTRLPWRSIG);
+    pinMode(INPUT, BLPWRNEUSIG);
+    pinMode(INPUT, BSKTGNDSIG);
+    pinMode(OUTPUT, POWERCTRL);
+    /*
+     * Add auxiliary IOs from terminal block and
+     * spark circuit here. They are already defined in iodefs.hpp
+     */
     pinMode(OUTPUT, RST);
     pinMode(OUTPUT, INT);
-    pinMode(INPUT, SPACTIVE);
 }

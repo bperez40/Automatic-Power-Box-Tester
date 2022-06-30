@@ -26,6 +26,20 @@
 #define MOSI 51
 #define SCK 52
 #define CS 53
-#define SPACTIVE 6
+#define BLPWRNEUSIG 64
+#define BSKTGNDSIG 65
+#define POWERCTRL 12
+#define SPA1 66
+#define SPA2 67
+#define SPA3 68
+#define SPA4 54
+#define SPD1 7
+#define SPD2 6
+#define SPD3 5
+#define SPD4 4
+#define ARD1 3
+#define ARD2 2
+#define ARD3 1
+#define ARD4 0
 
 void initPins();

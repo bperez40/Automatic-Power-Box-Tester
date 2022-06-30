@@ -12,6 +12,7 @@
 #define PRETEST 1
 #define POSTTEST 2
 #define RESULTS 3
+#define PIMINFO 4
 
 Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
 uint16_t tx, ty;
@@ -93,6 +94,7 @@ void touchCheck()
     if (tft.touched())
     {
       tft.touchRead(&tx, &ty);
+      Serial.print(tx); Serial.print(", "); Serial.println(ty);
       /* Switch statement controls which menu inputs it should be looking for, which is dependent on the active screen */
       switch (getActiveMenu())
       {
@@ -113,7 +115,7 @@ void touchCheck()
           setOption(2);
         }
         /* If results button is touched */
-        if (tx >= 378 && tx <= 640 && ty >= 590 && ty <= 730)
+        else if (tx >= 378 && tx <= 640 && ty >= 590 && ty <= 730)
         {
           option_selected = true;
           setOption(3);
@@ -126,7 +128,18 @@ void touchCheck()
           option_selected = true;
           setOption(2);
         }
+        else if (tx >= 74 && tx <= 295 && ty >= 585 && ty <= 885){
+          option_selected = true;
+          setOption(4);
+        }
         break;
+      case PIMINFO:
+      /* If exit is touched */
+      if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290)
+      {
+        option_selected = true;
+        setOption(2);
+      }
       }
     }
   }
@@ -169,7 +182,7 @@ void drawPostTestMenu(bool test_success)
   tft.graphicsMode();
   if (test_success == true)
   {
-    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_GREEN);    // Could make the background a different color
+    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_GREEN);  // Could make the background a different color
     tft.fillRoundRect(190, 75, 420, 110, 15, RA8875_BLACK); // Box's border
     tft.fillRoundRect(195, 80, 410, 100, 15, RA8875_WHITE); // Makes a box for the test status to stand out
     tft.textMode();
@@ -240,6 +253,12 @@ void drawResultsMenu()
   tft.textWrite("(Tap on boxes for more info)");
 }
 
+void drawPIMInfoMenu(){
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);  // Could make the background a different color
+  tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
+  tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
+}
+
 void setup()
 {
   Serial.begin(115200);
@@ -299,12 +318,8 @@ void loop()
     /*
      * Filter electronics check
      */
-    Serial.println("Driving pump control high");
-    digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
-    Serial.println("Waiting of pump power signal to trigger");
-    waitUntilTriggered(PMPWRSIG); // Wait to see if the pump motor would receive power
-    Serial.println("Pump power signal triggered");
-    if(digitalRead(SVALVESIG) == LOW){
+    if (digitalRead(SVALVESIG) == LOW)
+    {
       /* Test failed, this shouldn't be active without us driving it */
       drawPostTestMenu(test_status);
       setActiveMenu(POSTTEST);
@@ -313,13 +328,29 @@ void loop()
     Serial.println("Solenoid valve signal not active too early");
     /* If this part succeeds, test will progress */
     digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
-    waitUntilTriggered(SVALVESIG); // Now, if it is triggered, it is active
+    waitUntilTriggered(SVALVESIG);  // Now, if it is triggered, it is active
     Serial.println("Solenoid valve signal active");
+    /* Note that this pump check needs to happen after
+     * the solenoid valve is activated, otherwise, it
+     * will not be powered — even if the pump motor relay
+     * is activated
+     */
+    Serial.println("Driving pump control high");
+    digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
+    Serial.println("Waiting of pump power signal to trigger");
+    waitUntilTriggered(PMPWRSIG); // Wait to see if the pump motor would receive power
+    Serial.println("Pump power signal triggered");
 
     /*
      * Basket lift check
      */
+    digitalWrite(BSKTCTRL, HIGH); // Activate basket control relay
+    waitUntilTriggered(LBSKTSIG); // Check to see if left basket lift is powered
+    waitUntilTriggered(RBSKTSIG); // Check to see if right basket lift is powered
 
+    /*
+     * End of basket lift check
+     */
     test_status = true;
     drawPostTestMenu(test_status);
     setActiveMenu(POSTTEST);
@@ -333,6 +364,10 @@ void loop()
   case 3:
     drawResultsMenu();
     setActiveMenu(RESULTS);
+    break;
+  case 4:
+    drawPIMInfoMenu();
+    setActiveMenu(PIMINFO);
     break;
   }
 }
