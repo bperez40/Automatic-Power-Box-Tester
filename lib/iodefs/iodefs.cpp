@@ -4,11 +4,8 @@ void initPins(){
     pinMode(INPUT, ADCPIN);
     pinMode(OUTPUT, SVALVECTRL);
     pinMode(OUTPUT, THCALLCTRL);
-    pinMode(OUTPUT, DHWCALLCTRL);
     pinMode(OUTPUT, PUMPCTRL);
-    pinMode(OUTPUT, BTNILLCTRL);
     pinMode(OUTPUT, BSKTCTRL);
-    pinMode(INPUT, BTNSIG);
     pinMode(INPUT, RBSKTSIG);
     pinMode(INPUT, LBSKTSIG);
     pinMode(INPUT, ALARMSIG);
