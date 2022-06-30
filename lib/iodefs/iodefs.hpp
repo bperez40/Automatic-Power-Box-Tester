@@ -7,13 +7,10 @@
 * these pins after their set up.
 */
 #define ADCPIN 69
-#define SVALVECTRL 8
-#define THCALLCTRL 9
-#define DHWCALLCTRL 10
+#define SVALVECTRL 9
+#define THCALLCTRL 10
 #define PUMPCTRL 11
-#define BTNILLCTRL 12
 #define BSKTCTRL 13
-#define BTNSIG  54
 #define RBSKTSIG 55
 #define LBSKTSIG 56
 #define ALARMSIG 57

@@ -17,6 +17,7 @@ Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
 uint16_t tx, ty;
 int option = -1;            // Not an option
 int active_menu = MAINMENU; // Starts on main menu
+bool test_status = false;
 
 void initDisplay()
 {
@@ -92,7 +93,6 @@ void touchCheck()
     if (tft.touched())
     {
       tft.touchRead(&tx, &ty);
-      Serial.print(tx); Serial.print(", "); Serial.println(ty);
       /* Switch statement controls which menu inputs it should be looking for, which is dependent on the active screen */
       switch (getActiveMenu())
       {
@@ -113,7 +113,8 @@ void touchCheck()
           setOption(2);
         }
         /* If results button is touched */
-        if (tx >= 378 && tx <= 640 && ty >= 590 && ty <= 730){
+        if (tx >= 378 && tx <= 640 && ty >= 590 && ty <= 730)
+        {
           option_selected = true;
           setOption(3);
         }
@@ -163,15 +164,31 @@ void drawPreTestMenu()
   */
 }
 
-void drawPostTestMenu()
+void drawPostTestMenu(bool test_success)
 {
   tft.graphicsMode();
-  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Could make the background a different color
-  tft.textMode();
-  tft.textSetCursor(230, 100); // Location of text title text
-  tft.textEnlarge(2);          // Make text larger
-  tft.textTransparent(RA8875_BLACK);
-  tft.textWrite("Test Completed");
+  if (test_success == true)
+  {
+    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_GREEN);    // Could make the background a different color
+    tft.fillRoundRect(190, 75, 420, 110, 15, RA8875_BLACK); // Box's border
+    tft.fillRoundRect(195, 80, 410, 100, 15, RA8875_WHITE); // Makes a box for the test status to stand out
+    tft.textMode();
+    tft.textSetCursor(220, 100); // Location of text title text
+    tft.textEnlarge(2);          // Make text larger
+    tft.textTransparent(RA8875_BLACK);
+    tft.textWrite("Test Successful");
+  }
+  else
+  {
+    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_RED);    // Could make the background a different color
+    tft.fillRoundRect(225, 75, 330, 110, 15, RA8875_BLACK); // Box's border
+    tft.fillRoundRect(230, 80, 320, 100, 15, RA8875_WHITE); // Makes a box for the test status to stand out
+    tft.textMode();
+    tft.textSetCursor(250, 100); // Location of text title text
+    tft.textEnlarge(2);          // Make text larger
+    tft.textTransparent(RA8875_BLACK);
+    tft.textWrite("Test Failed");
+  }
 
   // Boxes
   tft.fillRoundRect(295, 287, 210, 60, 25, DARKRED);            // This is the box's border
@@ -234,6 +251,7 @@ void setup()
 
 void loop()
 {
+  option = -1;
   touchCheck();
   switch (option)
   {
@@ -244,7 +262,7 @@ void loop()
 
     // Function to setup fast ADC sampling
     ADCSetup();
-
+    test_status = true; // Test is unsuccessful by default. Every test start, reset var
     /*
      * Start of PIM check
      */
@@ -260,17 +278,16 @@ void loop()
     Serial.println("Blower powered");
 
     Serial.println("Starting low duty ADC measurements");
-    //dutyCheck(0.15, 0.25);
+    // dutyCheck(0.15, 0.25);
     Serial.println("Ending low duty ADC measurements");
 
     waitUntilTriggered(GASVALVESIG);
     Serial.println("Gas valve is activated");
 
-    waitUntilTriggered(SPACTIVE);
-    Serial.println("Spark detected");
+    /* This is where spark detection would go */
 
     Serial.println("Starting high duty ADC measurements");
-    //dutyCheck(0.55, 0.70);
+    // dutyCheck(0.55, 0.70);
     Serial.println("Ending high duty ADC measurements");
 
     /*
@@ -282,12 +299,23 @@ void loop()
     /*
      * Filter electronics check
      */
+    digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
+    waitUntilTriggered(PMPWRSIG); // Wait to see if the pump motor would receive power
+    if(digitalRead(SVALVESIG) == LOW){
+      /* Test failed, this shouldn't be active without us driving it */
+      drawPostTestMenu(test_status);
+      setActiveMenu(POSTTEST);
+      break; // Breaking early here will present a test failed screen
+    }
+    /* If this part succeeds, test will progress */
+    digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
+    waitUntilTriggered(SVALVESIG); // Now, if it is triggered, it is active
 
     /*
      * Basket lift check
      */
 
-    drawPostTestMenu();
+    drawPostTestMenu(test_status);
     setActiveMenu(POSTTEST);
     break;
   /* Case 2 will bring you back to the main menu and reset necessary variables */
@@ -299,5 +327,6 @@ void loop()
   case 3:
     drawResultsMenu();
     setActiveMenu(RESULTS);
+    break;
   }
 }
