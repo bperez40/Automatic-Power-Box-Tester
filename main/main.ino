@@ -148,11 +148,20 @@ void drawResultsMenu(){
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
   tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
   tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
+
+  /* Drawing exit box */
+  tft.fillRoundRect(40, 40, 40, 40, 5, RA8875_BLACK); // Outline for exit box
+  tft.fillRoundRect(45, 45, 30, 30, 5, RA8875_RED); // Exit box
+  tft.fillTriangle(45, 50, 45, 70, 55, 60, RA8875_WHITE); // First triangle to cut out red lines
+  tft.fillTriangle(75, 50, 75, 70, 65, 60, RA8875_WHITE); // Second triangle to cut out red lines
+  tft.fillTriangle(50, 45, 70, 45, 60, 55, RA8875_WHITE); // Third triangle to cut out red lines
+  tft.fillTriangle(50, 75, 70, 75, 60, 65, RA8875_WHITE); // Fourth triangle to cut out red lines
+  
   tft.textMode();
   tft.textSetCursor(230, 100); // Location of text title text
   tft.textEnlarge(2);          // Make text larger
   tft.textTransparent(RA8875_BLACK);
-  tft.textWrite("Test Completed");
+  tft.textWrite("Select Result");
   tft.textSetCursor(55, 340);
   tft.textEnlarge(1);
   tft.textWrite("PIM Test");
@@ -176,7 +185,7 @@ void loop()
   switch (option)
   {
   case 1:
-    drawPostTestMenu();
+    drawResultsMenu();
     // Function to setup fast ADC sampling
     ADCSetup();
 
