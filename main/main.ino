@@ -7,9 +7,16 @@
 #define NAVYBLUE 0b0011100011101111
 #define DARKRED 0b0111100011100011
 
+/* Active menu option */
+#define MAINMENU 0
+#define PRETEST 1
+#define POSTTEST 2
+#define RESULTS 3
+
 Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
 uint16_t tx, ty;
-int option = -1; // Not an option
+int option = -1;            // Not an option
+int active_menu = MAINMENU; // Starts on main menu
 
 void initDisplay()
 {
@@ -59,30 +66,67 @@ void drawMainMenu()
    */
 }
 
-void mainMenuTouchCheck()
+void setOption(int op)
+{
+  option = op;
+}
+
+void setActiveMenu(int sc)
+{
+  active_menu = sc;
+}
+
+int getActiveMenu()
+{
+  return active_menu;
+}
+
+void touchCheck()
 {
   float xScale = 1024.0F / tft.width();
   float yScale = 1024.0F / tft.height();
-
   bool option_selected = false;
   /* Wait around for touch events */
   while (!option_selected)
   {
     if (tft.touched())
     {
-      Serial.print("Touch: ");
       tft.touchRead(&tx, &ty);
-      Serial.print(tx);
-      Serial.print(", ");
-      Serial.println(ty);
-      if (tx >= 400 && tx <= 630 && ty >= 250 && ty <= 400)
-      {                         // Location for start test button
-        option_selected = true; // Leave touch loop
-        option = 1;             // Trigger test start option
+      Serial.print(tx); Serial.print(", "); Serial.println(ty);
+      /* Switch statement controls which menu inputs it should be looking for, which is dependent on the active screen */
+      switch (getActiveMenu())
+      {
+      case MAINMENU:
+        if (tx >= 400 && tx <= 630 && ty >= 250 && ty <= 400)
+        {                         // Location for start test button
+          option_selected = true; // Leave touch loop
+          setOption(1);           // Trigger test start option
+        }
+        break;
+      case PRETEST:
+        break;
+      case POSTTEST:
+        /* If exit is touched */
+        if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290) // Note that these locations don't line up with the pixel locations
+        {
+          option_selected = true;
+          setOption(2);
+        }
+        /* If results button is touched */
+        if (tx >= 378 && tx <= 640 && ty >= 590 && ty <= 730){
+          option_selected = true;
+          setOption(3);
+        }
+        break;
+      case RESULTS:
+        /* If exit is touched */
+        if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290)
+        {
+          option_selected = true;
+          setOption(2);
+        }
+        break;
       }
-      /* Draw a circle */
-      // Useful for visually figuring out where finger "touches"
-      // tft.fillCircle((uint16_t)(tx / xScale), (uint16_t)(ty / yScale), 4, RA8875_WHITE);
     }
   }
 }
@@ -90,7 +134,7 @@ void mainMenuTouchCheck()
 void drawPreTestMenu()
 {
   tft.graphicsMode();
-  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Could make the background a different color
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Could make the background a different color
   /*
   tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK);   // Outline for PIM progress box
   tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_YELLOW);  // PIM progress box pre completion
@@ -119,18 +163,26 @@ void drawPreTestMenu()
   */
 }
 
-void drawPostTestMenu(){
+void drawPostTestMenu()
+{
   tft.graphicsMode();
-  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Could make the background a different color
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Could make the background a different color
   tft.textMode();
   tft.textSetCursor(230, 100); // Location of text title text
   tft.textEnlarge(2);          // Make text larger
   tft.textTransparent(RA8875_BLACK);
   tft.textWrite("Test Completed");
 
-    // Boxes
-  tft.fillRoundRect(295, 287, 210, 60, 25, DARKRED);  // This is the box's border
+  // Boxes
+  tft.fillRoundRect(295, 287, 210, 60, 25, DARKRED);            // This is the box's border
   tft.fillRoundRect(300, 292, 200, 50, 25, 0b0000000000000000); // This is the main box
+  /* Drawing exit box */
+  tft.fillRoundRect(40, 40, 40, 40, 5, RA8875_BLACK);     // Outline for exit box
+  tft.fillRoundRect(45, 45, 30, 30, 5, RA8875_RED);       // Exit box
+  tft.fillTriangle(45, 50, 45, 70, 55, 60, RA8875_WHITE); // First triangle to cut out red lines
+  tft.fillTriangle(75, 50, 75, 70, 65, 60, RA8875_WHITE); // Second triangle to cut out red lines
+  tft.fillTriangle(50, 45, 70, 45, 60, 55, RA8875_WHITE); // Third triangle to cut out red lines
+  tft.fillTriangle(50, 75, 70, 75, 60, 65, RA8875_WHITE); // Fourth triangle to cut out red lines
 
   // Write text in boxes
   tft.textMode();              // Switch from graphics mode to text mode
@@ -140,9 +192,10 @@ void drawPostTestMenu(){
   tft.textWrite("Results");
 }
 
-void drawResultsMenu(){
+void drawResultsMenu()
+{
   tft.graphicsMode();
-  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Could make the background a different color
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Could make the background a different color
   // Redraw screen for test completion
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
@@ -150,13 +203,13 @@ void drawResultsMenu(){
   tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
 
   /* Drawing exit box */
-  tft.fillRoundRect(40, 40, 40, 40, 5, RA8875_BLACK); // Outline for exit box
-  tft.fillRoundRect(45, 45, 30, 30, 5, RA8875_RED); // Exit box
+  tft.fillRoundRect(40, 40, 40, 40, 5, RA8875_BLACK);     // Outline for exit box
+  tft.fillRoundRect(45, 45, 30, 30, 5, RA8875_RED);       // Exit box
   tft.fillTriangle(45, 50, 45, 70, 55, 60, RA8875_WHITE); // First triangle to cut out red lines
   tft.fillTriangle(75, 50, 75, 70, 65, 60, RA8875_WHITE); // Second triangle to cut out red lines
   tft.fillTriangle(50, 45, 70, 45, 60, 55, RA8875_WHITE); // Third triangle to cut out red lines
   tft.fillTriangle(50, 75, 70, 75, 60, 65, RA8875_WHITE); // Fourth triangle to cut out red lines
-  
+
   tft.textMode();
   tft.textSetCursor(230, 100); // Location of text title text
   tft.textEnlarge(2);          // Make text larger
@@ -181,11 +234,14 @@ void setup()
 
 void loop()
 {
-  mainMenuTouchCheck();
+  touchCheck();
   switch (option)
   {
+  /* Case 1 is draw test menu and start test*/
   case 1:
-    drawResultsMenu();
+    drawPreTestMenu();
+    setActiveMenu(PRETEST);
+
     // Function to setup fast ADC sampling
     ADCSetup();
 
@@ -204,7 +260,7 @@ void loop()
     Serial.println("Blower powered");
 
     Serial.println("Starting low duty ADC measurements");
-    dutyCheck(0.15, 0.25);
+    //dutyCheck(0.15, 0.25);
     Serial.println("Ending low duty ADC measurements");
 
     waitUntilTriggered(GASVALVESIG);
@@ -214,7 +270,7 @@ void loop()
     Serial.println("Spark detected");
 
     Serial.println("Starting high duty ADC measurements");
-    dutyCheck(0.55, 0.70);
+    //dutyCheck(0.55, 0.70);
     Serial.println("Ending high duty ADC measurements");
 
     /*
@@ -226,14 +282,22 @@ void loop()
     /*
      * Filter electronics check
      */
-    
 
     /*
      * Basket lift check
      */
-    drawPostTestMenu();
 
-    Serial.println("Halting");
-    halt();
+    drawPostTestMenu();
+    setActiveMenu(POSTTEST);
+    break;
+  /* Case 2 will bring you back to the main menu and reset necessary variables */
+  case 2:
+    drawMainMenu();
+    setActiveMenu(MAINMENU);
+    break;
+  /* Case 3 happens when the results button is pressed. It will set up the results screen. */
+  case 3:
+    drawResultsMenu();
+    setActiveMenu(RESULTS);
   }
 }
