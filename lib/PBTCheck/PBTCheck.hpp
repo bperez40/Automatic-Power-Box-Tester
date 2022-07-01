@@ -15,11 +15,11 @@
 #define CYCLES 5
 
 void ADCSetup();
-bool waitUntilTriggered(int pin, unsigned long timeout = 10000, int event = LOW);
+bool waitUntilTriggered(int pin, unsigned long timeout = 1000, int event = LOW);
 void dutyCheck(double low_threshold, double high_threshold);
 void runCheck();
 void halt();
-struct SignalInfo{
+typedef struct signalinfo_t{
     unsigned long time_limit;
     bool alarm;
 };

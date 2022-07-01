@@ -21,6 +21,13 @@ uint16_t tx, ty;
 int option = -1;            // Not an option
 int active_menu = MAINMENU; // Starts on main menu
 bool test_status = false;
+signalinfo_t LeftBasket;
+signalinfo_t RightBasket;
+signalinfo_t SolenoidValve;
+    /* Initialize all the signal info structures for this test. Will reinitialize them every test*/
+signalinfo_t BlowerPower;
+signalinfo_t GasValve;
+signalinfo_t PumpPower;
 
 void initDisplay()
 {
@@ -91,7 +98,7 @@ void touchCheck()
         if (tx >= 400 && tx <= 630 && ty >= 250 && ty <= 400)
         {                         // Location for start test button
           option_selected = true; // Leave touch loop
-          option = 1;           // Trigger test start option
+          option = 1;             // Trigger test start option
         }
         break;
       case PRETEST:
@@ -250,11 +257,26 @@ void drawResultsMenu()
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
   tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);  // Outline for PIM progress box
-  tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN);  // PIM progess box post completion
+  if(!GasValve.alarm && !BlowerPower.alarm){
+    tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN);  // PIM progess box post completion
+  }
+  else{
+    tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_RED);  // PIM progess box post completion
+  }
   tft.fillRoundRect(300, 200, 160, 160, 15, RA8875_BLACK); // Outline for PUMP progress box
-  tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_GREEN); // PUMP progess box post completion
+  if(!SolenoidValve.alarm && !PumpPower.alarm){
+    tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_GREEN); // PUMP progess box post completion
+  }
+  else{
+    tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_RED); // PUMP progess box post completion
+  }
   tft.fillRoundRect(550, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
-  tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_GREEN); // Basket progess box post completion
+  if(!RightBasket.alarm && !LeftBasket.alarm){
+   tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_GREEN); // Basket progess box post completion
+  }
+  else{
+    tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_RED); // Basket progess box post completion
+  }
 
   /* Drawing exit box */
   tft.fillRoundRect(40, 40, 40, 40, 5, RA8875_BLACK);     // Outline for exit box
@@ -325,39 +347,28 @@ void loop()
   case 1:
     drawPreTestMenu();
     active_menu = PRETEST;
-    /* Initialize all the signal info structures for this test. Will reinitialize them every test*/
-    SignalInfo blower_power;
-    SignalInfo call_for_heat;
-    SignalInfo gas_valve;
-    SignalInfo solenoid_valve;
-    SignalInfo pump_power;
-    SignalInfo left_basket;
-    left_basket.time_limit = 10000; // Timeout time in milliseconds
-    left_basket.time_alarm = false; // Alarms are false by default
-    left_basket.function_alarm = false;
-    SignalInfo right_basket;
-    // Function to setup fast ADC sampling
+    //  Function to setup fast ADC sampling
     ADCSetup();
     test_status = false; // Test is unsuccessful by default. Every test start, reset var
     /*
      * Start of PIM check
      */
     Serial.println("Starting PBT Check");
-
     digitalWrite(THCALLCTRL, HIGH); // Call for heat
 
     /*
      * Check for blower power. Otherwise, wait.
      */
-    waitUntilTriggered(BLPWRSIG);
+    BlowerPower.time_limit = 1000;
+    BlowerPower.alarm = waitUntilTriggered(BLPWRSIG);
 
     Serial.println("Blower powered");
 
     Serial.println("Starting low duty ADC measurements");
     // dutyCheck(0.15, 0.25);
     Serial.println("Ending low duty ADC measurements");
-
-    waitUntilTriggered(GASVALVESIG);
+    GasValve.time_limit = 1000;
+    GasValve.alarm = waitUntilTriggered(GASVALVESIG);
     Serial.println("Gas valve is activated");
 
     /* This is where spark detection would go */
@@ -365,7 +376,6 @@ void loop()
     Serial.println("Starting high duty ADC measurements");
     // dutyCheck(0.55, 0.70);
     Serial.println("Ending high duty ADC measurements");
-
     /*
      *
      * End of PIM check
@@ -375,43 +385,41 @@ void loop()
     /*
      * Filter electronics check
      */
-    if (digitalRead(SVALVESIG) == LOW)
-    {
-      /* Test failed, this shouldn't be active without us driving it */
-      drawPostTestMenu(test_status);
-      active_menu = POSTTEST;
-      break; // Breaking early here will present a test failed screen
-    }
+    SolenoidValve.time_limit=8000;
+    SolenoidValve.alarm=waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit, HIGH);
     Serial.println("Solenoid valve signal not active too early");
     /* If this part succeeds, test will progress */
     digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
-    waitUntilTriggered(SVALVESIG);  // Now, if it is triggered, it is active
+    SolenoidValve.alarm=waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit);  // Now, if it is triggered, it is active
     /* Note that this pump check needs to happen after
      * the solenoid valve is activated, otherwise, it
      * will not be powered — even if the pump motor relay
      * is activated
      */
     digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
-    waitUntilTriggered(PMPWRSIG); // Wait to see if the pump motor would receive power
+    PumpPower.time_limit = 1000;
+    PumpPower.alarm = waitUntilTriggered(PMPWRSIG); // Wait to see if the pump motor would receive power
 
     /*
      * Basket lift check
      */
     digitalWrite(BSKTCTRL, HIGH); // Activate basket control relay
-    left_basket.time_alarm = waitUntilTriggered(LBSKTSIG);
-    if (left_basket.time_alarm == true)
-    {
-      /* Test failed due to timeout */
-      drawPostTestMenu(test_status);
-      active_menu = POSTTEST;
-      break; // Go to post test screen
-    }
-    waitUntilTriggered(RBSKTSIG); // Check to see if right basket lift is powered
+    LeftBasket.time_limit = 1000; // Timeout time in milliseconds
+    LeftBasket.alarm = waitUntilTriggered(LBSKTSIG);
+    RightBasket.time_limit = 1000;
+    RightBasket.alarm = waitUntilTriggered(RBSKTSIG);
 
     /*
      * End of basket lift check
      */
-    test_status = true;
+    if (LeftBasket.alarm || RightBasket.alarm || SolenoidValve.alarm || PumpPower.alarm || GasValve.alarm || BlowerPower.alarm)
+    {
+      test_status = false;
+    }
+    else
+    {
+      test_status = true;
+    }
     drawPostTestMenu(test_status);
     active_menu = POSTTEST;
     break;
@@ -434,10 +442,9 @@ void loop()
     drawPumpInfoMenu();
     active_menu = PUMPINFO;
     break;
-case 6:
-  drawBasketInfoMenu();
-  active_menu = BSKTINFO;
-  break;
-
+  case 6:
+    drawBasketInfoMenu();
+    active_menu = BSKTINFO;
+    break;
   }
 }
