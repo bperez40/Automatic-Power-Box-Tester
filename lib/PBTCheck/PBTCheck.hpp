@@ -21,6 +21,5 @@ void runCheck();
 void halt();
 struct SignalInfo{
     unsigned long time_limit;
-    bool time_alarm;
-    bool function_alarm;
+    bool alarm;
 };

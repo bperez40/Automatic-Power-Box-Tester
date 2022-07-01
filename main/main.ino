@@ -70,11 +70,6 @@ void drawMainMenu()
    */
 }
 
-void setOption(int op)
-{
-  option = op;
-}
-
 void setActiveMenu(int sc)
 {
   active_menu = sc;
@@ -106,7 +101,7 @@ void touchCheck()
         if (tx >= 400 && tx <= 630 && ty >= 250 && ty <= 400)
         {                         // Location for start test button
           option_selected = true; // Leave touch loop
-          setOption(1);           // Trigger test start option
+          option = 1;           // Trigger test start option
         }
         break;
       case PRETEST:
@@ -116,13 +111,13 @@ void touchCheck()
         if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290) // Note that these locations don't line up with the pixel locations
         {
           option_selected = true;
-          setOption(2);
+          option = 2;
         }
         /* If results button is touched */
         else if (tx >= 380 && tx <= 640 && ty >= 760 && ty <= 890)
         {
           option_selected = true;
-          setOption(3);
+          option = 3;
         }
         break;
       case RESULTS:
@@ -130,19 +125,25 @@ void touchCheck()
         if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290)
         {
           option_selected = true;
-          setOption(2);
+          option = 2;
         }
         /* If PIM test box is touched */
         else if (tx >= 88 && tx <= 295 && ty >= 450 && ty <= 720)
         {
           option_selected = true;
-          setOption(4);
+          option = 4;
         }
         /* If pump test box is touched */
         else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 730)
         {
           option_selected = true;
-          setOption(5);
+          option = 5;
+        }
+        /* If basket test box is touched */
+        else if (tx >= 700 && tx <= 900 && ty >= 440 && ty <= 730)
+        {
+          option_selected = true;
+          option = 6;
         }
         break;
       case PIMINFO:
@@ -150,15 +151,25 @@ void touchCheck()
         if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
         {
           option_selected = true;
-          setOption(3);
+          option = 3;
         }
+        break;
       case PUMPINFO:
         /* If back is touched */
         if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
         {
           option_selected = true;
-          setOption(3);
+          option = 3;
         }
+        break;
+      case BSKTINFO:
+        /* If back is touched */
+        if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
+        {
+          option_selected = true;
+          option = 3;
+        }
+        break;
       }
     }
   }
@@ -252,6 +263,8 @@ void drawResultsMenu()
   tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN);  // PIM progess box post completion
   tft.fillRoundRect(300, 200, 160, 160, 15, RA8875_BLACK); // Outline for PUMP progress box
   tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_GREEN); // PUMP progess box post completion
+  tft.fillRoundRect(550, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
+  tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_GREEN); // Basket progess box post completion
 
   /* Drawing exit box */
   tft.fillRoundRect(40, 40, 40, 40, 5, RA8875_BLACK);     // Outline for exit box
@@ -271,6 +284,10 @@ void drawResultsMenu()
   tft.textWrite("PIM Test");
   tft.textSetCursor(310, 260);
   tft.textWrite("Pump Test");
+  tft.textSetCursor(580, 245);
+  tft.textWrite("Basket");
+  tft.textSetCursor(580, 275);
+  tft.textWrite("Test");
   tft.textSetCursor(165, 100); // Location of subtitle text
   tft.textEnlarge(1);
   tft.textWrite("(Tap on boxes for more info)");
@@ -285,6 +302,13 @@ void drawPIMInfoMenu()
 }
 
 void drawPumpInfoMenu()
+{
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Background
+  tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
+  tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
+  tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+}
+void drawBasketInfoMenu()
 {
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Background
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
@@ -372,24 +396,21 @@ void loop()
     /* If this part succeeds, test will progress */
     digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
     waitUntilTriggered(SVALVESIG);  // Now, if it is triggered, it is active
-    Serial.println("Solenoid valve signal active");
     /* Note that this pump check needs to happen after
      * the solenoid valve is activated, otherwise, it
      * will not be powered — even if the pump motor relay
      * is activated
      */
-    Serial.println("Driving pump control high");
     digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
-    Serial.println("Waiting of pump power signal to trigger");
     waitUntilTriggered(PMPWRSIG); // Wait to see if the pump motor would receive power
-    Serial.println("Pump power signal triggered");
 
     /*
      * Basket lift check
      */
     digitalWrite(BSKTCTRL, HIGH); // Activate basket control relay
     left_basket.time_alarm = waitUntilTriggered(LBSKTSIG);
-    if (left_basket.time_alarm == true){
+    if (left_basket.time_alarm == true)
+    {
       /* Test failed due to timeout */
       drawPostTestMenu(test_status);
       setActiveMenu(POSTTEST);
@@ -423,5 +444,10 @@ void loop()
     drawPumpInfoMenu();
     setActiveMenu(PUMPINFO);
     break;
+case 6:
+  drawBasketInfoMenu();
+  setActiveMenu(BSKTINFO);
+  break;
+
   }
 }
