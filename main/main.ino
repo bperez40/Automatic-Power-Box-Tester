@@ -70,16 +70,6 @@ void drawMainMenu()
    */
 }
 
-void setActiveMenu(int sc)
-{
-  active_menu = sc;
-}
-
-int getActiveMenu()
-{
-  return active_menu;
-}
-
 void touchCheck()
 {
   float xScale = 1024.0F / tft.width();
@@ -95,7 +85,7 @@ void touchCheck()
       Serial.print(", ");
       Serial.println(ty);
       /* Switch statement controls which menu inputs it should be looking for, which is dependent on the active screen */
-      switch (getActiveMenu())
+      switch (active_menu)
       {
       case MAINMENU:
         if (tx >= 400 && tx <= 630 && ty >= 250 && ty <= 400)
@@ -334,7 +324,7 @@ void loop()
   /* Case 1 is draw test menu and start test*/
   case 1:
     drawPreTestMenu();
-    setActiveMenu(PRETEST);
+    active_menu = PRETEST;
     /* Initialize all the signal info structures for this test. Will reinitialize them every test*/
     SignalInfo blower_power;
     SignalInfo call_for_heat;
@@ -389,7 +379,7 @@ void loop()
     {
       /* Test failed, this shouldn't be active without us driving it */
       drawPostTestMenu(test_status);
-      setActiveMenu(POSTTEST);
+      active_menu = POSTTEST;
       break; // Breaking early here will present a test failed screen
     }
     Serial.println("Solenoid valve signal not active too early");
@@ -413,7 +403,7 @@ void loop()
     {
       /* Test failed due to timeout */
       drawPostTestMenu(test_status);
-      setActiveMenu(POSTTEST);
+      active_menu = POSTTEST;
       break; // Go to post test screen
     }
     waitUntilTriggered(RBSKTSIG); // Check to see if right basket lift is powered
@@ -423,30 +413,30 @@ void loop()
      */
     test_status = true;
     drawPostTestMenu(test_status);
-    setActiveMenu(POSTTEST);
+    active_menu = POSTTEST;
     break;
   /* Case 2 will bring you back to the main menu and reset necessary variables */
   case 2:
     drawMainMenu();
-    setActiveMenu(MAINMENU);
+    active_menu = MAINMENU;
     break;
   /* Case 3 happens when the results button is pressed. It will set up the results screen. */
   case 3:
     drawResultsMenu();
-    setActiveMenu(RESULTS);
+    active_menu = RESULTS;
     break;
   /* Case 4 happens when the PIM info button is pressed on the results screen */
   case 4:
     drawPIMInfoMenu();
-    setActiveMenu(PIMINFO);
+    active_menu = PIMINFO;
     break;
   case 5:
     drawPumpInfoMenu();
-    setActiveMenu(PUMPINFO);
+    active_menu = PUMPINFO;
     break;
 case 6:
   drawBasketInfoMenu();
-  setActiveMenu(BSKTINFO);
+  active_menu = BSKTINFO;
   break;
 
   }
