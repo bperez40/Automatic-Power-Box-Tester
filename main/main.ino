@@ -24,7 +24,7 @@ bool test_status = false;
 signalinfo_t LeftBasket;
 signalinfo_t RightBasket;
 signalinfo_t SolenoidValve;
-    /* Initialize all the signal info structures for this test. Will reinitialize them every test*/
+/* Initialize all the signal info structures for this test. Will reinitialize them every test*/
 signalinfo_t BlowerPower;
 signalinfo_t GasValve;
 signalinfo_t PumpPower;
@@ -261,25 +261,31 @@ void drawResultsMenu()
   // Redraw screen for test completion
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
-  tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);  // Outline for PIM progress box
-  if(!Alarm.alarm && !BlowerPowerNeutral.alarm && !BlowerControl.alarm && !GasValve.alarm && !BlowerPower.alarm && !PowerOn.alarm){
-    tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN);  // PIM progess box post completion
+  tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
+  if (!Alarm.alarm && !BlowerPowerNeutral.alarm && !BlowerControl.alarm && !GasValve.alarm && !BlowerPower.alarm && !PowerOn.alarm)
+  {
+    tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
   }
-  else{
-    tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_RED);  // PIM progess box post completion
+  else
+  {
+    tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_RED); // PIM progess box post completion
   }
   tft.fillRoundRect(300, 200, 160, 160, 15, RA8875_BLACK); // Outline for PUMP progress box
-  if(!SolenoidValve.alarm && !PumpPower.alarm){
+  if (!SolenoidValve.alarm && !PumpPower.alarm)
+  {
     tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_GREEN); // PUMP progess box post completion
   }
-  else{
+  else
+  {
     tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_RED); // PUMP progess box post completion
   }
   tft.fillRoundRect(550, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
-  if(!BasketPower.alarm && !RightBasket.alarm && !LeftBasket.alarm){
-   tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_GREEN); // Basket progess box post completion
+  if (!BasketPower.alarm && !RightBasket.alarm && !LeftBasket.alarm)
+  {
+    tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_GREEN); // Basket progess box post completion
   }
-  else{
+  else
+  {
     tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_RED); // Basket progess box post completion
   }
 
@@ -316,6 +322,36 @@ void drawPIMInfoMenu()
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
   tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
   tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+  tft.textMode();
+  tft.textColor(RA8875_BLACK, RA8875_WHITE);
+  tft.textEnlarge(2);
+  tft.textSetCursor(240, 50);
+  tft.textWrite("PIM Test Info");
+  if (PowerOn.alarm)
+  {
+    tft.textSetCursor(130, 120);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_RED);
+    tft.textWrite("PIM board was not powered");
+  }
+  else{
+    tft.textSetCursor(130, 120);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+    tft.textWrite("PIM board was powered");
+  }
+  if(BlowerPower.alarm){
+    tft.textSetCursor(130, 160);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_RED);
+    tft.textWrite("Blower was not powered");
+  }
+  else{
+    tft.textSetCursor(130, 160);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+    tft.textWrite("Blower was powered");
+  }
 }
 
 void drawPumpInfoMenu()
@@ -399,12 +435,12 @@ void loop()
     /*
      * Filter electronics check
      */
-    SolenoidValve.time_limit=8000;
-    SolenoidValve.alarm=waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit, HIGH);
+    SolenoidValve.time_limit = 8000;
+    SolenoidValve.alarm = waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit, HIGH);
     Serial.println("Solenoid valve signal not active too early");
     /* If this part succeeds, test will progress */
-    digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
-    SolenoidValve.alarm=waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit);  // Now, if it is triggered, it is active
+    digitalWrite(SVALVECTRL, HIGH);                                                // Should make that SVALVESIG signal active
+    SolenoidValve.alarm = waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit); // Now, if it is triggered, it is active
     /* Note that this pump check needs to happen after
      * the solenoid valve is activated, otherwise, it
      * will not be powered — even if the pump motor relay
