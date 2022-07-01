@@ -13,8 +13,14 @@
  * May required adjusting.
  */
 #define CYCLES 5
+
 void ADCSetup();
-void waitUntilTriggered(int pin, int event = LOW);
+bool waitUntilTriggered(int pin, unsigned long timeout = 10000, int event = LOW);
 void dutyCheck(double low_threshold, double high_threshold);
 void runCheck();
 void halt();
+struct SignalInfo{
+    unsigned long time_limit;
+    bool time_alarm;
+    bool function_alarm;
+};

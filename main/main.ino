@@ -13,6 +13,8 @@
 #define POSTTEST 2
 #define RESULTS 3
 #define PIMINFO 4
+#define PUMPINFO 5
+#define BSKTINFO 6
 
 Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
 uint16_t tx, ty;
@@ -94,7 +96,9 @@ void touchCheck()
     if (tft.touched())
     {
       tft.touchRead(&tx, &ty);
-      Serial.print(tx); Serial.print(", "); Serial.println(ty);
+      Serial.print(tx);
+      Serial.print(", ");
+      Serial.println(ty);
       /* Switch statement controls which menu inputs it should be looking for, which is dependent on the active screen */
       switch (getActiveMenu())
       {
@@ -115,7 +119,7 @@ void touchCheck()
           setOption(2);
         }
         /* If results button is touched */
-        else if (tx >= 378 && tx <= 640 && ty >= 590 && ty <= 730)
+        else if (tx >= 380 && tx <= 640 && ty >= 760 && ty <= 890)
         {
           option_selected = true;
           setOption(3);
@@ -128,18 +132,33 @@ void touchCheck()
           option_selected = true;
           setOption(2);
         }
-        else if (tx >= 74 && tx <= 295 && ty >= 585 && ty <= 885){
+        /* If PIM test box is touched */
+        else if (tx >= 88 && tx <= 295 && ty >= 450 && ty <= 720)
+        {
           option_selected = true;
           setOption(4);
         }
+        /* If pump test box is touched */
+        else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 730)
+        {
+          option_selected = true;
+          setOption(5);
+        }
         break;
       case PIMINFO:
-      /* If exit is touched */
-      if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290)
-      {
-        option_selected = true;
-        setOption(2);
-      }
+        /* If back is touched */
+        if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
+        {
+          option_selected = true;
+          setOption(3);
+        }
+      case PUMPINFO:
+        /* If back is touched */
+        if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
+        {
+          option_selected = true;
+          setOption(3);
+        }
       }
     }
   }
@@ -204,8 +223,8 @@ void drawPostTestMenu(bool test_success)
   }
 
   // Boxes
-  tft.fillRoundRect(295, 287, 210, 60, 25, DARKRED);            // This is the box's border
-  tft.fillRoundRect(300, 292, 200, 50, 25, 0b0000000000000000); // This is the main box
+  tft.fillRoundRect(295, 380, 210, 60, 25, DARKRED);            // This is the result box's border
+  tft.fillRoundRect(300, 385, 200, 50, 25, 0b0000000000000000); // This is the result box
   /* Drawing exit box */
   tft.fillRoundRect(40, 40, 40, 40, 5, RA8875_BLACK);     // Outline for exit box
   tft.fillRoundRect(45, 45, 30, 30, 5, RA8875_RED);       // Exit box
@@ -216,7 +235,7 @@ void drawPostTestMenu(bool test_success)
 
   // Write text in boxes
   tft.textMode();              // Switch from graphics mode to text mode
-  tft.textSetCursor(344, 300); // Location of text in results box
+  tft.textSetCursor(344, 390); // Location of text in results box
   tft.textEnlarge(1);          // Make text larger
   tft.textTransparent(RA8875_WHITE);
   tft.textWrite("Results");
@@ -229,8 +248,10 @@ void drawResultsMenu()
   // Redraw screen for test completion
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
-  tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
-  tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
+  tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);  // Outline for PIM progress box
+  tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN);  // PIM progess box post completion
+  tft.fillRoundRect(300, 200, 160, 160, 15, RA8875_BLACK); // Outline for PUMP progress box
+  tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_GREEN); // PUMP progess box post completion
 
   /* Drawing exit box */
   tft.fillRoundRect(40, 40, 40, 40, 5, RA8875_BLACK);     // Outline for exit box
@@ -241,22 +262,34 @@ void drawResultsMenu()
   tft.fillTriangle(50, 75, 70, 75, 60, 65, RA8875_WHITE); // Fourth triangle to cut out red lines
 
   tft.textMode();
-  tft.textSetCursor(230, 100); // Location of text title text
-  tft.textEnlarge(2);          // Make text larger
+  tft.textSetCursor(230, 50); // Location of text title text
+  tft.textEnlarge(2);         // Make text larger
   tft.textTransparent(RA8875_BLACK);
   tft.textWrite("Select Result");
-  tft.textSetCursor(55, 340);
+  tft.textSetCursor(55, 260);
   tft.textEnlarge(1);
   tft.textWrite("PIM Test");
-  tft.textSetCursor(165, 150); // Location of text title text
+  tft.textSetCursor(310, 260);
+  tft.textWrite("Pump Test");
+  tft.textSetCursor(165, 100); // Location of subtitle text
   tft.textEnlarge(1);
   tft.textWrite("(Tap on boxes for more info)");
 }
 
-void drawPIMInfoMenu(){
-  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);  // Could make the background a different color
-  tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
-  tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
+void drawPIMInfoMenu()
+{
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Background
+  tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
+  tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
+  tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+}
+
+void drawPumpInfoMenu()
+{
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Background
+  tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
+  tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
+  tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
 }
 
 void setup()
@@ -278,7 +311,17 @@ void loop()
   case 1:
     drawPreTestMenu();
     setActiveMenu(PRETEST);
-
+    /* Initialize all the signal info structures for this test. Will reinitialize them every test*/
+    SignalInfo blower_power;
+    SignalInfo call_for_heat;
+    SignalInfo gas_valve;
+    SignalInfo solenoid_valve;
+    SignalInfo pump_power;
+    SignalInfo left_basket;
+    left_basket.time_limit = 10000; // Timeout time in milliseconds
+    left_basket.time_alarm = false; // Alarms are false by default
+    left_basket.function_alarm = false;
+    SignalInfo right_basket;
     // Function to setup fast ADC sampling
     ADCSetup();
     test_status = false; // Test is unsuccessful by default. Every test start, reset var
@@ -345,7 +388,13 @@ void loop()
      * Basket lift check
      */
     digitalWrite(BSKTCTRL, HIGH); // Activate basket control relay
-    waitUntilTriggered(LBSKTSIG); // Check to see if left basket lift is powered
+    left_basket.time_alarm = waitUntilTriggered(LBSKTSIG);
+    if (left_basket.time_alarm == true){
+      /* Test failed due to timeout */
+      drawPostTestMenu(test_status);
+      setActiveMenu(POSTTEST);
+      break; // Go to post test screen
+    }
     waitUntilTriggered(RBSKTSIG); // Check to see if right basket lift is powered
 
     /*
@@ -365,9 +414,14 @@ void loop()
     drawResultsMenu();
     setActiveMenu(RESULTS);
     break;
+  /* Case 4 happens when the PIM info button is pressed on the results screen */
   case 4:
     drawPIMInfoMenu();
     setActiveMenu(PIMINFO);
+    break;
+  case 5:
+    drawPumpInfoMenu();
+    setActiveMenu(PUMPINFO);
     break;
   }
 }

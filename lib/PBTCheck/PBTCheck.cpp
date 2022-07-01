@@ -31,14 +31,23 @@ void ADCSetup()
  * Recommend "inverted" logic for event b/c hardware configuration is open drain.
  * If you so desire to switch the event trigger to HIGH you can.
  */
-void waitUntilTriggered(int pin, int event = LOW)
+
+
+bool waitUntilTriggered(int pin, unsigned long timeout, int event = LOW)
 {
+    unsigned long start_time = millis();
+    unsigned long end_time = start_time;
     bool event_triggered = false;
     while (!event_triggered)
     {
+        end_time = millis();
         if (digitalRead(pin) == event)
         {
             event_triggered = true;
+            return false; // Returns whether alarm should be active or not
+        }
+        else if (end_time - start_time >= timeout){
+            return true; // Returns whether alarm should be active or not
         }
     }
 }
