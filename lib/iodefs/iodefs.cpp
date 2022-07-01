@@ -16,7 +16,7 @@ void initPins(){
     pinMode(INPUT, GASVALVESIG);
     pinMode(INPUT, BLCTRLPWRSIG);
     pinMode(INPUT, BLPWRNEUSIG);
-    pinMode(INPUT, BSKTGNDSIG);
+    pinMode(INPUT, BSKTPWRSIG);
     pinMode(OUTPUT, POWERCTRL);
     /*
      * Add auxiliary IOs from terminal block and

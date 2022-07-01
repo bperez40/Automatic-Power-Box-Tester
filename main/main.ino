@@ -28,6 +28,11 @@ signalinfo_t SolenoidValve;
 signalinfo_t BlowerPower;
 signalinfo_t GasValve;
 signalinfo_t PumpPower;
+signalinfo_t PowerOn;
+signalinfo_t BlowerControl;
+signalinfo_t BlowerPowerNeutral;
+signalinfo_t BasketPower;
+signalinfo_t Alarm;
 
 void initDisplay()
 {
@@ -257,7 +262,7 @@ void drawResultsMenu()
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
   tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);  // Outline for PIM progress box
-  if(!GasValve.alarm && !BlowerPower.alarm){
+  if(!Alarm.alarm && !BlowerPowerNeutral.alarm && !BlowerControl.alarm && !GasValve.alarm && !BlowerPower.alarm && !PowerOn.alarm){
     tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN);  // PIM progess box post completion
   }
   else{
@@ -271,7 +276,7 @@ void drawResultsMenu()
     tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_RED); // PUMP progess box post completion
   }
   tft.fillRoundRect(550, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
-  if(!RightBasket.alarm && !LeftBasket.alarm){
+  if(!BasketPower.alarm && !RightBasket.alarm && !LeftBasket.alarm){
    tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_GREEN); // Basket progess box post completion
   }
   else{
@@ -353,6 +358,8 @@ void loop()
     /*
      * Start of PIM check
      */
+    PowerOn.time_limit = 1000;
+    PowerOn.alarm = waitUntilTriggered(PONSIG);
     Serial.println("Starting PBT Check");
     digitalWrite(THCALLCTRL, HIGH); // Call for heat
 
@@ -361,6 +368,10 @@ void loop()
      */
     BlowerPower.time_limit = 1000;
     BlowerPower.alarm = waitUntilTriggered(BLPWRSIG);
+    BlowerControl.time_limit = 1000;
+    BlowerControl.alarm = waitUntilTriggered(BLCTRLPWRSIG);
+    BlowerPowerNeutral.time_limit = 1000;
+    BlowerPowerNeutral.alarm = waitUntilTriggered(BLPWRNEUSIG);
 
     Serial.println("Blower powered");
 
@@ -372,6 +383,9 @@ void loop()
     Serial.println("Gas valve is activated");
 
     /* This is where spark detection would go */
+
+    Alarm.time_limit = 1000;
+    Alarm.alarm = waitUntilTriggered(ALARMSIG, Alarm.time_limit, HIGH); // It's good if this signal ISN'T active
 
     Serial.println("Starting high duty ADC measurements");
     // dutyCheck(0.55, 0.70);
@@ -404,6 +418,8 @@ void loop()
      * Basket lift check
      */
     digitalWrite(BSKTCTRL, HIGH); // Activate basket control relay
+    BasketPower.time_limit = 1000;
+    BasketPower.alarm = waitUntilTriggered(BSKTPWRSIG);
     LeftBasket.time_limit = 1000; // Timeout time in milliseconds
     LeftBasket.alarm = waitUntilTriggered(LBSKTSIG);
     RightBasket.time_limit = 1000;
@@ -412,7 +428,7 @@ void loop()
     /*
      * End of basket lift check
      */
-    if (LeftBasket.alarm || RightBasket.alarm || SolenoidValve.alarm || PumpPower.alarm || GasValve.alarm || BlowerPower.alarm)
+    if (Alarm.alarm || BasketPower.alarm || BlowerPowerNeutral.alarm || BlowerControl.alarm || RightBasket.alarm || SolenoidValve.alarm || PumpPower.alarm || GasValve.alarm || BlowerPower.alarm || PowerOn.alarm)
     {
       test_status = false;
     }

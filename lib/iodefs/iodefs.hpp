@@ -27,7 +27,7 @@
 #define SCK 52
 #define CS 53
 #define BLPWRNEUSIG 64
-#define BSKTGNDSIG 65
+#define BSKTPWRSIG 65
 #define POWERCTRL 12
 #define SPA1 66
 #define SPA2 67
