@@ -13,11 +13,10 @@
  * May required adjusting.
  */
 #define CYCLES 5
-#define PWMTIME 1000 // Time to allow PWM measurement in milliseconds
 
 void ADCSetup();
 bool waitUntilTriggered(int pin, unsigned long timeout = 1000, int event = LOW);
-bool dutyCheck(double low_threshold, double high_threshold);
+bool dutyCheck(double low_threshold, double high_threshold, unsigned long pwm_time);
 void runCheck();
 void halt();
 typedef struct signalinfo_t{

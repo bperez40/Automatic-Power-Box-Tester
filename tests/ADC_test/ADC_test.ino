@@ -28,7 +28,7 @@ PWM pwminst(ADCPIN, MAXSAMPLES, SAMPLEPERIOD);
 void setup()
 {
   Serial.begin(115200);
-  initPins();
+  pinMode(ADCPIN, INPUT);
 }
 
 void loop()
@@ -44,14 +44,15 @@ void loop()
   /*
    * End of ADC Setup
    */
-
-  bool pwm_low = false;
   int *x = new int[MAXSAMPLES];
   double duty = 0;
-  Serial.println("Starting ADC measurements");
+  Serial.println("Starting ADC measurements"); // Don't change this line - breaks visualizer
   pwminst.pwmMeasure(x);
   pwminst.printXContents(x);
-  Serial.println("Ending ADC measurements");
+  Serial.println("Ending ADC measurements"); // Don't change this line - breaks visualizer
+  Serial.println("Resultant duty cycle is: ");
+  Serial.println(pwminst.calcDutyCycle(x));
   Serial.println("Halting");
-  pwminst.halt();
+  while(true){
+  }
 }

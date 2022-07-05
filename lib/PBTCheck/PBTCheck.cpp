@@ -52,7 +52,7 @@ bool waitUntilTriggered(int pin, unsigned long timeout, int event = LOW)
     }
 }
 
-bool dutyCheck(double low_threshold, double high_threshold)
+bool dutyCheck(double low_threshold, double high_threshold, unsigned long pwm_time = 5000)
 {
     bool pwm_met = false;
     int *x = new int[MAXSAMPLES];
@@ -60,7 +60,7 @@ bool dutyCheck(double low_threshold, double high_threshold)
     int duty_count = 0;
     unsigned long start_time = millis();
     unsigned long end_time = start_time;
-    while (!pwm_met && end_time - start_time <= PWMTIME)
+    while (!pwm_met && end_time - start_time <= pwm_time)
     {
         end_time = millis();
         pwminst.pwmMeasure(x);           // Take a thousand samples at frequency defined in the PWM library and store them to array x

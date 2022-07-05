@@ -462,7 +462,7 @@ void loop()
 
     Serial.println("Starting low duty ADC measurements");
     LowDutyCycle.time_limit = 1000;
-    LowDutyCycle.alarm = dutyCheck(0.15, 0.25); // First and second parameters indicate acceptable range of duty cycles
+    LowDutyCycle.alarm = dutyCheck(0.15, 0.25, LowDutyCycle.time_limit); // First and second parameters indicate acceptable range of duty cycles
     Serial.println("Ending low duty ADC measurements");
 
     GasValve.time_limit = 1000;
@@ -475,8 +475,8 @@ void loop()
     Alarm.alarm = waitUntilTriggered(ALARMSIG, Alarm.time_limit, HIGH); // It's good if this signal ISN'T active
 
     Serial.println("Starting high duty ADC measurements");
-    HighDutyCycle.time_limit = 1000;
-    //HighDutyCycle.alarm = dutyCheck(0.55, 0.70);
+    HighDutyCycle.time_limit = 5000;
+    HighDutyCycle.alarm = dutyCheck(0.55, 0.70, HighDutyCycle.time_limit);
     Serial.println("Ending high duty ADC measurements");
     /*
      *
