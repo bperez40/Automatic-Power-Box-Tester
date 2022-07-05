@@ -151,7 +151,12 @@ double PWM::calcDutyCycle(int x_in[]){
     }
   }
   double period = (rise_time/2)+(fall_time/2)+high_time+low_time;
-  double duty_cycle = high_time/period;
-  return duty_cycle;
+  double graphed_duty_cycle = high_time/period; // Represents the graph abstracted duty cycle (less accurate)
+  double averaged_duty_cycle = 0; // Represents the averaged duty cycle from the gathered data (more accurate)
+  for(int i = 0; i < _max_samples; i++){
+    averaged_duty_cycle += x_in[i]/max_val; // Need scaling for duty cycle percentage (hence /max_val)
+  }
+  averaged_duty_cycle = averaged_duty_cycle/_max_samples;
+  return averaged_duty_cycle;
 }
 
