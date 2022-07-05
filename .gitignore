@@ -1,5 +1,6 @@
 .vscode/*
 .venv/*
+.build/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
