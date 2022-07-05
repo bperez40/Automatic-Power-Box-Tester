@@ -16,6 +16,12 @@
 #define PUMPINFO 5
 #define BSKTINFO 6
 
+/* Duty cycle bound options */
+#define HDHB 0.70
+#define HDLB 0.55
+#define LDHB 0.25
+#define LDLB 0.15
+
 Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
 uint16_t tx, ty;
 int option = -1;            // Not an option
@@ -462,7 +468,7 @@ void loop()
 
     Serial.println("Starting low duty ADC measurements");
     LowDutyCycle.time_limit = 1000;
-    LowDutyCycle.alarm = dutyCheck(0.15, 0.25, LowDutyCycle.time_limit); // First and second parameters indicate acceptable range of duty cycles
+    LowDutyCycle.alarm = dutyCheck(0.3, 0.5, LowDutyCycle.time_limit); // First and second parameters indicate acceptable range of duty cycles
     Serial.println("Ending low duty ADC measurements");
 
     GasValve.time_limit = 1000;
@@ -476,7 +482,7 @@ void loop()
 
     Serial.println("Starting high duty ADC measurements");
     HighDutyCycle.time_limit = 5000;
-    HighDutyCycle.alarm = dutyCheck(0.55, 0.70, HighDutyCycle.time_limit);
+    HighDutyCycle.alarm = dutyCheck(HDLB, HDHB, HighDutyCycle.time_limit);
     Serial.println("Ending high duty ADC measurements");
     /*
      *

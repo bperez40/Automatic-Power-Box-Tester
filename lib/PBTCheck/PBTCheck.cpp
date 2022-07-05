@@ -71,7 +71,7 @@ bool dutyCheck(double low_threshold, double high_threshold, unsigned long pwm_ti
         }
         if (duty_count >= CYCLES)
         {
-            pwm_met == true;
+            pwm_met = true;
         }
     }
     delete (x); // Delete allocated memory to prevent memory leaks
