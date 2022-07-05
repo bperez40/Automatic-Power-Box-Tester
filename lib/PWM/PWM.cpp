@@ -157,6 +157,6 @@ double PWM::calcDutyCycle(int x_in[]){
     averaged_duty_cycle += x_in[i]/max_val; // Need scaling for duty cycle percentage (hence /max_val)
   }
   averaged_duty_cycle = averaged_duty_cycle/_max_samples;
-  return averaged_duty_cycle;
+  return graphed_duty_cycle;
 }
 
