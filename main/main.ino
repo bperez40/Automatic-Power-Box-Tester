@@ -442,6 +442,12 @@ void drawPumpInfoMenu()
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
   tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
   tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+  tft.textMode();
+  tft.textColor(RA8875_BLACK, RA8875_WHITE);
+  tft.textEnlarge(2);
+  tft.textSetCursor(240, 50);
+  tft.textWrite("Pump Test Info");
+  tft.textEnlarge(1);
   if (PumpPower.alarm)
   {
     tft.textSetCursor(100, 120);
@@ -477,6 +483,54 @@ void drawBasketInfoMenu()
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
   tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
   tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+  tft.textMode();
+  tft.textColor(RA8875_BLACK, RA8875_WHITE);
+  tft.textEnlarge(2);
+  tft.textSetCursor(220, 50);
+  tft.textWrite("Basket Test Info");
+  tft.textEnlarge(1);
+  if (BasketPower.alarm)
+  {
+    tft.textSetCursor(100, 120);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_RED);
+    tft.textWrite("Simulated basket lift not powered");
+  }
+  else
+  {
+    tft.textSetCursor(100, 120);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+    tft.textWrite("Simulated basket lift powered");
+  }
+  if (LeftBasket.alarm)
+  {
+    tft.textSetCursor(100, 160);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_RED);
+    tft.textWrite("Left basket lift signal not detected");
+  }
+  else
+  {
+    tft.textSetCursor(100, 160);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+    tft.textWrite("Left basket lift signal detected");
+  }
+  if (RightBasket.alarm)
+  {
+    tft.textSetCursor(100, 200);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_RED);
+    tft.textWrite("Right basket lift signal not detected");
+  }
+  else
+  {
+    tft.textSetCursor(100, 200);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+    tft.textWrite("Right basket lift signal detected");
+  }
 }
 
 void setup()
@@ -533,7 +587,7 @@ void loop()
     Serial.println("Gas valve is activated");
 
     /* This is where spark detection would go */
-    
+
     drawPreTestMenu(5);
 
     Alarm.time_limit = 1000;
@@ -560,7 +614,7 @@ void loop()
     SolenoidValve.alarm = waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit, HIGH);
     Serial.println("Solenoid valve signal not active too early");
     /* If this part succeeds, test will progress */
-    digitalWrite(SVALVECTRL, HIGH);                                                // Should make that SVALVESIG signal active
+    digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
     drawPreTestMenu(8);
     SolenoidValve.alarm = waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit); // Now, if it is triggered, it is active
     /* Note that this pump check needs to happen after
@@ -568,7 +622,7 @@ void loop()
      * will not be powered — even if the pump motor relay
      * is activated
      */
-    
+
     drawPreTestMenu(9);
 
     digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
