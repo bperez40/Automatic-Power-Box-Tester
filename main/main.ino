@@ -191,36 +191,59 @@ void touchCheck()
   }
 }
 
-void drawPreTestMenu()
+void drawPreTestMenu(int state)
 {
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Could make the background a different color
-  /*
-  tft.fillRoundRect(40, 280, 160, 160, 15, RA8875_BLACK);   // Outline for PIM progress box
-  tft.fillRoundRect(45, 285, 150, 150, 15, RA8875_YELLOW);  // PIM progress box pre completion
-  tft.fillRoundRect(310, 280, 160, 160, 15, RA8875_BLACK);  // Outline for filter progress box
-  tft.fillRoundRect(315, 285, 150, 150, 15, RA8875_YELLOW); // Filter progress box pre completion
-  tft.fillRoundRect(580, 280, 160, 160, 15, RA8875_BLACK);  // Outline for filter progress box
-  tft.fillRoundRect(585, 285, 150, 150, 15, RA8875_YELLOW); // Filter progress box pre completion
-  */
   tft.textMode();
   tft.textSetCursor(200, 100); // Location of text title text
   tft.textEnlarge(2);          // Make text larger
   tft.textTransparent(RA8875_BLACK);
   tft.textWrite("Test In Progress");
-  /*
-  tft.textSetCursor(55, 340);
   tft.textEnlarge(1);
-  tft.textWrite("PIM Test");
-  tft.textSetCursor(345, 330);
-  tft.textWrite("Filter");
-  tft.textSetCursor(360, 360);
-  tft.textWrite("Test");
-  tft.textSetCursor(610, 330);
-  tft.textWrite("Basket");
-  tft.textSetCursor(625, 360);
-  tft.textWrite("Test");
-  */
+  tft.textSetCursor(100, 300);
+  switch (state)
+  {
+  case 1:
+    tft.textWrite("Checking for PIM power on");
+    break;
+  case 2:
+    tft.textWrite("Checking for blower power");
+    break;
+  case 3:
+    tft.textWrite("Checking for low duty cycle");
+    break;
+  case 4:
+    tft.textWrite("Checking for gas valve signal");
+    break;
+  case 5:
+    tft.textWrite("Checking alarm signal");
+    break;
+  case 6:
+    tft.textWrite("Checking for high duty cycle");
+    break;
+  case 7:
+    tft.textWrite("Checking for solenoid valve to be inactive");
+    break;
+  case 8:
+    tft.textWrite("Checking for solenoid valve to be active");
+    break;
+  case 9:
+    tft.textWrite("Checking for pump power");
+    break;
+  case 10:
+    tft.textWrite("Checking for basket lift power");
+    break;
+  case 11:
+    tft.textWrite("Checking for left basket lift signal");
+    break;
+  case 12:
+    tft.textWrite("Checking for right basket lift signal");
+    break;
+  default:
+    tft.textWrite("NULL");
+    break;
+  }
 }
 
 void drawPostTestMenu(bool test_success)
@@ -383,25 +406,29 @@ void drawPIMInfoMenu()
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Simulated gas valve was activated");
   }
-  if(LowDutyCycle.alarm){
+  if (LowDutyCycle.alarm)
+  {
     tft.textSetCursor(100, 240);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("Simulated blower never hit low duty cycle");
   }
-  else{
+  else
+  {
     tft.textSetCursor(100, 240);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Simulated blower reached low duty cycle");
   }
-  if(HighDutyCycle.alarm){
+  if (HighDutyCycle.alarm)
+  {
     tft.textSetCursor(100, 280);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("Simulated blower never hit high duty cycle");
   }
-  else{
+  else
+  {
     tft.textSetCursor(100, 280);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
@@ -415,6 +442,34 @@ void drawPumpInfoMenu()
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
   tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
   tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+  if (PumpPower.alarm)
+  {
+    tft.textSetCursor(100, 120);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_RED);
+    tft.textWrite("Simulated pump not powered");
+  }
+  else
+  {
+    tft.textSetCursor(100, 120);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+    tft.textWrite("Simulated pump successfully powered");
+  }
+  if (SolenoidValve.alarm)
+  {
+    tft.textSetCursor(100, 160);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_RED);
+    tft.textWrite("Simulated solenoid valve not activated");
+  }
+  else
+  {
+    tft.textSetCursor(100, 160);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+    tft.textWrite("Simulated solenoid valve activated");
+  }
 }
 void drawBasketInfoMenu()
 {
@@ -441,7 +496,7 @@ void loop()
   {
   /* Case 1 is draw test menu and start test*/
   case 1:
-    drawPreTestMenu();
+    drawPreTestMenu(1);
     active_menu = PRETEST;
     //  Function to setup fast ADC sampling
     ADCSetup();
@@ -451,12 +506,12 @@ void loop()
      */
     PowerOn.time_limit = 1000;
     PowerOn.alarm = waitUntilTriggered(PONSIG);
-    Serial.println("Starting PBT Check");
     digitalWrite(THCALLCTRL, HIGH); // Call for heat
 
     /*
      * Check for blower power. Otherwise, wait.
      */
+    drawPreTestMenu(2);
     BlowerPower.time_limit = 1000;
     BlowerPower.alarm = waitUntilTriggered(BLPWRSIG);
     BlowerControl.time_limit = 1000;
@@ -464,21 +519,27 @@ void loop()
     BlowerPowerNeutral.time_limit = 1000;
     BlowerPowerNeutral.alarm = waitUntilTriggered(BLPWRNEUSIG);
 
-    Serial.println("Blower powered");
+    drawPreTestMenu(3);
 
     Serial.println("Starting low duty ADC measurements");
     LowDutyCycle.time_limit = 1000;
-    LowDutyCycle.alarm = dutyCheck(0.3, 0.5, LowDutyCycle.time_limit); // First and second parameters indicate acceptable range of duty cycles
+    LowDutyCycle.alarm = dutyCheck(LDLB, LDHB, LowDutyCycle.time_limit); // First and second parameters indicate acceptable range of duty cycles
     Serial.println("Ending low duty ADC measurements");
+
+    drawPreTestMenu(4);
 
     GasValve.time_limit = 1000;
     GasValve.alarm = waitUntilTriggered(GASVALVESIG);
     Serial.println("Gas valve is activated");
 
     /* This is where spark detection would go */
+    
+    drawPreTestMenu(5);
 
     Alarm.time_limit = 1000;
     Alarm.alarm = waitUntilTriggered(ALARMSIG, Alarm.time_limit, HIGH); // It's good if this signal ISN'T active
+
+    drawPreTestMenu(6);
 
     Serial.println("Starting high duty ADC measurements");
     HighDutyCycle.time_limit = 5000;
@@ -493,17 +554,23 @@ void loop()
     /*
      * Filter electronics check
      */
+    drawPreTestMenu(7);
+
     SolenoidValve.time_limit = 8000;
     SolenoidValve.alarm = waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit, HIGH);
     Serial.println("Solenoid valve signal not active too early");
     /* If this part succeeds, test will progress */
     digitalWrite(SVALVECTRL, HIGH);                                                // Should make that SVALVESIG signal active
+    drawPreTestMenu(8);
     SolenoidValve.alarm = waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit); // Now, if it is triggered, it is active
     /* Note that this pump check needs to happen after
      * the solenoid valve is activated, otherwise, it
      * will not be powered — even if the pump motor relay
      * is activated
      */
+    
+    drawPreTestMenu(9);
+
     digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
     PumpPower.time_limit = 1000;
     PumpPower.alarm = waitUntilTriggered(PMPWRSIG); // Wait to see if the pump motor would receive power
@@ -511,11 +578,20 @@ void loop()
     /*
      * Basket lift check
      */
+
+    drawPreTestMenu(10);
+
     digitalWrite(BSKTCTRL, HIGH); // Activate basket control relay
     BasketPower.time_limit = 1000;
     BasketPower.alarm = waitUntilTriggered(BSKTPWRSIG);
+
+    drawPreTestMenu(11);
+
     LeftBasket.time_limit = 1000; // Timeout time in milliseconds
     LeftBasket.alarm = waitUntilTriggered(LBSKTSIG);
+
+    drawPreTestMenu(12);
+
     RightBasket.time_limit = 1000;
     RightBasket.alarm = waitUntilTriggered(RBSKTSIG);
 
