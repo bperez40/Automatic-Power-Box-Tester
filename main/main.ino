@@ -59,11 +59,9 @@ void initDisplay()
 
   if (!tft.begin(RA8875_800x480))
   {
-    Serial.println("RA8875 Not Found!");
     while (1)
       ;
   }
-  Serial.println("Found RA8875");
   tft.displayOn(true);
   tft.GPIOX(true);                              // Enable TFT - display enable tied to GPIOX
   tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
@@ -195,13 +193,16 @@ void drawPreTestMenu(int state)
 {
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Could make the background a different color
+  tft.fillRect(160, 40, 480, 140, RA8875_BLACK);
+  tft.fillRect(165, 45, 465, 125, RA8875_WHITE);
   tft.textMode();
-  tft.textSetCursor(200, 100); // Location of text title text
-  tft.textEnlarge(2);          // Make text larger
+  tft.textSetCursor(200, 75); // Location of text title text
+  tft.textEnlarge(2);         // Make text larger
   tft.textTransparent(RA8875_BLACK);
   tft.textWrite("Test In Progress");
   tft.textEnlarge(1);
-  tft.textSetCursor(100, 300);
+  tft.textSetCursor(60, 300);
+
   switch (state)
   {
   case 1:
@@ -296,8 +297,8 @@ void drawResultsMenu()
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Could make the background a different color
   // Redraw screen for test completion
-  tft.graphicsMode();
-  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
+  tft.fillRect(150, 40, 485, 140, RA8875_BLACK);
+  tft.fillRect(155, 45, 470, 125, RA8875_WHITE);
   tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
   if (!HighDutyCycle.alarm && !LowDutyCycle.alarm && !Alarm.alarm && !BlowerPowerNeutral.alarm && !BlowerControl.alarm && !GasValve.alarm && !BlowerPower.alarm && !PowerOn.alarm)
   {
@@ -575,16 +576,13 @@ void loop()
 
     drawPreTestMenu(3);
 
-    Serial.println("Starting low duty ADC measurements");
     LowDutyCycle.time_limit = 1000;
     LowDutyCycle.alarm = dutyCheck(LDLB, LDHB, LowDutyCycle.time_limit); // First and second parameters indicate acceptable range of duty cycles
-    Serial.println("Ending low duty ADC measurements");
 
     drawPreTestMenu(4);
 
     GasValve.time_limit = 1000;
     GasValve.alarm = waitUntilTriggered(GASVALVESIG);
-    Serial.println("Gas valve is activated");
 
     /* This is where spark detection would go */
 
@@ -595,10 +593,8 @@ void loop()
 
     drawPreTestMenu(6);
 
-    Serial.println("Starting high duty ADC measurements");
     HighDutyCycle.time_limit = 5000;
     HighDutyCycle.alarm = dutyCheck(HDLB, HDHB, HighDutyCycle.time_limit);
-    Serial.println("Ending high duty ADC measurements");
     /*
      *
      * End of PIM check
@@ -612,7 +608,7 @@ void loop()
 
     SolenoidValve.time_limit = 8000;
     SolenoidValve.alarm = waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit, HIGH);
-    Serial.println("Solenoid valve signal not active too early");
+
     /* If this part succeeds, test will progress */
     digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
     drawPreTestMenu(8);
