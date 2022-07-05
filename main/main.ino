@@ -21,17 +21,25 @@ uint16_t tx, ty;
 int option = -1;            // Not an option
 int active_menu = MAINMENU; // Starts on main menu
 bool test_status = false;
+
+/* Initialize all the signal info structures for this test.*/
+
+/* Basket lift structures */
+signalinfo_t BasketPower;
 signalinfo_t LeftBasket;
 signalinfo_t RightBasket;
+/* Filter electronics structures */
+signalinfo_t PumpPower;
 signalinfo_t SolenoidValve;
-/* Initialize all the signal info structures for this test. Will reinitialize them every test*/
+
+/* PIM structures */
 signalinfo_t BlowerPower;
 signalinfo_t GasValve;
-signalinfo_t PumpPower;
 signalinfo_t PowerOn;
 signalinfo_t BlowerControl;
 signalinfo_t BlowerPowerNeutral;
-signalinfo_t BasketPower;
+signalinfo_t LowDutyCycle;
+signalinfo_t HighDutyCycle;
 signalinfo_t Alarm;
 
 void initDisplay()
@@ -262,7 +270,7 @@ void drawResultsMenu()
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
   tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
-  if (!Alarm.alarm && !BlowerPowerNeutral.alarm && !BlowerControl.alarm && !GasValve.alarm && !BlowerPower.alarm && !PowerOn.alarm)
+  if (!HighDutyCycle.alarm && !LowDutyCycle.alarm && !Alarm.alarm && !BlowerPowerNeutral.alarm && !BlowerControl.alarm && !GasValve.alarm && !BlowerPower.alarm && !PowerOn.alarm)
   {
     tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
   }
@@ -329,28 +337,69 @@ void drawPIMInfoMenu()
   tft.textWrite("PIM Test Info");
   if (PowerOn.alarm)
   {
-    tft.textSetCursor(130, 120);
+    tft.textSetCursor(100, 120);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
-    tft.textWrite("PIM board was not powered");
+    tft.textWrite("PIM was not powered");
   }
-  else{
-    tft.textSetCursor(130, 120);
+  else
+  {
+    tft.textSetCursor(100, 120);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
-    tft.textWrite("PIM board was powered");
+    tft.textWrite("PIM board was powered successfully");
   }
-  if(BlowerPower.alarm){
-    tft.textSetCursor(130, 160);
+  if (BlowerPower.alarm || BlowerControl.alarm)
+  {
+    tft.textSetCursor(100, 160);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
-    tft.textWrite("Blower was not powered");
+    tft.textWrite("Simulated blower was not powered");
   }
-  else{
-    tft.textSetCursor(130, 160);
+  else
+  {
+    tft.textSetCursor(100, 160);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
-    tft.textWrite("Blower was powered");
+    tft.textWrite("Simulated blower was powered successfully");
+  }
+  if (GasValve.alarm)
+  {
+    tft.textSetCursor(100, 200);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_RED);
+    tft.textWrite("Simulated gas valve was never activated");
+  }
+  else
+  {
+    tft.textSetCursor(100, 200);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+    tft.textWrite("Simulated gas valve was activated");
+  }
+  if(LowDutyCycle.alarm){
+    tft.textSetCursor(100, 240);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_RED);
+    tft.textWrite("Simulated blower never hit low duty cycle");
+  }
+  else{
+    tft.textSetCursor(100, 240);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+    tft.textWrite("Simulated blower reached low duty cycle");
+  }
+  if(HighDutyCycle.alarm){
+    tft.textSetCursor(100, 280);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_RED);
+    tft.textWrite("Simulated blower never hit high duty cycle");
+  }
+  else{
+    tft.textSetCursor(100, 280);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+    tft.textWrite("Simulated blower reached high duty cycle");
   }
 }
 
@@ -412,8 +461,10 @@ void loop()
     Serial.println("Blower powered");
 
     Serial.println("Starting low duty ADC measurements");
-    // dutyCheck(0.15, 0.25);
+    LowDutyCycle.time_limit = 1000;
+    LowDutyCycle.alarm = dutyCheck(0.15, 0.25); // First and second parameters indicate acceptable range of duty cycles
     Serial.println("Ending low duty ADC measurements");
+
     GasValve.time_limit = 1000;
     GasValve.alarm = waitUntilTriggered(GASVALVESIG);
     Serial.println("Gas valve is activated");
@@ -424,7 +475,8 @@ void loop()
     Alarm.alarm = waitUntilTriggered(ALARMSIG, Alarm.time_limit, HIGH); // It's good if this signal ISN'T active
 
     Serial.println("Starting high duty ADC measurements");
-    // dutyCheck(0.55, 0.70);
+    HighDutyCycle.time_limit = 1000;
+    //HighDutyCycle.alarm = dutyCheck(0.55, 0.70);
     Serial.println("Ending high duty ADC measurements");
     /*
      *
@@ -464,7 +516,7 @@ void loop()
     /*
      * End of basket lift check
      */
-    if (Alarm.alarm || BasketPower.alarm || BlowerPowerNeutral.alarm || BlowerControl.alarm || RightBasket.alarm || SolenoidValve.alarm || PumpPower.alarm || GasValve.alarm || BlowerPower.alarm || PowerOn.alarm)
+    if (HighDutyCycle.alarm || LowDutyCycle.alarm || Alarm.alarm || BasketPower.alarm || BlowerPowerNeutral.alarm || BlowerControl.alarm || RightBasket.alarm || SolenoidValve.alarm || PumpPower.alarm || GasValve.alarm || BlowerPower.alarm || PowerOn.alarm)
     {
       test_status = false;
     }
