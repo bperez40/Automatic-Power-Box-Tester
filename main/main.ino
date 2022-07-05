@@ -148,7 +148,7 @@ void touchCheck()
           option = 4;
         }
         /* If pump test box is touched */
-        else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 730)
+        else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 725)
         {
           option_selected = true;
           option = 5;
@@ -297,8 +297,8 @@ void drawResultsMenu()
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Could make the background a different color
   // Redraw screen for test completion
-  tft.fillRect(150, 40, 485, 140, RA8875_BLACK);
-  tft.fillRect(155, 45, 470, 125, RA8875_WHITE);
+  tft.fillRect(150, 40, 485, 140, RA8875_BLACK); // Title box outline
+  tft.fillRect(155, 45, 470, 125, RA8875_WHITE); // Title box fill
   tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
   if (!HighDutyCycle.alarm && !LowDutyCycle.alarm && !Alarm.alarm && !BlowerPowerNeutral.alarm && !BlowerControl.alarm && !GasValve.alarm && !BlowerPower.alarm && !PowerOn.alarm)
   {
@@ -360,6 +360,8 @@ void drawPIMInfoMenu()
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
   tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
   tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+  tft.fillRect(150, 40, 485, 80, RA8875_BLACK); // Title box outline
+  tft.fillRect(155, 45, 470, 65, RA8875_WHITE); // Title box fill
   tft.textMode();
   tft.textColor(RA8875_BLACK, RA8875_WHITE);
   tft.textEnlarge(2);
@@ -367,70 +369,70 @@ void drawPIMInfoMenu()
   tft.textWrite("PIM Test Info");
   if (PowerOn.alarm)
   {
-    tft.textSetCursor(100, 120);
+    tft.textSetCursor(100, 160);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("PIM was not powered");
   }
   else
   {
-    tft.textSetCursor(100, 120);
+    tft.textSetCursor(100, 160);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("PIM board was powered successfully");
   }
   if (BlowerPower.alarm || BlowerControl.alarm)
   {
-    tft.textSetCursor(100, 160);
+    tft.textSetCursor(100, 200);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("Simulated blower was not powered");
   }
   else
   {
-    tft.textSetCursor(100, 160);
+    tft.textSetCursor(100, 200);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Simulated blower was powered successfully");
   }
   if (GasValve.alarm)
   {
-    tft.textSetCursor(100, 200);
+    tft.textSetCursor(100, 240);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("Simulated gas valve was never activated");
   }
   else
   {
-    tft.textSetCursor(100, 200);
+    tft.textSetCursor(100, 240);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Simulated gas valve was activated");
   }
   if (LowDutyCycle.alarm)
   {
-    tft.textSetCursor(100, 240);
+    tft.textSetCursor(100, 280);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("Simulated blower never hit low duty cycle");
   }
   else
   {
-    tft.textSetCursor(100, 240);
+    tft.textSetCursor(100, 280);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Simulated blower reached low duty cycle");
   }
   if (HighDutyCycle.alarm)
   {
-    tft.textSetCursor(100, 280);
+    tft.textSetCursor(100, 320);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("Simulated blower never hit high duty cycle");
   }
   else
   {
-    tft.textSetCursor(100, 280);
+    tft.textSetCursor(100, 320);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Simulated blower reached high duty cycle");
@@ -443,6 +445,8 @@ void drawPumpInfoMenu()
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
   tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
   tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+  tft.fillRect(150, 40, 525, 80, RA8875_BLACK); // Title box outline
+  tft.fillRect(155, 45, 510, 65, RA8875_WHITE); // Title box fill
   tft.textMode();
   tft.textColor(RA8875_BLACK, RA8875_WHITE);
   tft.textEnlarge(2);
@@ -451,28 +455,28 @@ void drawPumpInfoMenu()
   tft.textEnlarge(1);
   if (PumpPower.alarm)
   {
-    tft.textSetCursor(100, 120);
+    tft.textSetCursor(100, 160);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("Simulated pump not powered");
   }
   else
   {
-    tft.textSetCursor(100, 120);
+    tft.textSetCursor(100, 160);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Simulated pump successfully powered");
   }
   if (SolenoidValve.alarm)
   {
-    tft.textSetCursor(100, 160);
+    tft.textSetCursor(100, 200);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("Simulated solenoid valve not activated");
   }
   else
   {
-    tft.textSetCursor(100, 160);
+    tft.textSetCursor(100, 200);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Simulated solenoid valve activated");
@@ -484,6 +488,8 @@ void drawBasketInfoMenu()
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
   tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
   tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+  tft.fillRect(150, 40, 525, 80, RA8875_BLACK); // Title box outline
+  tft.fillRect(155, 45, 510, 65, RA8875_WHITE); // Title box fill
   tft.textMode();
   tft.textColor(RA8875_BLACK, RA8875_WHITE);
   tft.textEnlarge(2);
@@ -492,42 +498,42 @@ void drawBasketInfoMenu()
   tft.textEnlarge(1);
   if (BasketPower.alarm)
   {
-    tft.textSetCursor(100, 120);
+    tft.textSetCursor(100, 160);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("Simulated basket lift not powered");
   }
   else
   {
-    tft.textSetCursor(100, 120);
+    tft.textSetCursor(100, 160);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Simulated basket lift powered");
   }
   if (LeftBasket.alarm)
   {
-    tft.textSetCursor(100, 160);
+    tft.textSetCursor(100, 200);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("Left basket lift signal not detected");
   }
   else
   {
-    tft.textSetCursor(100, 160);
+    tft.textSetCursor(100, 200);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Left basket lift signal detected");
   }
   if (RightBasket.alarm)
   {
-    tft.textSetCursor(100, 200);
+    tft.textSetCursor(100, 240);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_RED);
     tft.textWrite("Right basket lift signal not detected");
   }
   else
   {
-    tft.textSetCursor(100, 200);
+    tft.textSetCursor(100, 240);
     tft.textEnlarge(1);
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Right basket lift signal detected");
