@@ -60,7 +60,7 @@ This is essentially a configuration file for the CLI.
 
 Next, you should run the arduino-cli board list command to figure out the FQBN (Fully Qualified Board Name). Then, to compile main, run the arduino-cli compile command, with:
 
-arduino-cli.exe compile {PATH-TO-MAIN}
+arduino-cli.exe compile -b {FQBN} {PATH-TO-MAIN}
 
 The CLI will install some required libraries. Next, run the setup script in the util folder called setup.bat. This will take the packages in lib and put them in the folder that the Arduino CLI looks at to compile user libraries.
 
@@ -69,6 +69,8 @@ Chances are at some point the CLI will give you an error and suggest that you in
 Now, to upload a program, use the following:
 
 arduino-cli.exe upload -p {PORT-ARDUINO-IS-CONNECTED-TO} {PATH-TO-main.ino}
+
+This is probably pretty intuitive, but every time you change main.ino, you have to run the compile command and then the upload command. If you adjust one of the libraries in the lib folder, run the setup script again.
 
 If something here doesn't work, use your brain. Or Google.
 

@@ -15,6 +15,7 @@
 #define PIMINFO 4
 #define PUMPINFO 5
 #define BSKTINFO 6
+#define RECOM 7
 
 /* Duty cycle bound options */
 #define HDHB 0.70
@@ -96,9 +97,11 @@ void drawMainMenu()
 
 void touchCheck()
 {
+  Serial.println("Touch check called");
   float xScale = 1024.0F / tft.width();
   float yScale = 1024.0F / tft.height();
   bool option_selected = false;
+  bool untouched = false;
   /* Wait around for touch events */
   while (!option_selected)
   {
@@ -108,83 +111,101 @@ void touchCheck()
       Serial.print(tx);
       Serial.print(", ");
       Serial.println(ty);
-      /* Switch statement controls which menu inputs it should be looking for, which is dependent on the active screen */
-      switch (active_menu)
+      if (!untouched) /* Prevents accidental inputs */
       {
-      case MAINMENU:
-        if (tx >= 400 && tx <= 630 && ty >= 250 && ty <= 400)
-        {                         // Location for start test button
-          option_selected = true; // Leave touch loop
-          option = 1;             // Trigger test start option
-        }
-        break;
-      case PRETEST:
-        break;
-      case POSTTEST:
-        /* If exit is touched */
-        if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290) // Note that these locations don't line up with the pixel locations
-        {
-          option_selected = true;
-          option = 2;
-        }
-        /* If results button is touched */
-        else if (tx >= 380 && tx <= 640 && ty >= 760 && ty <= 890)
-        {
-          option_selected = true;
-          option = 3;
-        }
-        break;
-      case RESULTS:
-        /* If exit is touched */
-        if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290)
-        {
-          option_selected = true;
-          option = 2;
-        }
-        /* If PIM test box is touched */
-        else if (tx >= 88 && tx <= 295 && ty >= 450 && ty <= 720)
-        {
-          option_selected = true;
-          option = 4;
-        }
-        /* If pump test box is touched */
-        else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 725)
-        {
-          option_selected = true;
-          option = 5;
-        }
-        /* If basket test box is touched */
-        else if (tx >= 700 && tx <= 900 && ty >= 440 && ty <= 730)
-        {
-          option_selected = true;
-          option = 6;
-        }
-        break;
-      case PIMINFO:
-        /* If back is touched */
-        if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
-        {
-          option_selected = true;
-          option = 3;
-        }
-        break;
-      case PUMPINFO:
-        /* If back is touched */
-        if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
-        {
-          option_selected = true;
-          option = 3;
-        }
-        break;
-      case BSKTINFO:
-        /* If back is touched */
-        if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
-        {
-          option_selected = true;
-          option = 3;
-        }
-        break;
       }
+      else
+      {
+        untouched = false;
+        /* Switch statement controls which menu inputs it should be looking for, which is dependent on the active screen */
+        switch (active_menu)
+        {
+        case MAINMENU:
+          if (tx >= 400 && tx <= 630 && ty >= 250 && ty <= 400)
+          {                         // Location for start test button
+            option_selected = true; // Leave touch loop
+            option = 1;             // Trigger test start option
+          }
+          break;
+        case PRETEST:
+          break;
+        case POSTTEST:
+          /* If exit is touched */
+          if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290) // Note that these locations don't line up with the pixel locations
+          {
+            option_selected = true;
+            option = 2;
+          }
+          /* If results button is touched */
+          else if (tx >= 380 && tx <= 640 && ty >= 760 && ty <= 890)
+          {
+            option_selected = true;
+            option = 3;
+          }
+          break;
+        case RESULTS:
+          /* If exit is touched */
+          if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290)
+          {
+            option_selected = true;
+            option = 2;
+          }
+          /* If PIM test box is touched */
+          else if (tx >= 88 && tx <= 295 && ty >= 450 && ty <= 720)
+          {
+            option_selected = true;
+            option = 4;
+          }
+          /* If pump test box is touched */
+          else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 725)
+          {
+            option_selected = true;
+            option = 5;
+          }
+          /* If basket test box is touched */
+          else if (tx >= 700 && tx <= 900 && ty >= 440 && ty <= 730)
+          {
+            option_selected = true;
+            option = 6;
+          }
+          /* If recommendations box is touched */
+          else if (tx >= 310 && tx <= 680 && ty >= 760 && ty <= 870)
+          {
+            option_selected = true;
+            option = 7;
+          }
+          break;
+        case PIMINFO:
+          /* If back is touched */
+          if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
+          {
+            option_selected = true;
+            option = 3;
+          }
+          break;
+        case PUMPINFO:
+          /* If back is touched */
+          if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
+          {
+            option_selected = true;
+            option = 3;
+          }
+          break;
+        case BSKTINFO:
+          /* If back is touched */
+          if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
+          {
+            option_selected = true;
+            option = 3;
+          }
+          break;
+        }
+      }
+    }
+    else
+    {
+      tx = ty = 0;
+      untouched = true;
     }
   }
 }
@@ -297,10 +318,12 @@ void drawResultsMenu()
   tft.graphicsMode();
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Could make the background a different color
   // Redraw screen for test completion
-  tft.fillRect(150, 40, 485, 140, RA8875_BLACK); // Title box outline
-  tft.fillRect(155, 45, 470, 125, RA8875_WHITE); // Title box fill
-  tft.fillRoundRect(230, 380, 300, 60, 15, RA8875_BLACK); // Recommendations box outline
-  tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
+  tft.fillRect(150, 40, 485, 140, RA8875_BLACK);                // Title box outline
+  tft.fillRect(155, 45, 470, 125, RA8875_WHITE);                // Title box fill
+  tft.fillRoundRect(230, 380, 300, 60, 15, RA8875_BLACK);       // Recommendations box outline
+  tft.fillRoundRect(235, 385, 290, 50, 15, RA8875_WHITE);       // Recommendations box fill
+  tft.fillTriangle(490, 395, 490, 425, 510, 410, RA8875_BLACK); // Arrow for recommendations box
+  tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
   if (!HighDutyCycle.alarm && !LowDutyCycle.alarm && !Alarm.alarm && !BlowerPowerNeutral.alarm && !BlowerControl.alarm && !GasValve.alarm && !BlowerPower.alarm && !PowerOn.alarm)
   {
     tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
@@ -353,6 +376,8 @@ void drawResultsMenu()
   tft.textSetCursor(165, 100); // Location of subtitle text
   tft.textEnlarge(1);
   tft.textWrite("(Tap on boxes for more info)");
+  tft.textSetCursor(240, 390);
+  tft.textWrite("Recommendations");
 }
 
 void drawPIMInfoMenu()
@@ -361,8 +386,8 @@ void drawPIMInfoMenu()
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
   tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
   tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
-  tft.fillRect(150, 40, 485, 80, RA8875_BLACK); // Title box outline
-  tft.fillRect(155, 45, 470, 65, RA8875_WHITE); // Title box fill
+  tft.fillRect(150, 40, 485, 80, RA8875_BLACK);             // Title box outline
+  tft.fillRect(155, 45, 470, 65, RA8875_WHITE);             // Title box fill
   tft.textMode();
   tft.textColor(RA8875_BLACK, RA8875_WHITE);
   tft.textEnlarge(2);
@@ -446,8 +471,8 @@ void drawPumpInfoMenu()
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
   tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
   tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
-  tft.fillRect(150, 40, 525, 80, RA8875_BLACK); // Title box outline
-  tft.fillRect(155, 45, 510, 65, RA8875_WHITE); // Title box fill
+  tft.fillRect(150, 40, 525, 80, RA8875_BLACK);             // Title box outline
+  tft.fillRect(155, 45, 510, 65, RA8875_WHITE);             // Title box fill
   tft.textMode();
   tft.textColor(RA8875_BLACK, RA8875_WHITE);
   tft.textEnlarge(2);
@@ -489,8 +514,8 @@ void drawBasketInfoMenu()
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
   tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
   tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
-  tft.fillRect(150, 40, 525, 80, RA8875_BLACK); // Title box outline
-  tft.fillRect(155, 45, 510, 65, RA8875_WHITE); // Title box fill
+  tft.fillRect(150, 40, 525, 80, RA8875_BLACK);             // Title box outline
+  tft.fillRect(155, 45, 510, 65, RA8875_WHITE);             // Title box fill
   tft.textMode();
   tft.textColor(RA8875_BLACK, RA8875_WHITE);
   tft.textEnlarge(2);
@@ -539,6 +564,12 @@ void drawBasketInfoMenu()
     tft.textColor(RA8875_BLACK, RA8875_GREEN);
     tft.textWrite("Right basket lift signal detected");
   }
+}
+
+void drawRecommendationsMenu()
+{
+  tft.graphicsMode();
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Background
 }
 
 void setup()
@@ -688,6 +719,10 @@ void loop()
   case 6:
     drawBasketInfoMenu();
     active_menu = BSKTINFO;
+    break;
+  case 7:
+    drawRecommendationsMenu();
+    active_menu = RECOM;
     break;
   }
 }
