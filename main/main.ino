@@ -199,10 +199,17 @@ void touchCheck()
             option = 3;
           }
           break;
+        case RECOM:
+          /* If back is touched */
+          if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
+          {
+            option_selected = true;
+            option = 3;
+          }
         }
       }
     }
-    else
+    else /* Used to prevent accidental inputs */
     {
       tx = ty = 0;
       untouched = true;
@@ -322,7 +329,8 @@ void drawResultsMenu()
   tft.fillRect(155, 45, 470, 125, RA8875_WHITE);                // Title box fill
   tft.fillRoundRect(230, 380, 300, 60, 15, RA8875_BLACK);       // Recommendations box outline
   tft.fillRoundRect(235, 385, 290, 50, 15, RA8875_WHITE);       // Recommendations box fill
-  tft.fillTriangle(490, 395, 490, 425, 510, 410, RA8875_BLACK); // Arrow for recommendations box
+  tft.fillTriangle(490, 395, 490, 425, 510, 410, RA8875_BLACK); // Arrow outline for recommendations box
+  tft.fillTriangle(493, 402, 493, 418, 505, 410, RA8875_GREEN); // Arrow fill for recommendations box
   tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
   if (!HighDutyCycle.alarm && !LowDutyCycle.alarm && !Alarm.alarm && !BlowerPowerNeutral.alarm && !BlowerControl.alarm && !GasValve.alarm && !BlowerPower.alarm && !PowerOn.alarm)
   {
@@ -569,7 +577,10 @@ void drawBasketInfoMenu()
 void drawRecommendationsMenu()
 {
   tft.graphicsMode();
-  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Background
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Background
+  tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
+  tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
+  tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
 }
 
 void setup()
