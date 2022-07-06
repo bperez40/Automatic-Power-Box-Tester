@@ -299,6 +299,7 @@ void drawResultsMenu()
   // Redraw screen for test completion
   tft.fillRect(150, 40, 485, 140, RA8875_BLACK); // Title box outline
   tft.fillRect(155, 45, 470, 125, RA8875_WHITE); // Title box fill
+  tft.fillRoundRect(230, 380, 300, 60, 15, RA8875_BLACK); // Recommendations box outline
   tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
   if (!HighDutyCycle.alarm && !LowDutyCycle.alarm && !Alarm.alarm && !BlowerPowerNeutral.alarm && !BlowerControl.alarm && !GasValve.alarm && !BlowerPower.alarm && !PowerOn.alarm)
   {
