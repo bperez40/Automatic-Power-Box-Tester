@@ -20,7 +20,7 @@ To run the script, either double click on setup.bat, or in the terminal, move to
 To compile and upload, select your target board type, the programmer and the communication port. In the command palette, type "Arduino: Upload" and press enter.
 
 # Using Arduino CLI (Instead of Arduino IDE w/ VSCode extension)
-In some ways, it's nice to use the CLI instead. This is a better avenue for cross-platform development generally speaking (not that it isn't already more or less cross-platform). Anyways, if you want to use the Arduino CLI to make your own custom configuration, start by downloading the Arduino CLI from Arduino.
+If you want to use the Arduino CLI to make your own custom configuration, start by downloading the Arduino CLI from Arduino.
 
 In my setup, I put the Arduino CLI in it's own gitignored folder within the root folder for this repo. So, C:/Arduino-Power-Box-Tester/.arduino-cli
 

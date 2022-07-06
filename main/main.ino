@@ -581,6 +581,30 @@ void drawRecommendationsMenu()
   tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
   tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
   tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+  tft.fillRect(180, 40, 410, 80, RA8875_BLACK);             // Title box outline
+  tft.fillRect(185, 45, 395, 65, RA8875_WHITE);             // Title box fill
+  tft.textMode();
+  tft.textSetCursor(200, 50);
+  tft.textColor(RA8875_BLACK, RA8875_WHITE);
+  tft.textEnlarge(2);
+  tft.textWrite("Recommendations");
+  tft.textEnlarge(1);
+  if (HighDutyCycle.alarm)
+  {
+    tft.textSetCursor(50, 150);
+    tft.textWrite("Check pin 6 on the blower connector.");
+    tft.textSetCursor(50, 190);
+    tft.textWrite("Make sure the wire is secure on both ends");
+    tft.textSetCursor(50, 230);
+    tft.textWrite("of the harness.");
+    tft.textSetCursor(50, 290);
+    tft.textWrite("Check inside the power box and ensure that");
+    tft.textSetCursor(50, 330);
+    tft.textWrite("the wire is routed correctly.");
+  }
+  else if (){
+
+  }
 }
 
 void setup()
