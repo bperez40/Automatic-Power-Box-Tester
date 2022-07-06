@@ -6,11 +6,12 @@ mkdir PBTCheck
 mkdir Adafruit_RA8875
 mkdir Adafruit-GFX-Library
 mkdir Adafruit_BusIO
-cd Arduino-Power-Box-Tester/lib/include
-copy "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\Arduino-Power-Box-Tester\lib\PWM" "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\libraries\PWM"
-copy "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\Arduino-Power-Box-Tester\lib\iodefs" "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\libraries\iodefs"
-copy "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\Arduino-Power-Box-Tester\lib\PBTCheck" "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\libraries\PBTCheck"
-copy "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\Arduino-Power-Box-Tester\lib\Adafruit_RA8875\Adafruit_RA8875.cpp" "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\libraries\Adafruit_RA8875\Adafruit_RA8875.cpp"
-copy "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\Arduino-Power-Box-Tester\lib\Adafruit_RA8875\Adafruit_RA8875.h" "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\libraries\Adafruit_RA8875\Adafruit_RA8875.h"
-copy "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\Arduino-Power-Box-Tester\lib\Adafruit-GFX-Library" "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\libraries\Adafruit-GFX-Library"
-copy "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\Arduino-Power-Box-Tester\lib\Adafruit_BusIO" "C:\Users\Bernardo.Perez\OneDrive - ITW Food Equipment Group, LLC\Arduino\libraries\Adafruit_BusIO"
+copy "C:\ArduinoSketchbook\Arduino-Power-Box-Tester\lib\PWM\PWM.cpp" "C:\ArduinoSketchbook\libraries\PWM\PWM.cpp"
+copy "C:\ArduinoSketchbook\Arduino-Power-Box-Tester\lib\PWM\PWM.hpp" "C:\ArduinoSketchbook\libraries\PWM\PWM.hpp"
+copy "C:\ArduinoSketchbook\Arduino-Power-Box-Tester\lib\iodefs\iodefs.cpp" "C:\ArduinoSketchbook\libraries\iodefs\iodefs.cpp"
+copy "C:\ArduinoSketchbook\Arduino-Power-Box-Tester\lib\iodefs\iodefs.hpp" "C:\ArduinoSketchbook\libraries\iodefs\iodefs.hpp"
+copy "C:\ArduinoSketchbook\Arduino-Power-Box-Tester\lib\PBTCheck\PBTCheck.cpp" "C:\ArduinoSketchbook\libraries\PBTCheck\PBTCheck.cpp"
+copy "C:\ArduinoSketchbook\Arduino-Power-Box-Tester\lib\PBTCheck\PBTCheck.hpp" "C:\ArduinoSketchbook\libraries\PBTCheck\PBTCheck.hpp"
+copy "C:\ArduinoSketchbook\Arduino-Power-Box-Tester\lib\Adafruit-GFX-Library" "C:\ArduinoSketchbook\libraries\Adafruit-GFX-Library"
+copy "C:\ArduinoSketchbook\Arduino-Power-Box-Tester\lib\Adafruit_RA8875" "C:\ArduinoSketchbook\libraries\Adafruit_RA8875"
+copy "C:\ArduinoSketchbook\Arduino-Power-Box-Tester\lib\Adafruit_BusIO" "C:\ArduinoSketchbook\libraries\Adafruit_BusIO"
