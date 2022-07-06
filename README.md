@@ -4,7 +4,7 @@ Summer 2022 ITW Vulcan Project
 # Cloning Repo
 When cloning this repo from GitHub, it is essential that you clone this into your Arduino's sketchbook folder. The batch scripts included assume you're operating in this folder and the Arduino compiler will look for the library files within the libraries folder of the sketchbook.
 
-# Setup for VSCode
+# Arduino Setup Using VSCode Extension
 Install the Arduino extension. This can be natively installed with the extensions. More information here: https://github.com/microsoft/vscode-arduino.
 
 Use the IntelliSense configuration outlined here (put this in .vscode/c_cpp_properties.json): https://learn.sparkfun.com/tutorials/efficient-arduino-programming-with-arduino-cli-and-visual-studio-code/all
@@ -18,6 +18,59 @@ copy "{path-to-src}" "{path-to-libraries}"
 To run the script, either double click on setup.bat, or in the terminal, move to the directory where setup.bat is located and enter ".\setup.bat"
 
 To compile and upload, select your target board type, the programmer and the communication port. In the command palette, type "Arduino: Upload" and press enter.
+
+# Using Arduino CLI (Instead of Arduino IDE w/ VSCode extension)
+In some ways, it's nice to use the CLI instead. This is a better avenue for cross-platform development generally speaking (not that it isn't already more or less cross-platform). Anyways, if you want to use the Arduino CLI to make your own custom configuration, start by downloading the Arduino CLI from Arduino.
+
+In my setup, I put the Arduino CLI in it's own gitignored folder within the root folder for this repo. So, C:/Arduino-Power-Box-Tester/.arduino-cli
+
+Next, you'll have to do some basic set up.
+
+First, in your arduino-cli directory, make a file called arduino-cli.yaml and paste the following, changing the paths as necessary:
+
+COPY BELOW THE LINE
+***************
+board_manager:
+  additional_urls: []
+daemon:
+  port: "50051"
+directories:
+  data: {PATH-TO-ARUINO-CLI}
+  downloads: {PATH-TO-ARUINO-CLI}\staging
+  user: {PATH-TO-ARUINO-CLI}
+library:
+  enable_unsafe_install: true
+logging:
+  file: ""
+  format: text
+  level: info
+metrics:
+  addr: :9090
+  enabled: true
+output:
+  no_color: false
+sketch:
+  always_export_binaries: false
+updater:
+  enable_notification: true
+***************
+COPY ABOVE THE LINE
+
+This is essentially a configuration file for the CLI.
+
+Next, you should run the arduino-cli board list command to figure out the FQBN (Fully Qualified Board Name). Then, to compile main, run the arduino-cli compile command, with:
+
+arduino-cli.exe compile {PATH-TO-MAIN}
+
+The CLI will install some required libraries. Next, run the setup script in the util folder called setup.bat. This will take the packages in lib and put them in the folder that the Arduino CLI looks at to compile user libraries.
+
+Chances are at some point the CLI will give you an error and suggest that you install the avr-gcc compiler. Go ahead and run the command it suggests.
+
+Now, to upload a program, use the following:
+
+arduino-cli.exe upload -p {PORT-ARDUINO-IS-CONNECTED-TO} {PATH-TO-main.ino}
+
+If something here doesn't work, use your brain. Or Google.
 
 # Running Python Scripts
 This part assumes you're running Windows.
