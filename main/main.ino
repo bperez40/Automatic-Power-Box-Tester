@@ -602,9 +602,6 @@ void drawRecommendationsMenu()
     tft.textSetCursor(50, 330);
     tft.textWrite("the wire is routed correctly.");
   }
-  else if (){
-
-  }
 }
 
 void setup()

@@ -54,9 +54,9 @@ COPY ABOVE THE LINE
 
 This is essentially a configuration file for the CLI.
 
-Next, you should run the arduino-cli board list command to figure out the FQBN (Fully Qualified Board Name). Then, to compile main, run the arduino-cli compile command, with:
+Next, you should run the arduino-cli board list command to figure out the FQBN (Fully Qualified Board Name). Then, to compile main, run the arduino-cli compile command (with CWD being the root folder), with:
 
-arduino-cli.exe compile -b {FQBN} {PATH-TO-MAIN}
+arduino-cli.exe compile --build-path ./build --libraries ./lib -b arduino:avr:mega main/main.ino
 
 The CLI will install some required libraries. Next, run the setup script in the util folder called setup.bat. This will take the packages in lib and put them in the folder that the Arduino CLI looks at to compile user libraries.
 
