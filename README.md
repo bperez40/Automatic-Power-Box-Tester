@@ -9,13 +9,9 @@ Install the Arduino extension. This can be natively installed with the extension
 
 Use the IntelliSense configuration outlined here (put this in .vscode/c_cpp_properties.json): https://learn.sparkfun.com/tutorials/efficient-arduino-programming-with-arduino-cli-and-visual-studio-code/all
 
-Before compiling for the first time, edit the setup.bat script in Util. On lines 5 and 6, change the copy commands to reflect the path to your Arduino sketchbook's libraries folder. Run this script anytime you change one of the libraries.
-The format of lines 5 and 6 should be as follows:
+Before compiling for the first time, run the setup.bat script in the util folder.
 
-copy "{path-to-include}" "{path-to-libraries}"
-copy "{path-to-src}" "{path-to-libraries}"
-
-To run the script, either double click on setup.bat, or in the terminal, move to the directory where setup.bat is located and enter ".\setup.bat"
+To run the script, either double click on setup.bat, or in a terminal move to the directory where setup.bat is located and enter ".\setup.bat"
 
 To compile and upload, select your target board type, the programmer and the communication port. In the command palette, type "Arduino: Upload" and press enter.
 
@@ -70,7 +66,7 @@ Now, to upload a program, use the following:
 
 arduino-cli.exe upload -p {PORT-ARDUINO-IS-CONNECTED-TO} {PATH-TO-main.ino}
 
-This is probably pretty intuitive, but every time you change main.ino, you have to run the compile command and then the upload command. If you adjust one of the libraries in the lib folder, run the setup script again.
+This is probably pretty intuitive, but every time you change main.ino, you have to run the compile command and then the upload command. If you adjust one of the libraries in the lib folder, run the setup script again (then compile and upload, yadda yadda yadda).
 
 If something here doesn't work, use your brain. Or Google.
 
