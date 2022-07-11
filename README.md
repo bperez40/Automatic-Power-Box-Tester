@@ -54,9 +54,15 @@ COPY ABOVE THE LINE
 
 This is essentially a configuration file for the CLI.
 
-Next, you should run the arduino-cli board list command to figure out the FQBN (Fully Qualified Board Name). Then, to compile main, run the arduino-cli compile command (with CWD being the root folder), with:
+If you don't want to be constantly annoyed, I recommend adding arduino-cli.exe to your PATH.
+
+To compile, run the following from your root folder:
 
 arduino-cli.exe compile --build-path ./build --libraries ./lib -b arduino:avr:mega main/main.ino
+
+To compile and upload, you can instead do:
+
+arduino-cli.exe compile --build-path ./build --libraries ./lib -b arduino:avr:mega -p COM4 -u main/main.ino
 
 The CLI will install some required libraries. Next, run the setup script in the util folder called setup.bat. This will take the packages in lib and put them in the folder that the Arduino CLI looks at to compile user libraries.
 
@@ -111,6 +117,12 @@ In the logging tab, set session logging to "All session output." Name the file w
 When you start a session, PuTTY will then create a log in the util folder.
 
 You can run the visualizer python script to then visualize the file's output, if you want to analyze ADC data in particular.
+
+If you want to start putty in your terminal of choice, run the following command:
+
+plink.exe -load {SAVED-PROFILE}
+
+Where the saved profile is one that you've previously set up. If plink.exe isn't found, make sure it's part of your PATH environment.
 
 # Creating images for the LCD display
 When displaying something on the LCD display, we have to use functions that directly translate some bytes into pixel locations. There's a neat project made by someone who had this exact intention in mind, and even supports Arduino and Adafruit formats. It's called image2cpp and can be found here: https://javl.github.io/image2cpp/.

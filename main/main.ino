@@ -52,10 +52,8 @@ signalinfo_t Alarm;
 void initDisplay()
 {
   /*
-   * Start main menu.
    * Display setup and open to main menu. Should have it go here when our program
    * initially starts, and possibly when a test is completed.
-   *
    */
 
   if (!tft.begin(RA8875_800x480))
@@ -79,20 +77,20 @@ void drawMainMenu()
   tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // White background
 
   // Boxes
-  tft.fillRoundRect(295, 95, 210, 60, 25, 0b0111101111101111);  // This is the box's border
-  tft.fillRoundRect(300, 100, 200, 50, 25, 0b0000000000000000); // This is the main box
+  tft.fillRoundRect(245, 95, 310, 160, 25, 0b0011101111100111);  // This is the start button's border
+  tft.fillRoundRect(250, 100, 300, 150, 25, 0b0000000000000000); // This is the start button
+  tft.fillRoundRect(245, 295, 310, 85, 25, 0b0111101111101111); // This is the configuration button's border
+  tft.fillRoundRect(250, 300, 300, 75, 25, RA8875_BLACK); // This is the configuration button
 
   // Write text in boxes
   tft.textMode();              // Switch from graphics mode to text mode
-  tft.textSetCursor(320, 108); // Location of text in first box
+  tft.textSetCursor(320, 155); // Location of text in first box
   tft.textEnlarge(1);          // Make text larger
   tft.textTransparent(RA8875_WHITE);
   tft.textWrite("Start Test");
-  /*
-   *
-   * End main menu
-   *
-   */
+  tft.textSetCursor(290, 320);
+  tft.textColor(RA8875_WHITE, RA8875_BLACK);
+  tft.textWrite("Configurations");
 }
 
 void touchCheck()
@@ -121,7 +119,7 @@ void touchCheck()
         switch (active_menu)
         {
         case MAINMENU:
-          if (tx >= 400 && tx <= 630 && ty >= 250 && ty <= 400)
+          if (tx >= 320 && tx <= 700 && ty >= 250 && ty <= 550)
           {                         // Location for start test button
             option_selected = true; // Leave touch loop
             option = 1;             // Trigger test start option
