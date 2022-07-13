@@ -6,6 +6,7 @@
 
 #define NAVYBLUE 0b0011100011101111
 #define DARKRED 0b0111100011100011
+#define GLOBAL_TIME_LIMIT 3000
 
 /* Active menu option */
 #define MAINMENU 0
@@ -16,6 +17,7 @@
 #define PUMPINFO 5
 #define BSKTINFO 6
 #define RECOM 7
+#define ABORTMENU 8
 
 /* Duty cycle bound options */
 #define HDHB 0.70
@@ -79,8 +81,8 @@ void drawMainMenu()
   // Boxes
   tft.fillRoundRect(245, 95, 310, 160, 25, 0b0011101111100111);  // This is the start button's border
   tft.fillRoundRect(250, 100, 300, 150, 25, 0b0000000000000000); // This is the start button
-  tft.fillRoundRect(245, 295, 310, 85, 25, 0b0111101111101111); // This is the configuration button's border
-  tft.fillRoundRect(250, 300, 300, 75, 25, RA8875_BLACK); // This is the configuration button
+  tft.fillRoundRect(245, 295, 310, 85, 25, 0b0111101111101111);  // This is the configuration button's border
+  tft.fillRoundRect(250, 300, 300, 75, 25, RA8875_BLACK);        // This is the configuration button
 
   // Write text in boxes
   tft.textMode();              // Switch from graphics mode to text mode
@@ -203,6 +205,13 @@ void touchCheck()
           {
             option_selected = true;
             option = 3;
+          }
+        case ABORTMENU:
+          /* If exit is touched */
+          if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290)
+          {
+            option_selected = true;
+            option = 2;
           }
         }
       }
@@ -602,6 +611,30 @@ void drawRecommendationsMenu()
   }
 }
 
+void drawAbortMenu(){
+  tft.graphicsMode();
+  tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_RED);    // Could make the background a different color
+  tft.fillRoundRect(225, 75, 330, 110, 15, RA8875_BLACK); // Box's border
+  tft.fillRoundRect(230, 80, 320, 100, 15, RA8875_WHITE); // Makes a box for the test status to stand out
+  tft.textMode();
+  tft.textSetCursor(250, 100); // Location of text title text
+  tft.textEnlarge(2);          // Make text larger
+  tft.textTransparent(RA8875_BLACK);
+  tft.textWrite("Test Aborted");
+  tft.textEnlarge(1);
+  tft.textColor(RA8875_WHITE, RA8875_RED);
+  tft.textSetCursor(140, 240);
+  tft.textWrite("Power box did not receive power");
+
+  /* Drawing exit box */
+  tft.fillRoundRect(40, 40, 40, 40, 5, RA8875_BLACK);     // Outline for exit box
+  tft.fillRoundRect(45, 45, 30, 30, 5, RA8875_RED);       // Exit box
+  tft.fillTriangle(45, 50, 45, 70, 55, 60, RA8875_WHITE); // First triangle to cut out red lines
+  tft.fillTriangle(75, 50, 75, 70, 65, 60, RA8875_WHITE); // Second triangle to cut out red lines
+  tft.fillTriangle(50, 45, 70, 45, 60, 55, RA8875_WHITE); // Third triangle to cut out red lines
+  tft.fillTriangle(50, 75, 70, 75, 60, 65, RA8875_WHITE); // Fourth triangle to cut out red lines
+}
+
 void setup()
 {
   Serial.begin(115200);
@@ -623,109 +656,137 @@ void loop()
     active_menu = PRETEST;
     //  Function to setup fast ADC sampling
     ADCSetup();
+
+    /* Reset test variables*/
     test_status = false; // Test is unsuccessful by default. Every test start, reset var
     /*
      * Start of PIM check
      */
-    PowerOn.time_limit = 1000;
-    PowerOn.alarm = waitUntilTriggered(PONSIG);
-    digitalWrite(THCALLCTRL, HIGH); // Call for heat
+    digitalWrite(POWERCTRL, HIGH);
 
-    /*
-     * Check for blower power. Otherwise, wait.
-     */
-    drawPreTestMenu(2);
-    BlowerPower.time_limit = 1000;
-    BlowerPower.alarm = waitUntilTriggered(BLPWRSIG);
-    BlowerControl.time_limit = 1000;
-    BlowerControl.alarm = waitUntilTriggered(BLCTRLPWRSIG);
-    BlowerPowerNeutral.time_limit = 1000;
-    BlowerPowerNeutral.alarm = waitUntilTriggered(BLPWRNEUSIG);
+    PowerOn.time_limit = GLOBAL_TIME_LIMIT;
+    PowerOn.alarm = waitUntilTriggered(PONSIG, PowerOn.time_limit);
 
-    drawPreTestMenu(3);
-
-    LowDutyCycle.time_limit = 1000;
-    LowDutyCycle.alarm = dutyCheck(LDLB, LDHB, LowDutyCycle.time_limit); // First and second parameters indicate acceptable range of duty cycles
-
-    drawPreTestMenu(4);
-
-    GasValve.time_limit = 1000;
-    GasValve.alarm = waitUntilTriggered(GASVALVESIG);
-
-    /* This is where spark detection would go */
-
-    drawPreTestMenu(5);
-
-    Alarm.time_limit = 1000;
-    Alarm.alarm = waitUntilTriggered(ALARMSIG, Alarm.time_limit, HIGH); // It's good if this signal ISN'T active
-
-    drawPreTestMenu(6);
-
-    HighDutyCycle.time_limit = 5000;
-    HighDutyCycle.alarm = dutyCheck(HDLB, HDHB, HighDutyCycle.time_limit);
-    /*
-     *
-     * End of PIM check
-     *
+    /* IMPORTANT
+     * You must have an abort exception if the relay on the PBT board is not powered
+     * this will cause a 24VAC path to draw high current through where it shouldn't,
+     * notably in the left basket and right basket tests.
      */
 
-    /*
-     * Filter electronics check
-     */
-    drawPreTestMenu(7);
-
-    SolenoidValve.time_limit = 8000;
-    SolenoidValve.alarm = waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit, HIGH);
-
-    /* If this part succeeds, test will progress */
-    digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
-    drawPreTestMenu(8);
-    SolenoidValve.alarm = waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit); // Now, if it is triggered, it is active
-    /* Note that this pump check needs to happen after
-     * the solenoid valve is activated, otherwise, it
-     * will not be powered — even if the pump motor relay
-     * is activated
-     */
-
-    drawPreTestMenu(9);
-
-    digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
-    PumpPower.time_limit = 1000;
-    PumpPower.alarm = waitUntilTriggered(PMPWRSIG); // Wait to see if the pump motor would receive power
-
-    /*
-     * Basket lift check
-     */
-
-    drawPreTestMenu(10);
-
-    digitalWrite(BSKTCTRL, HIGH); // Activate basket control relay
-    BasketPower.time_limit = 1000;
-    BasketPower.alarm = waitUntilTriggered(BSKTPWRSIG);
-
-    drawPreTestMenu(11);
-
-    LeftBasket.time_limit = 1000; // Timeout time in milliseconds
-    LeftBasket.alarm = waitUntilTriggered(LBSKTSIG);
-
-    drawPreTestMenu(12);
-
-    RightBasket.time_limit = 1000;
-    RightBasket.alarm = waitUntilTriggered(RBSKTSIG);
-
-    /*
-     * End of basket lift check
-     */
-    if (HighDutyCycle.alarm || LowDutyCycle.alarm || Alarm.alarm || BasketPower.alarm || BlowerPowerNeutral.alarm || BlowerControl.alarm || RightBasket.alarm || SolenoidValve.alarm || PumpPower.alarm || GasValve.alarm || BlowerPower.alarm || PowerOn.alarm)
+    if (PowerOn.alarm)
     {
-      test_status = false;
+      digitalWrite(POWERCTRL, LOW);
+      drawAbortMenu();
+      active_menu = ABORTMENU;
     }
     else
     {
-      test_status = true;
+      digitalWrite(THCALLCTRL, HIGH); // Call for heat
+
+      /*
+       * Check for blower power. Otherwise, wait.
+       */
+      drawPreTestMenu(2);
+      BlowerPower.time_limit = GLOBAL_TIME_LIMIT;
+      BlowerPower.alarm = waitUntilTriggered(BLPWRSIG, BlowerPower.time_limit);
+      BlowerControl.time_limit = GLOBAL_TIME_LIMIT;
+      BlowerControl.alarm = waitUntilTriggered(BLCTRLPWRSIG, BlowerControl.time_limit);
+      BlowerPowerNeutral.time_limit = GLOBAL_TIME_LIMIT;
+      BlowerPowerNeutral.alarm = waitUntilTriggered(BLPWRNEUSIG, BlowerPowerNeutral.time_limit);
+
+      drawPreTestMenu(3);
+
+      LowDutyCycle.time_limit = GLOBAL_TIME_LIMIT;
+      LowDutyCycle.alarm = dutyCheck(LDLB, LDHB, LowDutyCycle.time_limit); // First and second parameters indicate acceptable range of duty cycles
+
+      drawPreTestMenu(4);
+
+      GasValve.time_limit = GLOBAL_TIME_LIMIT;
+      GasValve.alarm = waitUntilTriggered(GASVALVESIG, GasValve.time_limit);
+
+      /* This is where spark detection would go */
+
+      drawPreTestMenu(5);
+
+      Alarm.time_limit = GLOBAL_TIME_LIMIT;
+      Alarm.alarm = waitUntilTriggered(ALARMSIG, Alarm.time_limit, HIGH); // It's good if this signal ISN'T active
+
+      drawPreTestMenu(6);
+
+      HighDutyCycle.time_limit = GLOBAL_TIME_LIMIT;
+      HighDutyCycle.alarm = dutyCheck(HDLB, HDHB, HighDutyCycle.time_limit);
+      /*
+       *
+       * End of PIM check
+       *
+       */
+
+      /*
+       * Filter electronics check
+       */
+      drawPreTestMenu(7);
+
+      SolenoidValve.time_limit = GLOBAL_TIME_LIMIT;
+      SolenoidValve.alarm = waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit, HIGH);
+
+      /* If this part succeeds, test will progress */
+      digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
+      drawPreTestMenu(8);
+      SolenoidValve.alarm = waitUntilTriggered(SVALVESIG, SolenoidValve.time_limit); // Now, if it is triggered, it is active
+      /* Note that this pump check needs to happen after
+       * the solenoid valve is activated, otherwise, it
+       * will not be powered — even if the pump motor relay
+       * is activated
+       */
+
+      drawPreTestMenu(9);
+
+      digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
+      PumpPower.time_limit = GLOBAL_TIME_LIMIT;
+      PumpPower.alarm = waitUntilTriggered(PMPWRSIG, PumpPower.time_limit); // Wait to see if the pump motor would receive power
+
+      /*
+       * Basket lift check
+       */
+
+      drawPreTestMenu(10);
+
+      digitalWrite(BSKTCTRL, HIGH); // Activate basket control relay
+      BasketPower.time_limit = GLOBAL_TIME_LIMIT;
+      BasketPower.alarm = waitUntilTriggered(BSKTPWRSIG, BasketPower.time_limit);
+
+      drawPreTestMenu(11);
+
+      LeftBasket.time_limit = GLOBAL_TIME_LIMIT; // Timeout time in milliseconds
+      LeftBasket.alarm = waitUntilTriggered(LBSKTSIG, LeftBasket.time_limit);
+
+      drawPreTestMenu(12);
+
+      RightBasket.time_limit = GLOBAL_TIME_LIMIT;
+      RightBasket.alarm = waitUntilTriggered(RBSKTSIG, RightBasket.time_limit);
+
+      /*
+       * End of basket lift check
+       */
+      if (HighDutyCycle.alarm || LowDutyCycle.alarm || Alarm.alarm || BasketPower.alarm || BlowerPowerNeutral.alarm || BlowerControl.alarm || RightBasket.alarm || SolenoidValve.alarm || PumpPower.alarm || GasValve.alarm || BlowerPower.alarm || PowerOn.alarm)
+      {
+        test_status = false;
+      }
+      else
+      {
+        test_status = true;
+      }
+      /* Disable GPIO */
+      digitalWrite(POWERCTRL, LOW);
+      digitalWrite(THCALLCTRL, LOW);
+      digitalWrite(SVALVECTRL, LOW);
+      digitalWrite(PUMPCTRL, LOW);
+      digitalWrite(BSKTCTRL, LOW);
+
+      /* Proceed to next menu */
+      drawPostTestMenu(test_status);
+      active_menu = POSTTEST;
     }
-    drawPostTestMenu(test_status);
-    active_menu = POSTTEST;
     break;
   /* Case 2 will bring you back to the main menu and reset necessary variables */
   case 2:

@@ -1,7 +1,7 @@
 #include <avr/wdt.h>
 
 void setup(){
-    pinMode(OUTPUT, 4);
+    pinMode(OUTPUT, 12);
 }
 
 unsigned long start_time = millis();
@@ -14,6 +14,5 @@ void reboot() {
 }
 
 void loop(){
-    analogWrite(4, 80);
-    reboot(); // Doesn't behave consistently without this
+    digitalWrite(12, HIGH);
 }
