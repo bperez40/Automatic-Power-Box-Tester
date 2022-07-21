@@ -3837,10 +3837,8 @@ Source: &lt;a href="https://componentsearchengine.com/Datasheets/1/BZX84C2V4-E3-
 <part name="J10" library="ADVANCEDPBTLIB" library_urn="urn:adsk.wipprod:fs.file:vf.HmO57ON0RU6SJHXO-VonIQ" deviceset="TB001-500-07BE" device=""/>
 <part name="D1" library="ADVANCEDPBTLIB" library_urn="urn:adsk.wipprod:fs.file:vf.HmO57ON0RU6SJHXO-VonIQ" deviceset="BZX84B10-E3-08" device=""/>
 <part name="D2" library="ADVANCEDPBTLIB" library_urn="urn:adsk.wipprod:fs.file:vf.HmO57ON0RU6SJHXO-VonIQ" deviceset="BZX84C2V4-E3-08" device=""/>
-<part name="R45" library="Resistor" deviceset="R-US" device="CHIP-0603(1608-METRIC)" package3d_urn="urn:adsk.eagle:package:16378565/2" technology="_" value="100K"/>
-<part name="R46" library="Resistor" deviceset="R-US" device="CHIP-0603(1608-METRIC)" package3d_urn="urn:adsk.eagle:package:16378565/2" technology="_" value="100K"/>
-<part name="C1" library="Capacitor" deviceset="C" device="CHIP-0603(1608-METRIC)" package3d_urn="urn:adsk.eagle:package:16290898/2" technology="_" value=".2uF"/>
-<part name="C2" library="Capacitor" deviceset="C" device="CHIP-0603(1608-METRIC)" package3d_urn="urn:adsk.eagle:package:16290898/2" technology="_" value=".2uF"/>
+<part name="C1" library="Capacitor" deviceset="C" device="CHIP-1206(3216-METRIC)" package3d_urn="urn:adsk.eagle:package:16290893/2" technology="_" value=".2uF"/>
+<part name="C2" library="Capacitor" deviceset="C" device="CHIP-1206(3216-METRIC)" package3d_urn="urn:adsk.eagle:package:16290893/2" technology="_" value=".2uF"/>
 <part name="U27" library="ADVANCEDPBTLIB" library_urn="urn:adsk.wipprod:fs.file:vf.HmO57ON0RU6SJHXO-VonIQ" deviceset="PZTA06" device="SOT-223_ONS"/>
 <part name="U28" library="ADVANCEDPBTLIB" library_urn="urn:adsk.wipprod:fs.file:vf.HmO57ON0RU6SJHXO-VonIQ" deviceset="PZTA06" device="SOT-223_ONS"/>
 <part name="R47" library="Resistor" deviceset="R-US" device="CHIP-0603(1608-METRIC)" package3d_urn="urn:adsk.eagle:package:16378565/2" technology="_" value="3300"/>
@@ -3853,6 +3851,8 @@ Source: &lt;a href="https://componentsearchengine.com/Datasheets/1/BZX84C2V4-E3-
 <part name="SUPPLY16" library="Power_Symbols" deviceset="GND-EARTH" device="" value="GND"/>
 <part name="J11" library="ADVANCEDPBTLIB" library_urn="urn:adsk.wipprod:fs.file:vf.HmO57ON0RU6SJHXO-VonIQ" deviceset="430450212" device="CON_430450212_MOL"/>
 <part name="SUPPLY17" library="Power_Symbols" deviceset="GND-EARTH" device="" value="GND"/>
+<part name="R45" library="Resistor" deviceset="R-US" device="CHIP-2512(6332-METRIC)" package3d_urn="urn:adsk.eagle:package:16378557/3" technology="_" value="100k"/>
+<part name="R46" library="Resistor" deviceset="R-US" device="CHIP-2512(6332-METRIC)" package3d_urn="urn:adsk.eagle:package:16378557/3" technology="_" value="100k"/>
 </parts>
 <sheets>
 <sheet>
@@ -4355,14 +4355,6 @@ for operation (but don't short 3v3 and !CS!)</text>
 <attribute name="NAME" x="-298.45" y="-30.48" size="1.778" layer="95" rot="R180" align="center-left"/>
 <attribute name="VALUE" x="-298.45" y="-27.94" size="1.778" layer="96" rot="R180" align="center-left"/>
 </instance>
-<instance part="R45" gate="G$1" x="-335.28" y="22.86" smashed="yes">
-<attribute name="NAME" x="-335.28" y="25.6286" size="1.778" layer="95" align="center"/>
-<attribute name="VALUE" x="-335.28" y="19.558" size="1.778" layer="96" align="center"/>
-</instance>
-<instance part="R46" gate="G$1" x="-337.82" y="-22.86" smashed="yes">
-<attribute name="NAME" x="-337.82" y="-20.0914" size="1.778" layer="95" align="center"/>
-<attribute name="VALUE" x="-337.82" y="-26.162" size="1.778" layer="96" align="center"/>
-</instance>
 <instance part="C1" gate="G$1" x="-317.5" y="12.7" smashed="yes">
 <attribute name="NAME" x="-314.96" y="15.24" size="1.778" layer="95"/>
 <attribute name="VALUE" x="-314.96" y="12.7" size="1.778" layer="96"/>
@@ -4414,6 +4406,14 @@ for operation (but don't short 3v3 and !CS!)</text>
 </instance>
 <instance part="SUPPLY17" gate="G$1" x="-269.24" y="88.9" smashed="yes">
 <attribute name="VALUE" x="-269.24" y="85.725" size="1.778" layer="96" align="center"/>
+</instance>
+<instance part="R45" gate="G$1" x="-335.28" y="22.86" smashed="yes">
+<attribute name="NAME" x="-335.28" y="25.6286" size="1.778" layer="95" align="center"/>
+<attribute name="VALUE" x="-335.28" y="19.558" size="1.778" layer="96" align="center"/>
+</instance>
+<instance part="R46" gate="G$1" x="-337.82" y="-22.86" smashed="yes">
+<attribute name="NAME" x="-337.82" y="-20.0914" size="1.778" layer="95" align="center"/>
+<attribute name="VALUE" x="-337.82" y="-26.162" size="1.778" layer="96" align="center"/>
 </instance>
 </instances>
 <busses>
@@ -4829,14 +4829,14 @@ for operation (but don't short 3v3 and !CS!)</text>
 <pinref part="J10" gate="G$1" pin="1"/>
 </segment>
 <segment>
-<pinref part="R45" gate="G$1" pin="1"/>
 <wire x1="-340.36" y1="22.86" x2="-347.98" y2="22.86" width="0.1524" layer="91"/>
 <label x="-347.98" y="22.86" size="1.27" layer="95" rot="R180" xref="yes"/>
+<pinref part="R45" gate="G$1" pin="1"/>
 </segment>
 <segment>
-<pinref part="R46" gate="G$1" pin="1"/>
 <wire x1="-342.9" y1="-22.86" x2="-350.52" y2="-22.86" width="0.1524" layer="91"/>
 <label x="-350.52" y="-22.86" size="1.27" layer="95" rot="R180" xref="yes"/>
+<pinref part="R46" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="BL_PWR_SIGNAL" class="0">
@@ -5984,13 +5984,13 @@ for operation (but don't short 3v3 and !CS!)</text>
 </net>
 <net name="N$21" class="0">
 <segment>
-<pinref part="R46" gate="G$1" pin="2"/>
 <wire x1="-332.74" y1="-22.86" x2="-320.04" y2="-22.86" width="0.1524" layer="91"/>
 <pinref part="C2" gate="G$1" pin="1"/>
 <wire x1="-320.04" y1="-33.02" x2="-320.04" y2="-22.86" width="0.1524" layer="91"/>
 <wire x1="-320.04" y1="-22.86" x2="-302.26" y2="-22.86" width="0.1524" layer="91"/>
 <junction x="-320.04" y="-22.86"/>
 <pinref part="D2" gate="G$1" pin="CATHODE"/>
+<pinref part="R46" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="N$42" class="0">
@@ -5998,10 +5998,10 @@ for operation (but don't short 3v3 and !CS!)</text>
 <pinref part="C1" gate="G$1" pin="1"/>
 <wire x1="-317.5" y1="15.24" x2="-317.5" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="-317.5" y1="22.86" x2="-330.2" y2="22.86" width="0.1524" layer="91"/>
-<pinref part="R45" gate="G$1" pin="2"/>
 <wire x1="-317.5" y1="22.86" x2="-299.72" y2="22.86" width="0.1524" layer="91"/>
 <junction x="-317.5" y="22.86"/>
 <pinref part="D1" gate="G$1" pin="CATHODE"/>
+<pinref part="R45" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="N$24" class="0">

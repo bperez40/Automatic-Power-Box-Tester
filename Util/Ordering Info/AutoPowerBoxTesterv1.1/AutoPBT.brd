@@ -1505,6 +1505,20 @@ MEGA
 <text x="0" y="1.4359" size="1.27" layer="25" align="bottom-center">&gt;NAME</text>
 <text x="0" y="-1.4359" size="1.27" layer="27" align="top-center">&gt;VALUE</text>
 </package>
+<package name="RESC6332X71" urn="urn:adsk.eagle:footprint:16378533/2">
+<description>Chip, 6.30 X 3.20 X 0.71 mm body
+&lt;p&gt;Chip package with body size 6.30 X 3.20 X 0.71 mm&lt;/p&gt;</description>
+<wire x1="3.225" y1="1.9991" x2="-3.225" y2="1.9991" width="0.127" layer="21"/>
+<wire x1="3.225" y1="-1.9991" x2="-3.225" y2="-1.9991" width="0.127" layer="21"/>
+<wire x1="3.225" y1="-1.675" x2="-3.225" y2="-1.675" width="0.12" layer="51"/>
+<wire x1="-3.225" y1="-1.675" x2="-3.225" y2="1.675" width="0.12" layer="51"/>
+<wire x1="-3.225" y1="1.675" x2="3.225" y2="1.675" width="0.12" layer="51"/>
+<wire x1="3.225" y1="1.675" x2="3.225" y2="-1.675" width="0.12" layer="51"/>
+<smd name="1" x="-2.9695" y="0" dx="1.2312" dy="3.3702" layer="1"/>
+<smd name="2" x="2.9695" y="0" dx="1.2312" dy="3.3702" layer="1"/>
+<text x="0" y="2.6341" size="1.27" layer="25" align="bottom-center">&gt;NAME</text>
+<text x="0" y="-2.6341" size="1.27" layer="27" align="top-center">&gt;VALUE</text>
+</package>
 </packages>
 <packages3d>
 <package3d name="RESC1608X60" urn="urn:adsk.eagle:package:16378565/2" type="model">
@@ -1514,32 +1528,39 @@ MEGA
 <packageinstance name="RESC1608X60"/>
 </packageinstances>
 </package3d>
+<package3d name="RESC6332X71L" urn="urn:adsk.eagle:package:16378557/3" type="model">
+<description>Chip, 6.30 X 3.20 X 0.71 mm body
+&lt;p&gt;Chip package with body size 6.30 X 3.20 X 0.71 mm&lt;/p&gt;</description>
+<packageinstances>
+<packageinstance name="RESC6332X71"/>
+</packageinstances>
+</package3d>
 </packages3d>
 </library>
 <library name="Capacitor">
 <description>&lt;B&gt;Capacitors - Fixed, Variable, Trimmers</description>
 <packages>
-<package name="CAPC1608X85" urn="urn:adsk.eagle:footprint:16290847/2">
-<description>Chip, 1.60 X 0.80 X 0.85 mm body
-&lt;p&gt;Chip package with body size 1.60 X 0.80 X 0.85 mm&lt;/p&gt;</description>
-<wire x1="0.875" y1="0.7991" x2="-0.875" y2="0.7991" width="0.127" layer="21"/>
-<wire x1="0.875" y1="-0.7991" x2="-0.875" y2="-0.7991" width="0.127" layer="21"/>
-<wire x1="0.875" y1="-0.475" x2="-0.875" y2="-0.475" width="0.12" layer="51"/>
-<wire x1="-0.875" y1="-0.475" x2="-0.875" y2="0.475" width="0.12" layer="51"/>
-<wire x1="-0.875" y1="0.475" x2="0.875" y2="0.475" width="0.12" layer="51"/>
-<wire x1="0.875" y1="0.475" x2="0.875" y2="-0.475" width="0.12" layer="51"/>
-<smd name="1" x="-0.7746" y="0" dx="0.9209" dy="0.9702" layer="1"/>
-<smd name="2" x="0.7746" y="0" dx="0.9209" dy="0.9702" layer="1"/>
-<text x="0" y="1.4341" size="1.27" layer="25" align="bottom-center">&gt;NAME</text>
-<text x="0" y="-1.4341" size="1.27" layer="27" align="top-center">&gt;VALUE</text>
+<package name="CAPC3216X135" urn="urn:adsk.eagle:footprint:16290836/2">
+<description>Chip, 3.20 X 1.60 X 1.35 mm body
+&lt;p&gt;Chip package with body size 3.20 X 1.60 X 1.35 mm&lt;/p&gt;</description>
+<wire x1="1.7" y1="1.2217" x2="-1.7" y2="1.2217" width="0.127" layer="21"/>
+<wire x1="1.7" y1="-1.2217" x2="-1.7" y2="-1.2217" width="0.127" layer="21"/>
+<wire x1="1.7" y1="-0.9" x2="-1.7" y2="-0.9" width="0.12" layer="51"/>
+<wire x1="-1.7" y1="-0.9" x2="-1.7" y2="0.9" width="0.12" layer="51"/>
+<wire x1="-1.7" y1="0.9" x2="1.7" y2="0.9" width="0.12" layer="51"/>
+<wire x1="1.7" y1="0.9" x2="1.7" y2="-0.9" width="0.12" layer="51"/>
+<smd name="1" x="-1.4754" y="0" dx="1.1646" dy="1.8153" layer="1"/>
+<smd name="2" x="1.4754" y="0" dx="1.1646" dy="1.8153" layer="1"/>
+<text x="0" y="1.8567" size="1.27" layer="25" align="bottom-center">&gt;NAME</text>
+<text x="0" y="-1.8567" size="1.27" layer="27" align="top-center">&gt;VALUE</text>
 </package>
 </packages>
 <packages3d>
-<package3d name="CAPC1608X85" urn="urn:adsk.eagle:package:16290898/2" type="model">
-<description>Chip, 1.60 X 0.80 X 0.85 mm body
-&lt;p&gt;Chip package with body size 1.60 X 0.80 X 0.85 mm&lt;/p&gt;</description>
+<package3d name="CAPC3216X135" urn="urn:adsk.eagle:package:16290893/2" type="model">
+<description>Chip, 3.20 X 1.60 X 1.35 mm body
+&lt;p&gt;Chip package with body size 3.20 X 1.60 X 1.35 mm&lt;/p&gt;</description>
 <packageinstances>
-<packageinstance name="CAPC1608X85"/>
+<packageinstance name="CAPC3216X135"/>
 </packageinstances>
 </package3d>
 </packages3d>
@@ -2720,39 +2741,7 @@ design rules under a new name.</description>
 <attribute name="NAME" x="-24.13" y="33.02" size="1.27" layer="26" font="vector" rot="MR180" align="center"/>
 <attribute name="VALUE" x="-27.94" y="30.48" size="1.27" layer="28" font="vector" rot="MR270" align="center"/>
 </element>
-<element name="R45" library="Resistor" package="RESC1608X60" package3d_urn="urn:adsk.eagle:package:16378565/2" value="100K" x="-12.7" y="24.13" smashed="yes" rot="MR90">
-<attribute name="CATEGORY" value="Resistor" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="MANUFACTURER" value="" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="MPN" value="" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="NAME" x="-11.2641" y="24.13" size="1.27" layer="26" font="vector" rot="MR90" align="bottom-center"/>
-<attribute name="OPERATING_TEMP" value="" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="PART_STATUS" value="" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="RATING" value="" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="ROHS_COMPLIANT" value="" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="SERIES" value="" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="SUB-CATEGORY" value="Fixed" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="THERMALLOSS" value="" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="TOLERANCE" value="" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="TYPE" value="" x="-12.7" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="VALUE" x="-14.1359" y="24.13" size="1.27" layer="28" font="vector" rot="MR90" align="top-center"/>
-</element>
-<element name="R46" library="Resistor" package="RESC1608X60" package3d_urn="urn:adsk.eagle:package:16378565/2" value="100K" x="-27.94" y="24.13" smashed="yes" rot="MR90">
-<attribute name="CATEGORY" value="Resistor" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="MANUFACTURER" value="" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="MPN" value="" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="NAME" x="-26.5041" y="24.13" size="1.27" layer="26" font="vector" rot="MR90" align="bottom-center"/>
-<attribute name="OPERATING_TEMP" value="" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="PART_STATUS" value="" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="RATING" value="" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="ROHS_COMPLIANT" value="" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="SERIES" value="" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="SUB-CATEGORY" value="Fixed" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="THERMALLOSS" value="" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="TOLERANCE" value="" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="TYPE" value="" x="-27.94" y="24.13" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
-<attribute name="VALUE" x="-29.3759" y="24.13" size="1.27" layer="28" font="vector" rot="MR90" align="top-center"/>
-</element>
-<element name="C1" library="Capacitor" package="CAPC1608X85" package3d_urn="urn:adsk.eagle:package:16290898/2" value=".2uF" x="-19.05" y="29.21" smashed="yes" rot="MR90">
+<element name="C1" library="Capacitor" package="CAPC3216X135" package3d_urn="urn:adsk.eagle:package:16290893/2" value=".2uF" x="-19.05" y="29.21" smashed="yes" rot="MR90">
 <attribute name="CATEGORY" value="Capacitor" x="-19.05" y="29.21" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
 <attribute name="MANUFACTURER" value="" x="-19.05" y="29.21" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
 <attribute name="MPN" value="" x="-19.05" y="29.21" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
@@ -2767,7 +2756,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="-20.4841" y="29.21" size="1.27" layer="28" font="vector" rot="MR90" align="top-center"/>
 <attribute name="VOLTAGE_RATING" value="" x="-19.05" y="29.21" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
 </element>
-<element name="C2" library="Capacitor" package="CAPC1608X85" package3d_urn="urn:adsk.eagle:package:16290898/2" value=".2uF" x="-34.29" y="29.21" smashed="yes" rot="MR90">
+<element name="C2" library="Capacitor" package="CAPC3216X135" package3d_urn="urn:adsk.eagle:package:16290893/2" value=".2uF" x="-34.29" y="29.21" smashed="yes" rot="MR90">
 <attribute name="CATEGORY" value="Capacitor" x="-34.29" y="29.21" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
 <attribute name="MANUFACTURER" value="" x="-34.29" y="29.21" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
 <attribute name="MPN" value="" x="-34.29" y="29.21" size="1.778" layer="28" font="vector" rot="MR90" display="off"/>
@@ -2880,6 +2869,38 @@ design rules under a new name.</description>
 <attribute name="MFR_NAME" value="Molex Connector Corporation" x="82.55" y="25.4" size="1.778" layer="27" font="vector" display="off"/>
 <attribute name="NAME" x="78.0088" y="32.385" size="1.27" layer="25" font="vector" ratio="6"/>
 <attribute name="VALUE" x="78.2812" y="20.955" size="1.27" layer="27" ratio="6"/>
+</element>
+<element name="R45" library="Resistor" package="RESC6332X71" package3d_urn="urn:adsk.eagle:package:16378557/3" value="100k" x="-15.24" y="22.86" smashed="yes" rot="MR0">
+<attribute name="CATEGORY" value="Resistor" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="MANUFACTURER" value="" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="MPN" value="" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="NAME" x="-15.24" y="25.4941" size="1.27" layer="26" rot="MR0" align="bottom-center"/>
+<attribute name="OPERATING_TEMP" value="" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="PART_STATUS" value="" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="RATING" value="" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="ROHS_COMPLIANT" value="" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="SERIES" value="" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="SUB-CATEGORY" value="Fixed" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="THERMALLOSS" value="" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="TOLERANCE" value="" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="TYPE" value="" x="-15.24" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="VALUE" x="-15.24" y="20.2259" size="1.27" layer="28" rot="MR0" align="top-center"/>
+</element>
+<element name="R46" library="Resistor" package="RESC6332X71" package3d_urn="urn:adsk.eagle:package:16378557/3" value="100k" x="-29.21" y="22.86" smashed="yes" rot="MR0">
+<attribute name="CATEGORY" value="Resistor" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="MANUFACTURER" value="" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="MPN" value="" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="NAME" x="-29.21" y="25.4941" size="1.27" layer="26" rot="MR0" align="bottom-center"/>
+<attribute name="OPERATING_TEMP" value="" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="PART_STATUS" value="" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="RATING" value="" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="ROHS_COMPLIANT" value="" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="SERIES" value="" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="SUB-CATEGORY" value="Fixed" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="THERMALLOSS" value="" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="TOLERANCE" value="" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="TYPE" value="" x="-29.21" y="22.86" size="1.778" layer="28" font="vector" rot="MR0" display="off"/>
+<attribute name="VALUE" x="-29.21" y="20.2259" size="1.27" layer="28" rot="MR0" align="top-center"/>
 </element>
 </elements>
 <signals>
@@ -3273,20 +3294,16 @@ design rules under a new name.</description>
 <wire x1="104.14" y1="62.187" x2="104.183" y2="62.23" width="0.3" layer="16"/>
 <contactref element="C1" pad="2"/>
 <contactref element="C2" pad="2"/>
-<wire x1="-34.29" y1="29.9846" x2="-34.29" y2="30.48" width="0.3" layer="16"/>
+<wire x1="-34.29" y1="30.6854" x2="-34.29" y2="30.48" width="0.3" layer="16"/>
 <wire x1="2.0802" y1="39.792565625" x2="-2.962565625" y2="39.792565625" width="0.3" layer="16"/>
 <wire x1="-2.962565625" y1="39.792565625" x2="-19.05" y2="55.88" width="0.3" layer="16"/>
 <via x="-19.05" y="55.88" extent="1-16" drill="0.35"/>
 <wire x1="-19.05" y1="55.88" x2="-19.05" y2="35.56" width="0.3" layer="1"/>
 <wire x1="-19.05" y1="35.56" x2="-21.59" y2="33.02" width="0.3" layer="1"/>
 <via x="-21.59" y="33.02" extent="1-16" drill="0.35"/>
-<wire x1="-26.1746" y1="29.9846" x2="-19.05" y2="29.9846" width="0.3" layer="16"/>
-<wire x1="-26.67" y1="30.48" x2="-26.1746" y2="29.9846" width="0.3" layer="16"/>
-<wire x1="-34.29" y1="30.48" x2="-26.67" y2="30.48" width="0.3" layer="16"/>
+<wire x1="-34.29" y1="30.48" x2="-24.13" y2="30.48" width="0.3" layer="16"/>
 <contactref element="U29" pad="2"/>
 <contactref element="U30" pad="2"/>
-<wire x1="-21.59" y1="33.02" x2="-21.59" y2="32.5246" width="0.3" layer="16"/>
-<wire x1="-21.59" y1="32.5246" x2="-19.05" y2="29.9846" width="0.3" layer="16"/>
 <wire x1="-64.77" y1="24.525" x2="-63.105" y2="22.86" width="0.3" layer="16"/>
 <wire x1="-63.105" y1="22.86" x2="-50.8" y2="22.86" width="0.3" layer="16"/>
 <wire x1="-50.8" y1="22.86" x2="-49.53" y2="24.13" width="0.3" layer="16"/>
@@ -3298,6 +3315,9 @@ design rules under a new name.</description>
 <wire x1="59.873409375" y1="40.1898" x2="68.515809375" y2="31.5474" width="0.3" layer="1"/>
 <wire x1="101.3974" y1="31.5474" x2="104.14" y2="34.29" width="0.3" layer="1"/>
 <wire x1="68.515809375" y1="31.5474" x2="101.3974" y2="31.5474" width="0.3" layer="1"/>
+<wire x1="-21.59" y1="33.02" x2="-21.3846" y2="33.02" width="0.3" layer="16"/>
+<wire x1="-21.3846" y1="33.02" x2="-19.05" y2="30.6854" width="0.3" layer="16"/>
+<wire x1="-21.59" y1="33.02" x2="-24.13" y2="30.48" width="0.3" layer="16"/>
 </signal>
 <signal name="BLOW_P6">
 <contactref element="R1" pad="1"/>
@@ -3328,12 +3348,15 @@ design rules under a new name.</description>
 <contactref element="J10" pad="1"/>
 <wire x1="93.98" y1="22.86" x2="44.45" y2="22.86" width="0.3" layer="16"/>
 <wire x1="44.45" y1="22.86" x2="40.64" y2="26.67" width="0.3" layer="16"/>
+<wire x1="37.7396" y1="22.86" x2="39.37" y2="22.86" width="0.3" layer="16"/>
 <contactref element="R45" pad="1"/>
 <contactref element="R46" pad="1"/>
-<wire x1="-12.7" y1="23.3148" x2="-27.94" y2="23.3148" width="0.3" layer="16"/>
-<wire x1="-12.7" y1="23.3148" x2="37.2848" y2="23.3148" width="0.3" layer="16"/>
-<wire x1="37.2848" y1="23.3148" x2="37.7396" y2="22.86" width="0.3" layer="16"/>
-<wire x1="37.7396" y1="22.86" x2="44.45" y2="22.86" width="0.3" layer="16"/>
+<wire x1="39.37" y1="22.86" x2="44.45" y2="22.86" width="0.3" layer="16"/>
+<wire x1="-26.2405" y1="22.86" x2="-21.59" y2="22.86" width="0.3" layer="16"/>
+<wire x1="-21.59" y1="22.86" x2="-19.05" y2="20.32" width="0.3" layer="16"/>
+<wire x1="-19.05" y1="20.32" x2="-14.8105" y2="20.32" width="0.3" layer="16"/>
+<wire x1="-14.8105" y1="20.32" x2="-12.2705" y2="22.86" width="0.3" layer="16"/>
+<wire x1="-12.2705" y1="22.86" x2="37.7396" y2="22.86" width="0.3" layer="16"/>
 </signal>
 <signal name="BL_PWR_SIGNAL">
 <contactref element="U15" pad="4"/>
@@ -4845,26 +4868,23 @@ design rules under a new name.</description>
 <wire x1="60.64" y1="26.67" x2="55.64" y2="26.67" width="0.3" layer="16"/>
 <wire x1="55.64" y1="26.67" x2="50.64" y2="26.67" width="0.3" layer="16"/>
 </signal>
-<signal name="N$7">
-<contactref element="R46" pad="2"/>
-</signal>
 <signal name="N$21">
-<contactref element="R46" pad="2"/>
 <contactref element="C2" pad="1"/>
 <contactref element="D2" pad="3"/>
-<wire x1="-27.94" y1="24.9452" x2="-27.94" y2="29.38" width="0.3" layer="16"/>
-<wire x1="-34.29" y1="28.4354" x2="-28.8846" y2="28.4354" width="0.3" layer="16"/>
-<wire x1="-28.8846" y1="28.4354" x2="-27.94" y2="29.38" width="0.3" layer="16"/>
+<contactref element="R46" pad="2"/>
+<wire x1="-32.1795" y1="22.86" x2="-34.29" y2="24.9705" width="0.3" layer="16"/>
+<wire x1="-34.29" y1="24.9705" x2="-34.29" y2="27.7346" width="0.3" layer="16"/>
+<wire x1="-27.94" y1="29.38" x2="-29.5854" y2="27.7346" width="0.3" layer="16"/>
+<wire x1="-29.5854" y1="27.7346" x2="-34.29" y2="27.7346" width="0.3" layer="16"/>
 </signal>
 <signal name="N$42">
 <contactref element="C1" pad="1"/>
-<contactref element="R45" pad="2"/>
 <contactref element="D1" pad="3"/>
-<wire x1="-19.05" y1="28.4354" x2="-13.6446" y2="28.4354" width="0.3" layer="16"/>
-<wire x1="-13.6446" y1="28.4354" x2="-12.785" y2="29.295" width="0.3" layer="16"/>
-<wire x1="-12.785" y1="29.295" x2="-12.7" y2="29.38" width="0.3" layer="16"/>
-<wire x1="-12.7" y1="24.9452" x2="-12.7" y2="29.21" width="0.3" layer="16"/>
-<wire x1="-12.7" y1="29.21" x2="-12.785" y2="29.295" width="0.3" layer="16"/>
+<contactref element="R45" pad="2"/>
+<wire x1="-19.05" y1="23.7005" x2="-18.2095" y2="22.86" width="0.3" layer="16"/>
+<wire x1="-19.05" y1="23.7005" x2="-19.05" y2="27.7346" width="0.3" layer="16"/>
+<wire x1="-12.7" y1="29.38" x2="-14.3454" y2="27.7346" width="0.3" layer="16"/>
+<wire x1="-14.3454" y1="27.7346" x2="-19.05" y2="27.7346" width="0.3" layer="16"/>
 </signal>
 <signal name="N$24">
 <contactref element="D2" pad="1"/>
