@@ -123,8 +123,3 @@ If you want to start putty in your terminal of choice, run the following command
 plink.exe -load {SAVED-PROFILE}
 
 Where the saved profile is one that you've previously set up. If plink.exe isn't found, make sure it's part of your PATH environment.
-
-# Creating images for the LCD display
-When displaying something on the LCD display, we have to use functions that directly translate some bytes into pixel locations. There's a neat project made by someone who had this exact intention in mind, and even supports Arduino and Adafruit formats. It's called image2cpp and can be found here: https://javl.github.io/image2cpp/.
-
-To create images, I would advise using GIMP or Photoshop, then exporting them into the image2cpp tool to convert them into the proper format for use.
