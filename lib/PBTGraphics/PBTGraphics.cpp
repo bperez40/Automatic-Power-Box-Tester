@@ -1,9 +1,233 @@
-#include "PBTGraphics.h"
-#include <Adafruit_GFX.h>
-#include <Adafruit_RA8875.h>
+#include "PBTGraphics.hpp"
+
+uint16_t tx, ty;
+Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
+int option;
+
+
+typedef struct signalinfo_t{
+    unsigned long time_limit;
+    bool alarm;
+};
+
+/* Initialize all the signal info structures for this test.*/
+/* Basket lift structures */
+signalinfo_t BasketPower;
+signalinfo_t LeftBasket;
+signalinfo_t RightBasket;
+/* Filter electronics structures */
+signalinfo_t PumpPower;
+signalinfo_t SolenoidValve;
+
+/* PIM structures */
+signalinfo_t BlowerPower;
+signalinfo_t GasValve;
+signalinfo_t PowerOn;
+signalinfo_t BlowerControl;
+signalinfo_t BlowerPowerNeutral;
+signalinfo_t LowDutyCycle;
+signalinfo_t HighDutyCycle;
+signalinfo_t Alarm;
+
+int active_menu;
+
+int getActiveMenu(){
+    return active_menu;
+}
+
+void setActiveMenu(int menu){
+    active_menu = menu;
+}
+
+void setOption(int op){
+    option = op;
+}
+
+int getOption(){
+    return option;
+}
+
+void setSignalTimeout(unsigned long tl, int sigOp){
+    switch(sigOp)
+    {
+    case BASKETPOWEROP:
+        BasketPower.time_limit = tl;
+        break;
+    case LEFTBASKETOP:
+        LeftBasket.time_limit = tl;
+        break;
+    case RIGHTBASKETOP:
+        RightBasket.time_limit = tl;
+        break;
+    case PUMPPOWEROP:
+        PumpPower.time_limit = tl;
+        break;
+    case SOLENOIDVALVEOP:
+        SolenoidValve.time_limit = tl;
+        break;
+    case BLOWERPOWEROP:
+        BlowerPower.time_limit = tl;
+        break;
+    case GASVALVEOP:
+        GasValve.time_limit = tl;
+        break;
+    case POWERONOP:
+        PowerOn.time_limit = tl;
+        break;
+    case BLOWERCONTROLOP:
+        BlowerControl.time_limit = tl;
+        break;
+    case BLOWERPOWERNEUTRALOP:
+        BlowerPowerNeutral.time_limit = tl;
+        break;
+    case LOWDUTYCYCLEOP:
+        LowDutyCycle.time_limit = tl;
+        break;
+    case HIGHDUTYCYCLEOP:
+        HighDutyCycle.time_limit = tl;
+        break;
+    case ALARMOP:
+        Alarm.time_limit = tl;
+        break;
+    }
+}
+
+unsigned long getSignalTimeout(int sigOp){
+    switch(sigOp){
+    case BASKETPOWEROP:
+        return (BasketPower.time_limit);
+        break;
+    case LEFTBASKETOP:
+        return (LeftBasket.time_limit);
+        break;
+    case RIGHTBASKETOP:
+        return (RightBasket.time_limit);
+        break;
+    case PUMPPOWEROP:
+        return (PumpPower.time_limit);
+        break;
+    case SOLENOIDVALVEOP:
+        return (SolenoidValve.time_limit);
+        break;
+    case BLOWERPOWEROP:
+        return (BlowerPower.time_limit);
+        break;
+    case GASVALVEOP:
+        return (GasValve.time_limit);
+        break;
+    case POWERONOP:
+        return (PowerOn.time_limit);
+        break;
+    case BLOWERCONTROLOP:
+        return (BlowerControl.time_limit);
+        break;
+    case BLOWERPOWERNEUTRALOP:
+        return (BlowerPowerNeutral.time_limit);
+        break;
+    case LOWDUTYCYCLEOP:
+        return (LowDutyCycle.time_limit);
+        break;
+    case HIGHDUTYCYCLEOP:
+        return (HighDutyCycle.time_limit);
+        break;
+    case ALARMOP:
+        return (Alarm.time_limit);
+        break;
+    }
+}
+
+void setSignalAlarm(bool al, int sigOp){
+    switch(sigOp){
+    case BASKETPOWEROP:
+        BasketPower.alarm = al;
+        break;
+    case LEFTBASKETOP:
+        LeftBasket.alarm = al;
+        break;
+    case RIGHTBASKETOP:
+        RightBasket.alarm = al;
+        break;
+    case PUMPPOWEROP:
+        PumpPower.alarm = al;
+        break;
+    case SOLENOIDVALVEOP:
+        SolenoidValve.alarm = al;
+        break;
+    case BLOWERPOWEROP:
+        BlowerPower.alarm = al;
+        break;
+    case GASVALVEOP:
+        GasValve.alarm = al;
+        break;
+    case POWERONOP:
+        PowerOn.alarm = al;
+        break;
+    case BLOWERCONTROLOP:
+        BlowerControl.alarm = al;
+        break;
+    case BLOWERPOWERNEUTRALOP:
+        BlowerPowerNeutral.alarm = al;
+        break;
+    case LOWDUTYCYCLEOP:
+        LowDutyCycle.alarm = al;
+        break;
+    case HIGHDUTYCYCLEOP:
+        HighDutyCycle.alarm = al;
+        break;
+    case ALARMOP:
+        Alarm.alarm = al;
+        break;
+    }
+}
+
+bool getSignalAlarm(int sigOp){
+    switch(sigOp){
+    case BASKETPOWEROP:
+        return (BasketPower.alarm);
+        break;
+    case LEFTBASKETOP:
+        return (LeftBasket.alarm);
+        break;
+    case RIGHTBASKETOP:
+        return (RightBasket.alarm);
+        break;
+    case PUMPPOWEROP:
+        return (PumpPower.alarm);
+        break;
+    case SOLENOIDVALVEOP:
+        return (SolenoidValve.alarm);
+        break;
+    case BLOWERPOWEROP:
+        return (BlowerPower.alarm);
+        break;
+    case GASVALVEOP:
+        return (GasValve.alarm);
+        break;
+    case POWERONOP:
+        return (PowerOn.alarm);
+        break;
+    case BLOWERCONTROLOP:
+        return (BlowerControl.alarm);
+        break;
+    case BLOWERPOWERNEUTRALOP:
+        return (BlowerPowerNeutral.alarm);
+        break;
+    case LOWDUTYCYCLEOP:
+        return (LowDutyCycle.alarm);
+        break;
+    case HIGHDUTYCYCLEOP:
+        return (HighDutyCycle.alarm);
+        break;
+    case ALARMOP:
+        return (Alarm.alarm);
+        break;
+    }
+}
 
 void initDisplay()
 {
+    setOption(-1);            // Not an option
+    setActiveMenu(MAINMENU); // Starts on main menu
     /*
      * Display setup and open to main menu. Should have it go here when our program
      * initially starts, and possibly when a test is completed.
@@ -18,6 +242,7 @@ void initDisplay()
     tft.GPIOX(true);                              // Enable TFT - display enable tied to GPIOX
     tft.PWM1config(true, RA8875_PWM_CLK_DIV1024); // PWM output for backlight
     tft.PWM1out(255);
+    tft.touchEnable(true); // Enables touch detection
 }
 
 void touchCheck()
@@ -26,6 +251,7 @@ void touchCheck()
     float xScale = 1024.0F / tft.width();
     float yScale = 1024.0F / tft.height();
     bool option_selected = false;
+    setOption(-1);
     bool untouched = false;
     /* Wait around for touch events */
     while (!option_selected)
@@ -43,13 +269,13 @@ void touchCheck()
             {
                 untouched = false;
                 /* Switch statement controls which menu inputs it should be looking for, which is dependent on the active screen */
-                switch (active_menu)
+                switch (getActiveMenu())
                 {
                 case MAINMENU:
                     if (tx >= 320 && tx <= 700 && ty >= 250 && ty <= 550)
                     {                           // Location for start test button
                         option_selected = true; // Leave touch loop
-                        option = 1;             // Trigger test start option
+                        setOption(1);             // Trigger test start option
                     }
                     break;
                 case PRETEST:
@@ -59,13 +285,13 @@ void touchCheck()
                     if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290) // Note that these locations don't line up with the pixel locations
                     {
                         option_selected = true;
-                        option = 2;
+                        setOption(2);
                     }
                     /* If results button is touched */
                     else if (tx >= 380 && tx <= 640 && ty >= 760 && ty <= 890)
                     {
                         option_selected = true;
-                        option = 3;
+                        setOption(3);
                     }
                     break;
                 case RESULTS:
@@ -73,31 +299,31 @@ void touchCheck()
                     if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290)
                     {
                         option_selected = true;
-                        option = 2;
+                        setOption(2);
                     }
                     /* If PIM test box is touched */
                     else if (tx >= 88 && tx <= 295 && ty >= 450 && ty <= 720)
                     {
                         option_selected = true;
-                        option = 4;
+                        setOption(4);
                     }
                     /* If pump test box is touched */
                     else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 725)
                     {
                         option_selected = true;
-                        option = 5;
+                        setOption(5);
                     }
                     /* If basket test box is touched */
                     else if (tx >= 700 && tx <= 900 && ty >= 440 && ty <= 730)
                     {
                         option_selected = true;
-                        option = 6;
+                        setOption(6);
                     }
                     /* If recommendations box is touched */
                     else if (tx >= 310 && tx <= 680 && ty >= 760 && ty <= 870)
                     {
                         option_selected = true;
-                        option = 7;
+                        setOption(7);
                     }
                     break;
                 case PIMINFO:
@@ -105,7 +331,7 @@ void touchCheck()
                     if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
                     {
                         option_selected = true;
-                        option = 3;
+                        setOption(3);
                     }
                     break;
                 case PUMPINFO:
@@ -113,7 +339,7 @@ void touchCheck()
                     if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
                     {
                         option_selected = true;
-                        option = 3;
+                        setOption(3);
                     }
                     break;
                 case BSKTINFO:
@@ -121,7 +347,7 @@ void touchCheck()
                     if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
                     {
                         option_selected = true;
-                        option = 3;
+                        setOption(3);
                     }
                     break;
                 case RECOM:
@@ -129,14 +355,14 @@ void touchCheck()
                     if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
                     {
                         option_selected = true;
-                        option = 3;
+                        setOption(3);
                     }
                 case ABORTMENU:
                     /* If exit is touched */
                     if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290)
                     {
                         option_selected = true;
-                        option = 2;
+                        setOption(2);
                     }
                 }
             }
@@ -290,7 +516,7 @@ void drawResultsMenu()
     tft.fillTriangle(490, 395, 490, 425, 510, 410, RA8875_BLACK); // Arrow outline for recommendations box
     tft.fillTriangle(493, 402, 493, 418, 505, 410, RA8875_GREEN); // Arrow fill for recommendations box
     tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
-    if (!HighDutyCycle.alarm && !LowDutyCycle.alarm && !Alarm.alarm && !BlowerPowerNeutral.alarm && !BlowerControl.alarm && !GasValve.alarm && !BlowerPower.alarm && !PowerOn.alarm)
+    if (!getSignalAlarm(HIGHDUTYCYCLEOP) && !getSignalAlarm(LOWDUTYCYCLEOP) && !getSignalAlarm(ALARMOP) && !getSignalAlarm(BLOWERPOWERNEUTRALOP) && !getSignalAlarm(BLOWERCONTROLOP) && !getSignalAlarm(GASVALVEOP) && !getSignalAlarm(BLOWERPOWEROP) && !getSignalAlarm(POWERONOP))
     {
         tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
     }
@@ -299,7 +525,7 @@ void drawResultsMenu()
         tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_RED); // PIM progess box post completion
     }
     tft.fillRoundRect(300, 200, 160, 160, 15, RA8875_BLACK); // Outline for PUMP progress box
-    if (!SolenoidValve.alarm && !PumpPower.alarm)
+    if (!getSignalAlarm(SOLENOIDVALVEOP) && !getSignalAlarm(PUMPPOWEROP))
     {
         tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_GREEN); // PUMP progess box post completion
     }
@@ -308,7 +534,7 @@ void drawResultsMenu()
         tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_RED); // PUMP progess box post completion
     }
     tft.fillRoundRect(550, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
-    if (!BasketPower.alarm && !RightBasket.alarm && !LeftBasket.alarm)
+    if (!getSignalAlarm(BASKETPOWEROP) && !getSignalAlarm(RIGHTBASKETOP) && !getSignalAlarm(LEFTBASKETOP))
     {
         tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_GREEN); // Basket progess box post completion
     }
@@ -359,7 +585,7 @@ void drawPIMInfoMenu()
     tft.textEnlarge(2);
     tft.textSetCursor(240, 50);
     tft.textWrite("PIM Test Info");
-    if (PowerOn.alarm)
+    if (getSignalAlarm(POWERONOP))
     {
         tft.textSetCursor(100, 160);
         tft.textEnlarge(1);
@@ -373,7 +599,7 @@ void drawPIMInfoMenu()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("PIM board was powered successfully");
     }
-    if (BlowerPower.alarm || BlowerControl.alarm)
+    if (getSignalAlarm(BLOWERPOWEROP) || getSignalAlarm(BLOWERCONTROLOP))
     {
         tft.textSetCursor(100, 200);
         tft.textEnlarge(1);
@@ -387,7 +613,7 @@ void drawPIMInfoMenu()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("Simulated blower was powered successfully");
     }
-    if (GasValve.alarm)
+    if (getSignalAlarm(GASVALVEOP))
     {
         tft.textSetCursor(100, 240);
         tft.textEnlarge(1);
@@ -401,7 +627,7 @@ void drawPIMInfoMenu()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("Simulated gas valve was activated");
     }
-    if (LowDutyCycle.alarm)
+    if (getSignalAlarm(LOWDUTYCYCLEOP))
     {
         tft.textSetCursor(100, 280);
         tft.textEnlarge(1);
@@ -415,7 +641,7 @@ void drawPIMInfoMenu()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("Simulated blower reached low duty cycle");
     }
-    if (HighDutyCycle.alarm)
+    if (getSignalAlarm(HIGHDUTYCYCLEOP))
     {
         tft.textSetCursor(100, 320);
         tft.textEnlarge(1);
@@ -445,7 +671,7 @@ void drawPumpInfoMenu()
     tft.textSetCursor(240, 50);
     tft.textWrite("Pump Test Info");
     tft.textEnlarge(1);
-    if (PumpPower.alarm)
+    if (getSignalAlarm(PUMPPOWEROP))
     {
         tft.textSetCursor(100, 160);
         tft.textEnlarge(1);
@@ -459,7 +685,7 @@ void drawPumpInfoMenu()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("Simulated pump successfully powered");
     }
-    if (SolenoidValve.alarm)
+    if (getSignalAlarm(SOLENOIDVALVEOP))
     {
         tft.textSetCursor(100, 200);
         tft.textEnlarge(1);
@@ -489,7 +715,7 @@ void drawBasketInfoMenu()
     tft.textSetCursor(220, 50);
     tft.textWrite("Basket Test Info");
     tft.textEnlarge(1);
-    if (BasketPower.alarm)
+    if (getSignalAlarm(BASKETPOWEROP))
     {
         tft.textSetCursor(100, 160);
         tft.textEnlarge(1);
@@ -503,7 +729,7 @@ void drawBasketInfoMenu()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("Simulated basket lift powered");
     }
-    if (LeftBasket.alarm)
+    if (getSignalAlarm(LEFTBASKETOP))
     {
         tft.textSetCursor(100, 200);
         tft.textEnlarge(1);
@@ -517,7 +743,7 @@ void drawBasketInfoMenu()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("Left basket lift signal detected");
     }
-    if (RightBasket.alarm)
+    if (getSignalAlarm(RIGHTBASKETOP))
     {
         tft.textSetCursor(100, 240);
         tft.textEnlarge(1);
@@ -548,7 +774,7 @@ void drawRecommendationsMenu()
     tft.textEnlarge(2);
     tft.textWrite("Recommendations");
     tft.textEnlarge(1);
-    if (HighDutyCycle.alarm)
+    if (getSignalAlarm(HIGHDUTYCYCLEOP))
     {
         tft.textSetCursor(50, 150);
         tft.textWrite("Check pin 6 on the blower connector.");

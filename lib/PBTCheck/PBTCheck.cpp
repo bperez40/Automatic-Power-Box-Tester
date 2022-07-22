@@ -32,7 +32,6 @@ void ADCSetup()
  * If you so desire to switch the event trigger to HIGH you can.
  */
 
-
 bool waitUntilTriggered(int pin, unsigned long timeout, int event = LOW)
 {
     unsigned long start_time = millis();

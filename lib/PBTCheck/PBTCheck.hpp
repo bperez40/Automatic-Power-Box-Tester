@@ -19,7 +19,3 @@ bool waitUntilTriggered(int pin, unsigned long timeout = 1000, int event = LOW);
 bool dutyCheck(double low_threshold, double high_threshold, unsigned long pwm_time);
 void runCheck();
 void halt();
-typedef struct signalinfo_t{
-    unsigned long time_limit;
-    bool alarm;
-};
