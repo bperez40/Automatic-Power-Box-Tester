@@ -3,9 +3,10 @@
 uint16_t tx, ty;
 Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
 int option;
+int configuration = 0;
 
-
-typedef struct signalinfo_t{
+typedef struct signalinfo_t
+{
     unsigned long time_limit;
     bool alarm;
 };
@@ -31,24 +32,34 @@ signalinfo_t Alarm;
 
 int active_menu;
 
-int getActiveMenu(){
+int getActiveMenu()
+{
     return active_menu;
 }
 
-void setActiveMenu(int menu){
+void setActiveMenu(int menu)
+{
     active_menu = menu;
 }
 
-void setOption(int op){
+void setOption(int op)
+{
     option = op;
 }
 
-int getOption(){
+int getOption()
+{
     return option;
 }
 
-void setSignalTimeout(unsigned long tl, int sigOp){
-    switch(sigOp)
+int getConfiguration()
+{
+    return configuration;
+}
+
+void setSignalTimeout(unsigned long tl, int sigOp)
+{
+    switch (sigOp)
     {
     case BASKETPOWEROP:
         BasketPower.time_limit = tl;
@@ -92,8 +103,10 @@ void setSignalTimeout(unsigned long tl, int sigOp){
     }
 }
 
-unsigned long getSignalTimeout(int sigOp){
-    switch(sigOp){
+unsigned long getSignalTimeout(int sigOp)
+{
+    switch (sigOp)
+    {
     case BASKETPOWEROP:
         return (BasketPower.time_limit);
         break;
@@ -136,8 +149,10 @@ unsigned long getSignalTimeout(int sigOp){
     }
 }
 
-void setSignalAlarm(bool al, int sigOp){
-    switch(sigOp){
+void setSignalAlarm(bool al, int sigOp)
+{
+    switch (sigOp)
+    {
     case BASKETPOWEROP:
         BasketPower.alarm = al;
         break;
@@ -180,8 +195,10 @@ void setSignalAlarm(bool al, int sigOp){
     }
 }
 
-bool getSignalAlarm(int sigOp){
-    switch(sigOp){
+bool getSignalAlarm(int sigOp)
+{
+    switch (sigOp)
+    {
     case BASKETPOWEROP:
         return (BasketPower.alarm);
         break;
@@ -226,7 +243,7 @@ bool getSignalAlarm(int sigOp){
 
 void initDisplay()
 {
-    setOption(-1);            // Not an option
+    setOption(-1);           // Not an option
     setActiveMenu(MAINMENU); // Starts on main menu
     /*
      * Display setup and open to main menu. Should have it go here when our program
@@ -275,7 +292,12 @@ void touchCheck()
                     if (tx >= 320 && tx <= 700 && ty >= 250 && ty <= 550)
                     {                           // Location for start test button
                         option_selected = true; // Leave touch loop
-                        setOption(1);             // Trigger test start option
+                        setOption(1);           // Trigger test start option
+                    }
+                    if (tx >= 330 && tx <= 700 && ty >= 630 && ty <= 765)
+                    {
+                        option_selected = true;
+                        setOption(8);
                     }
                     break;
                 case PRETEST:
@@ -307,8 +329,9 @@ void touchCheck()
                         option_selected = true;
                         setOption(4);
                     }
-                    /* If pump test box is touched */
-                    else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 725)
+
+                    /* If pump test box is touched. Should only be available if the pump test ran */
+                    else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 725 && configuration == 0)
                     {
                         option_selected = true;
                         setOption(5);
@@ -357,6 +380,7 @@ void touchCheck()
                         option_selected = true;
                         setOption(3);
                     }
+                    break;
                 case ABORTMENU:
                     /* If exit is touched */
                     if (tx >= 95 && tx <= 140 && ty >= 220 && ty <= 290)
@@ -364,6 +388,29 @@ void touchCheck()
                         option_selected = true;
                         setOption(2);
                     }
+                    break;
+                case CONFIG:
+                    /* If back is touched */
+                    if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
+                    {
+                        option_selected = true;
+                        setOption(2);
+                    }
+                    /* If default setting is touched */
+                    else if (tx >= 207 && tx <= 490 && ty >= 400 && ty <= 510)
+                    {
+                        option_selected = true;
+                        configuration = 0;
+                        setOption(8);
+                    }
+                    /* If non-filter option is touched */
+                    else if (tx >= 207 && tx <= 490 && ty >= 600 && ty <= 750)
+                    {
+                        option_selected = true;
+                        configuration = 1;
+                        setOption(8);
+                    }
+                    break;
                 }
             }
         }
@@ -399,6 +446,20 @@ void drawMainMenu()
     tft.textSetCursor(290, 320);
     tft.textColor(RA8875_WHITE, RA8875_BLACK);
     tft.textWrite("Configurations");
+    tft.textSetCursor(50, 400);
+    tft.textColor(RA8875_BLACK, RA8875_WHITE);
+    if (configuration == 0)
+    {
+        tft.textWrite("Current configuration: Default");
+    }
+    else if (configuration == 1)
+    {
+        tft.textWrite("Current configuration: Non-Filter");
+    }
+    else
+    {
+        tft.textWrite("Current configuration: NULL");
+    }
 }
 
 void drawPreTestMenu(int state)
@@ -524,14 +585,20 @@ void drawResultsMenu()
     {
         tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_RED); // PIM progess box post completion
     }
-    tft.fillRoundRect(300, 200, 160, 160, 15, RA8875_BLACK); // Outline for PUMP progress box
-    if (!getSignalAlarm(SOLENOIDVALVEOP) && !getSignalAlarm(PUMPPOWEROP))
+
+    if (!getSignalAlarm(SOLENOIDVALVEOP) && !getSignalAlarm(PUMPPOWEROP) && configuration == 0)
     {
+        tft.fillRoundRect(300, 200, 160, 160, 15, RA8875_BLACK); // Outline for PUMP progress box
         tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_GREEN); // PUMP progess box post completion
+    }
+    else if (configuration == 0)
+    {
+        tft.fillRoundRect(300, 200, 160, 160, 15, RA8875_BLACK); // Outline for PUMP progress box
+        tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_RED);   // PUMP progess box post completion
     }
     else
     {
-        tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_RED); // PUMP progess box post completion
+        /* If the pump test didn't run (non-filter option was selected), we shouldn't draw this result box */
     }
     tft.fillRoundRect(550, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
     if (!getSignalAlarm(BASKETPOWEROP) && !getSignalAlarm(RIGHTBASKETOP) && !getSignalAlarm(LEFTBASKETOP))
@@ -559,8 +626,11 @@ void drawResultsMenu()
     tft.textSetCursor(55, 260);
     tft.textEnlarge(1);
     tft.textWrite("PIM Test");
-    tft.textSetCursor(310, 260);
-    tft.textWrite("Pump Test");
+    if (configuration == 0)
+    {
+        tft.textSetCursor(310, 260);
+        tft.textWrite("Pump Test");
+    }
     tft.textSetCursor(580, 245);
     tft.textWrite("Basket");
     tft.textSetCursor(580, 275);
@@ -812,4 +882,49 @@ void drawAbortMenu()
     tft.fillTriangle(75, 50, 75, 70, 65, 60, RA8875_WHITE); // Second triangle to cut out red lines
     tft.fillTriangle(50, 45, 70, 45, 60, 55, RA8875_WHITE); // Third triangle to cut out red lines
     tft.fillTriangle(50, 75, 70, 75, 60, 65, RA8875_WHITE); // Fourth triangle to cut out red lines
+}
+
+void drawConfigurationMenu()
+{
+    tft.graphicsMode();
+    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Could make the background a different color
+    tft.fillRect(180, 40, 410, 80, RA8875_BLACK);             // Title box outline
+    tft.fillRect(185, 45, 395, 65, RA8875_WHITE);             // Title box fill
+    tft.fillRoundRect(145, 175, 240, 65, 25, RA8875_YELLOW);   // This is the first button's border
+    tft.fillRoundRect(150, 180, 230, 55, 25, RA8875_BLACK);   // This is the first button
+    tft.fillRoundRect(145, 295, 240, 65, 25, RA8875_YELLOW);  // This is the second button's border
+    tft.fillRoundRect(150, 300, 230, 55, 25, RA8875_BLACK);   // This is the second button
+    tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
+    tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
+    tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+    tft.textMode();
+    tft.textSetCursor(150, 400);
+    tft.textColor(RA8875_BLACK, RA8875_WHITE);
+    if (configuration == 0)
+    {
+        tft.textWrite("Selected: Default");
+    }
+    else if (configuration == 1)
+    {
+        tft.textWrite("Selected: Non-Filter");
+    }
+    else
+    {
+        tft.textWrite("Selected: NULL");
+    }
+    tft.textSetCursor(200, 50); // Title location
+    tft.textColor(RA8875_BLACK, RA8875_WHITE); // Title color
+    tft.textEnlarge(2); // Title size
+    tft.textWrite("Configurations"); // Title text
+    tft.textEnlarge(1); // Back to small size text 
+    tft.textSetCursor(210, 190); // First option text location
+    tft.textColor(RA8875_WHITE, RA8875_BLACK); // First and second option text color
+    tft.textWrite("Default"); // First option text
+    tft.textSetCursor(185, 310); // Second option text location
+    tft.textWrite("Non-Filter"); // Second option text
+    tft.textSetCursor(400, 190);
+    tft.textColor(RA8875_BLACK, RA8875_WHITE);
+    tft.textWrite("Executes all tests");
+    tft.textSetCursor(400, 310);
+    tft.textWrite("Excludes filter tests");
 }

@@ -1,7 +1,6 @@
 #include <SPI.h>
 #include "PBTGraphics.hpp"
 
-
 /* Duty cycle bound options */
 #define HDHB 0.70
 #define HDLB 0.55
@@ -99,7 +98,12 @@ void loop()
 
       /*
        * Filter electronics check
+       * If configuration is set to 1 (non-filter), then we should skip the filter system tests.
+       * Otherwise, we'll execute the filter system tests.
        */
+      if (getConfiguration() == 1){
+      }
+      else{
       drawPreTestMenu(7);
       setSignalTimeout(GLOBAL_TIME_LIMIT, SOLENOIDVALVEOP);
       setSignalAlarm(waitUntilTriggered(SVALVESIG, getSignalTimeout(SOLENOIDVALVEOP), HIGH), SOLENOIDVALVEOP);
@@ -120,7 +124,7 @@ void loop()
 
       setSignalTimeout(GLOBAL_TIME_LIMIT, PUMPPOWEROP);
       setSignalAlarm(waitUntilTriggered(PMPWRSIG, getSignalTimeout(PUMPPOWEROP)), PUMPPOWEROP);
-
+      }
       /*
        * Basket lift check
        */
@@ -145,13 +149,27 @@ void loop()
       /*
        * End of basket lift check
        */
-      if (getSignalAlarm(HIGHDUTYCYCLEOP) || getSignalAlarm(LOWDUTYCYCLEOP)|| getSignalAlarm(ALARMOP) || getSignalAlarm(BASKETPOWEROP) || getSignalAlarm(BLOWERPOWERNEUTRALOP) || getSignalAlarm(BLOWERCONTROLOP) || getSignalAlarm(RIGHTBASKETOP) || getSignalAlarm(SOLENOIDVALVEOP) || getSignalAlarm(PUMPPOWEROP) || getSignalAlarm(GASVALVEOP) || getSignalAlarm(BLOWERPOWEROP) || getSignalAlarm(POWERONOP))
-      {
-        test_status = false;
-      }
-      else
-      {
-        test_status = true;
+      switch(getConfiguration()){
+      case 0:
+        if (getSignalAlarm(HIGHDUTYCYCLEOP) || getSignalAlarm(LOWDUTYCYCLEOP)|| getSignalAlarm(ALARMOP) || getSignalAlarm(BASKETPOWEROP) || getSignalAlarm(BLOWERPOWERNEUTRALOP) || getSignalAlarm(BLOWERCONTROLOP) || getSignalAlarm(RIGHTBASKETOP) || getSignalAlarm(SOLENOIDVALVEOP) || getSignalAlarm(PUMPPOWEROP) || getSignalAlarm(GASVALVEOP) || getSignalAlarm(BLOWERPOWEROP) || getSignalAlarm(POWERONOP))
+        {
+          test_status = false;
+        }
+        else
+        {
+          test_status = true;
+        }
+        break;
+      case 1:
+        if (getSignalAlarm(HIGHDUTYCYCLEOP) || getSignalAlarm(LOWDUTYCYCLEOP)|| getSignalAlarm(ALARMOP) || getSignalAlarm(BASKETPOWEROP) || getSignalAlarm(BLOWERPOWERNEUTRALOP) || getSignalAlarm(BLOWERCONTROLOP) || getSignalAlarm(RIGHTBASKETOP) || getSignalAlarm(GASVALVEOP) || getSignalAlarm(BLOWERPOWEROP) || getSignalAlarm(POWERONOP))
+        {
+          test_status = false;
+        }
+        else
+        {
+          test_status = true;
+        }
+        break;
       }
       /* Disable GPIO */
       digitalWrite(POWERCTRL, LOW);
@@ -191,6 +209,10 @@ void loop()
   case 7:
     drawRecommendationsMenu();
     setActiveMenu(RECOM);
+    break;
+  case 8:
+    drawConfigurationMenu();
+    setActiveMenu(CONFIG);
     break;
   }
 }

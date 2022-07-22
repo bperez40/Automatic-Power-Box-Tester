@@ -31,6 +31,7 @@
 #define BSKTINFO 6
 #define RECOM 7
 #define ABORTMENU 8
+#define CONFIG 9
 
 int getActiveMenu();
 
@@ -39,6 +40,8 @@ void setActiveMenu(int menu);
 void setOption(int op);
 
 int getOption();
+
+int getConfiguration();
 
 void setSignalTimeout(unsigned long tl, int sigOp);
 
@@ -69,3 +72,5 @@ void drawBasketInfoMenu();
 void drawRecommendationsMenu();
 
 void drawAbortMenu();
+
+void drawConfigurationMenu();
