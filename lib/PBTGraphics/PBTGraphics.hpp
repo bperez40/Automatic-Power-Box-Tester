@@ -34,6 +34,9 @@
 #define CONFIG 9
 #define DEBUG 10
 
+#define GLOBALCD 200
+#define GLOBALCHAINS 100
+
 int getActiveMenu();
 
 void setActiveMenu(int menu);

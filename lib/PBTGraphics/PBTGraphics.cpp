@@ -15,6 +15,16 @@ struct toggles
     bool basket_toggle;
 };
 
+struct cooldowns{
+    unsigned long power;
+    unsigned long heat;
+    unsigned long svalve;
+    unsigned long pump;
+    unsigned long basket;
+    unsigned long default_config;
+    unsigned long nonfilter;
+};
+
 typedef struct signalinfo_t
 {
     unsigned long time_limit;
@@ -281,6 +291,9 @@ void touchCheck()
     bool option_selected = false;
     setOption(-1);
     bool untouched = false;
+    cooldowns cd;
+    cd.basket = cd.heat = cd.default_config = cd.nonfilter = cd.power = cd.pump = cd.svalve = millis();
+    unsigned long current_time = millis(); 
     /* Wait around for touch events */
     while (!option_selected)
     {
@@ -432,16 +445,21 @@ void touchCheck()
                     }
                     break;
                 case DEBUG:
-                    bool untouched_debug = false;
+                    current_time = millis(); // Update current time (relative to cooldowns)
                     /* If back is touched */
                     if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
                     {
                         /* Make sure all outputs are false upon leaving the menu */
                         tgs->power_toggle = false;
+                        digitalWrite(POWERCTRL, LOW);
                         tgs->heat_toggle = false;
+                        digitalWrite(THCALLCTRL, LOW);
                         tgs->svalve_toggle = false;
+                        digitalWrite(SVALVECTRL, LOW);
                         tgs->pump_toggle = false;
+                        digitalWrite(PUMPCTRL, LOW);
                         tgs->basket_toggle = false;
+                        digitalWrite(BSKTCTRL, LOW);
                         option_selected = true;
                         setOption(2);
                     }
@@ -450,26 +468,25 @@ void touchCheck()
                      * we make note of the state and make a visual indication of what state it is in.
                      *
                      */
-                    else if (tx >= 140 && tx <= 465 && ty >= 160 && ty <= 270)
+                    else if (tx >= 140 && tx <= 465 && ty >= 170 && ty <= 260 && current_time - cd.power >= GLOBALCD)
                     {
-                        Serial.println("ptoggle touched");
+                        cd.power = millis();
                         if (tgs->power_toggle == false)
                         {
-                            Serial.println("was false");
                             tgs->power_toggle = true;
                             digitalWrite(POWERCTRL, HIGH);
                             tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_GREEN); // This is the first button
                         }
                         else
                         {
-                            Serial.println("was true");
                             tgs->power_toggle = false;
                             digitalWrite(POWERCTRL, LOW);
                             tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_RED); // This is the first button
                         }
                     }
-                    else if (tx >= 140 && tx <= 465 && ty >= 310 && ty <= 430)
+                    else if (tx >= 140 && tx <= 465 && ty >= 320 && ty <= 420 && current_time - cd.heat >= GLOBALCD)
                     {
+                        cd.heat = millis();
                         if (tgs->heat_toggle == false)
                         {
                             tgs->heat_toggle = true;
@@ -480,11 +497,12 @@ void touchCheck()
                         {
                             tgs->heat_toggle = false;
                             digitalWrite(THCALLCTRL, LOW);
-                            tft.fillRoundRect(100, 120, 240, 55, 25, RA8875_RED); // This is the second button        // This is the first button
+                            tft.fillRoundRect(100, 120, 240, 55, 25, RA8875_RED); // This is the second button
                         }
                     }
-                    else if (tx >= 140 && tx <= 465 && ty >= 470 && ty <= 560)
+                    else if (tx >= 140 && tx <= 465 && ty >= 480 && ty <= 550 && current_time - cd.svalve >= GLOBALCD)
                     {
+                        cd.svalve = millis();
                         if (tgs->svalve_toggle == false)
                         {
                             tgs->svalve_toggle = true;
@@ -498,8 +516,9 @@ void touchCheck()
                             tft.fillRoundRect(100, 210, 240, 55, 25, RA8875_RED); // Third button
                         }
                     }
-                    else if (tx >= 140 && tx <= 465 && ty >= 600 && ty <= 715)
+                    else if (tx >= 140 && tx <= 465 && ty >= 610 && ty <= 705 && current_time - cd.pump >= GLOBALCD)
                     {
+                        cd.pump = millis();
                         if (tgs->pump_toggle == false)
                         {
                             tgs->pump_toggle = true;
@@ -513,8 +532,9 @@ void touchCheck()
                             tft.fillRoundRect(100, 300, 240, 55, 25, RA8875_RED); // This is the fourth button
                         }
                     }
-                    else if (tx >= 140 && tx <= 465 && ty >= 760 && ty <= 870)
+                    else if (tx >= 140 && tx <= 465 && ty >= 770 && ty <= 860 && current_time - cd.basket >= GLOBALCD)
                     {
+                        cd.basket = millis();
                         if (tgs->basket_toggle == false)
                         {
                             tgs->basket_toggle = true;
