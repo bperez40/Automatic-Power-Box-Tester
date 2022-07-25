@@ -6,6 +6,15 @@ Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
 int option;
 int configuration = EEPROM.read(0);
 
+struct toggles
+{
+    bool power_toggle;
+    bool heat_toggle;
+    bool svalve_toggle;
+    bool pump_toggle;
+    bool basket_toggle;
+};
+
 typedef struct signalinfo_t
 {
     unsigned long time_limit;
@@ -30,6 +39,8 @@ signalinfo_t BlowerPowerNeutral;
 signalinfo_t LowDutyCycle;
 signalinfo_t HighDutyCycle;
 signalinfo_t Alarm;
+
+toggles *tgs = new toggles; // Heap allocating because we need to manually control the liftime of this struct
 
 int active_menu;
 
@@ -276,9 +287,11 @@ void touchCheck()
         if (tft.touched())
         {
             tft.touchRead(&tx, &ty);
+            /*
             Serial.print(tx);
             Serial.print(", ");
             Serial.println(ty);
+            */
             if (!untouched) /* Prevents accidental inputs */
             {
             }
@@ -289,15 +302,20 @@ void touchCheck()
                 switch (getActiveMenu())
                 {
                 case MAINMENU:
-                    if (tx >= 330 && tx <= 700 && ty >= 450 && ty <= 600)
+                    if (tx >= 105 && tx <= 500 && ty >= 440 && ty <= 600)
                     {                           // Location for start test button
                         option_selected = true; // Leave touch loop
                         setOption(1);           // Trigger test start option
                     }
-                    if (tx >= 330 && tx <= 700 && ty >= 630 && ty <= 765)
+                    if (tx >= 105 && tx <= 500 && ty >= 630 && ty <= 765)
                     {
                         option_selected = true;
                         setOption(8);
+                    }
+                    if (tx >= 530 && tx <= 920 && ty >= 435 && ty <= 600)
+                    {
+                        option_selected = true;
+                        setOption(9);
                     }
                     break;
                 case PRETEST:
@@ -403,7 +421,7 @@ void touchCheck()
                         configuration = 0;
                         EEPROM.write(0, configuration);
                         setOption(8);
-                    } 
+                    }
                     /* If non-filter option is touched */
                     else if (tx >= 207 && tx <= 490 && ty >= 600 && ty <= 750)
                     {
@@ -411,6 +429,104 @@ void touchCheck()
                         configuration = 1;
                         EEPROM.write(0, configuration);
                         setOption(8);
+                    }
+                    break;
+                case DEBUG:
+                    bool untouched_debug = false;
+                    /* If back is touched */
+                    if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
+                    {
+                        /* Make sure all outputs are false upon leaving the menu */
+                        tgs->power_toggle = false;
+                        tgs->heat_toggle = false;
+                        tgs->svalve_toggle = false;
+                        tgs->pump_toggle = false;
+                        tgs->basket_toggle = false;
+                        option_selected = true;
+                        setOption(2);
+                    }
+                    /*
+                     * When someone manually toggles one of the GPIO pins controlling the solid state relays
+                     * we make note of the state and make a visual indication of what state it is in.
+                     *
+                     */
+                    else if (tx >= 140 && tx <= 465 && ty >= 160 && ty <= 270)
+                    {
+                        Serial.println("ptoggle touched");
+                        if (tgs->power_toggle == false)
+                        {
+                            Serial.println("was false");
+                            tgs->power_toggle = true;
+                            digitalWrite(POWERCTRL, HIGH);
+                            tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_GREEN); // This is the first button
+                        }
+                        else
+                        {
+                            Serial.println("was true");
+                            tgs->power_toggle = false;
+                            digitalWrite(POWERCTRL, LOW);
+                            tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_RED); // This is the first button
+                        }
+                    }
+                    else if (tx >= 140 && tx <= 465 && ty >= 310 && ty <= 430)
+                    {
+                        if (tgs->heat_toggle == false)
+                        {
+                            tgs->heat_toggle = true;
+                            digitalWrite(THCALLCTRL, HIGH);
+                            tft.fillRoundRect(100, 120, 240, 55, 25, RA8875_GREEN); // This is the second button
+                        }
+                        else
+                        {
+                            tgs->heat_toggle = false;
+                            digitalWrite(THCALLCTRL, LOW);
+                            tft.fillRoundRect(100, 120, 240, 55, 25, RA8875_RED); // This is the second button        // This is the first button
+                        }
+                    }
+                    else if (tx >= 140 && tx <= 465 && ty >= 470 && ty <= 560)
+                    {
+                        if (tgs->svalve_toggle == false)
+                        {
+                            tgs->svalve_toggle = true;
+                            digitalWrite(SVALVECTRL, HIGH);
+                            tft.fillRoundRect(100, 210, 240, 55, 25, RA8875_GREEN); // Third button
+                        }
+                        else
+                        {
+                            tgs->svalve_toggle = false;
+                            digitalWrite(SVALVECTRL, LOW);
+                            tft.fillRoundRect(100, 210, 240, 55, 25, RA8875_RED); // Third button
+                        }
+                    }
+                    else if (tx >= 140 && tx <= 465 && ty >= 600 && ty <= 715)
+                    {
+                        if (tgs->pump_toggle == false)
+                        {
+                            tgs->pump_toggle = true;
+                            digitalWrite(PUMPCTRL, HIGH);
+                            tft.fillRoundRect(100, 300, 240, 55, 25, RA8875_GREEN); // This is the fourth button
+                        }
+                        else
+                        {
+                            tgs->pump_toggle = false;
+                            digitalWrite(PUMPCTRL, LOW);
+                            tft.fillRoundRect(100, 300, 240, 55, 25, RA8875_RED); // This is the fourth button
+                        }
+                    }
+                    else if (tx >= 140 && tx <= 465 && ty >= 760 && ty <= 870)
+                    {
+                        if (tgs->basket_toggle == false)
+                        {
+                            tgs->basket_toggle = true;
+                            digitalWrite(BSKTCTRL, HIGH);
+                            tft.fillRoundRect(100, 390, 240, 55, 25, RA8875_GREEN); // This is the fifth button
+                        }
+                        else
+                        {
+                            tgs->basket_toggle = false;
+                            digitalWrite(BSKTCTRL, LOW);
+                            tft.fillRoundRect(100, 390, 240, 55, 25, RA8875_RED); // This is the fifth button
+                        }
                     }
                     break;
                 }
@@ -434,22 +550,26 @@ void drawMainMenu()
     tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // White background
 
     // Boxes
-    tft.fillRoundRect(245, 195, 310, 85, 25, 0b0011101111100111);  // This is the start button's border
-    tft.fillRoundRect(250, 200, 300, 75, 25, 0b0000000000000000); // This is the test history button
-    tft.fillRoundRect(245, 295, 310, 85, 25, 0b0111101111101111);  // This is the configuration button's border
-    tft.fillRoundRect(250, 300, 300, 75, 25, RA8875_BLACK);        // This is the configuration button
-    tft.fillRect(170, 40, 465, 140, RA8875_BLACK);                // Title box outline
-    tft.fillRect(175, 45, 450, 125, RA8875_WHITE);                // Title box fill
+    tft.fillRoundRect(65, 195, 310, 85, 25, 0b0011101111100111); // This is the start button's border
+    tft.fillRoundRect(70, 200, 300, 75, 25, 0b0000000000000000); // This is the start button
+    tft.fillRoundRect(65, 295, 310, 85, 25, 0b0111101111101111); // This is the configuration button's border
+    tft.fillRoundRect(70, 300, 300, 75, 25, RA8875_BLACK);       // This is the configuration button
+    tft.fillRoundRect(420, 195, 310, 85, 25, RA8875_RED);        // This is the debug button's border
+    tft.fillRoundRect(425, 200, 300, 75, 25, RA8875_BLACK);      // This is the debug button
+    tft.fillRect(170, 40, 465, 140, RA8875_BLACK);               // Title box outline
+    tft.fillRect(175, 45, 450, 125, RA8875_WHITE);               // Title box fill
 
     // Write text in boxes
     tft.textMode();              // Switch from graphics mode to text mode
-    tft.textSetCursor(320, 220); // Location of text in first box
+    tft.textSetCursor(140, 220); // Location of text in first box
     tft.textEnlarge(1);          // Make text larger
     tft.textTransparent(RA8875_WHITE);
     tft.textWrite("Start Test");
-    tft.textSetCursor(290, 320);
+    tft.textSetCursor(110, 320);
     tft.textColor(RA8875_WHITE, RA8875_BLACK);
     tft.textWrite("Configurations");
+    tft.textSetCursor(530, 220);
+    tft.textWrite("Debug");
     tft.textSetCursor(130, 400);
     tft.textColor(RA8875_BLACK, RA8875_WHITE);
     if (configuration == 0)
@@ -898,7 +1018,7 @@ void drawConfigurationMenu()
     tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Could make the background a different color
     tft.fillRect(180, 40, 410, 80, RA8875_BLACK);             // Title box outline
     tft.fillRect(185, 45, 395, 65, RA8875_WHITE);             // Title box fill
-    tft.fillRoundRect(145, 175, 240, 65, 25, RA8875_YELLOW);   // This is the first button's border
+    tft.fillRoundRect(145, 175, 240, 65, 25, RA8875_YELLOW);  // This is the first button's border
     tft.fillRoundRect(150, 180, 230, 55, 25, RA8875_BLACK);   // This is the first button
     tft.fillRoundRect(145, 295, 240, 65, 25, RA8875_YELLOW);  // This is the second button's border
     tft.fillRoundRect(150, 300, 230, 55, 25, RA8875_BLACK);   // This is the second button
@@ -920,19 +1040,58 @@ void drawConfigurationMenu()
     {
         tft.textWrite("Selected: Default");
     }
-    tft.textSetCursor(210, 50); // Title location
+    tft.textSetCursor(210, 50);                // Title location
     tft.textColor(RA8875_BLACK, RA8875_WHITE); // Title color
-    tft.textEnlarge(2); // Title size
-    tft.textWrite("Configurations"); // Title text
-    tft.textEnlarge(1); // Back to small size text 
-    tft.textSetCursor(210, 190); // First option text location
+    tft.textEnlarge(2);                        // Title size
+    tft.textWrite("Configurations");           // Title text
+    tft.textEnlarge(1);                        // Back to small size text
+    tft.textSetCursor(210, 190);               // First option text location
     tft.textColor(RA8875_WHITE, RA8875_BLACK); // First and second option text color
-    tft.textWrite("Default"); // First option text
-    tft.textSetCursor(185, 310); // Second option text location
-    tft.textWrite("Non-Filter"); // Second option text
+    tft.textWrite("Default");                  // First option text
+    tft.textSetCursor(185, 310);               // Second option text location
+    tft.textWrite("Non-Filter");               // Second option text
     tft.textSetCursor(400, 190);
     tft.textColor(RA8875_BLACK, RA8875_WHITE);
     tft.textWrite("Executes all tests");
     tft.textSetCursor(400, 310);
     tft.textWrite("Excludes filter tests");
+}
+
+void drawDebugMenu()
+{
+    tft.graphicsMode();
+    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
+    tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);         // Outline for back box
+    tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);         // Back box
+    tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE);    // Arrow in back box
+    tft.fillRoundRect(95, 25, 250, 65, 25, 0b0111101111101111);  // This is the first button's border
+    tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_RED);         // This is the first button
+    tft.fillRoundRect(95, 115, 250, 65, 25, 0b0111101111101111); // This is the second button's border
+    tft.fillRoundRect(100, 120, 240, 55, 25, RA8875_RED);        // This is the second button
+    tft.fillRoundRect(95, 205, 250, 65, 25, 0b0111101111101111); // This is the third button's border
+    tft.fillRoundRect(100, 210, 240, 55, 25, RA8875_RED);        // This is the third button
+    tft.fillRoundRect(95, 295, 250, 65, 25, 0b0111101111101111); // This is the fourth button's border
+    tft.fillRoundRect(100, 300, 240, 55, 25, RA8875_RED);        // This is the fourth button
+    tft.fillRoundRect(95, 385, 250, 65, 25, 0b0111101111101111); // This is the fifth button's border
+    tft.fillRoundRect(100, 390, 240, 55, 25, RA8875_RED);        // This is the fifth button
+
+    tft.textMode();
+    tft.textSetCursor(120, 40);
+    tft.textEnlarge(1);
+    tft.textColor(RA8875_WHITE, RA8875_BLACK);
+    tft.textWrite("Power Toggle");
+    tft.textSetCursor(106, 130);
+    tft.textWrite("Heating Toggle");
+    tft.textSetCursor(115, 220);
+    tft.textWrite("SValve Toggle");
+    tft.textSetCursor(130, 310);
+    tft.textWrite("Pump Toggle");
+    tft.textSetCursor(115, 400);
+    tft.textWrite("Basket Toggle");
+
+    tgs->power_toggle = false;
+    tgs->heat_toggle = false;
+    tgs->pump_toggle = false;
+    tgs->svalve_toggle = false;
+    tgs->basket_toggle = false;
 }

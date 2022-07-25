@@ -224,5 +224,8 @@ void loop()
     drawConfigurationMenu();
     setActiveMenu(CONFIG);
     break;
+  case 9:
+    drawDebugMenu();
+    setActiveMenu(DEBUG);
   }
 }

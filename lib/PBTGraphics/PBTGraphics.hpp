@@ -32,6 +32,7 @@
 #define RECOM 7
 #define ABORTMENU 8
 #define CONFIG 9
+#define DEBUG 10
 
 int getActiveMenu();
 
@@ -74,3 +75,5 @@ void drawRecommendationsMenu();
 void drawAbortMenu();
 
 void drawConfigurationMenu();
+
+void drawDebugMenu();
