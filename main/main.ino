@@ -170,6 +170,16 @@ void loop()
           test_status = true;
         }
         break;
+      default:
+        if (getSignalAlarm(HIGHDUTYCYCLEOP) || getSignalAlarm(LOWDUTYCYCLEOP)|| getSignalAlarm(ALARMOP) || getSignalAlarm(BASKETPOWEROP) || getSignalAlarm(BLOWERPOWERNEUTRALOP) || getSignalAlarm(BLOWERCONTROLOP) || getSignalAlarm(RIGHTBASKETOP) || getSignalAlarm(SOLENOIDVALVEOP) || getSignalAlarm(PUMPPOWEROP) || getSignalAlarm(GASVALVEOP) || getSignalAlarm(BLOWERPOWEROP) || getSignalAlarm(POWERONOP))
+        {
+          test_status = false;
+        }
+        else
+        {
+          test_status = true;
+        }
+        break;
       }
       /* Disable GPIO */
       digitalWrite(POWERCTRL, LOW);

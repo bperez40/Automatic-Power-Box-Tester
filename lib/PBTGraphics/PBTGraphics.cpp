@@ -1,9 +1,10 @@
 #include "PBTGraphics.hpp"
+#include <EEPROM.h>
 
 uint16_t tx, ty;
 Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
 int option;
-int configuration = 0;
+int configuration = EEPROM.read(0);
 
 typedef struct signalinfo_t
 {
@@ -264,7 +265,6 @@ void initDisplay()
 
 void touchCheck()
 {
-    Serial.println("Touch check called");
     float xScale = 1024.0F / tft.width();
     float yScale = 1024.0F / tft.height();
     bool option_selected = false;
@@ -289,7 +289,7 @@ void touchCheck()
                 switch (getActiveMenu())
                 {
                 case MAINMENU:
-                    if (tx >= 320 && tx <= 700 && ty >= 250 && ty <= 550)
+                    if (tx >= 330 && tx <= 700 && ty >= 450 && ty <= 600)
                     {                           // Location for start test button
                         option_selected = true; // Leave touch loop
                         setOption(1);           // Trigger test start option
@@ -331,7 +331,7 @@ void touchCheck()
                     }
 
                     /* If pump test box is touched. Should only be available if the pump test ran */
-                    else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 725 && configuration == 0)
+                    else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 725 && configuration != 1)
                     {
                         option_selected = true;
                         setOption(5);
@@ -401,13 +401,15 @@ void touchCheck()
                     {
                         option_selected = true;
                         configuration = 0;
+                        EEPROM.write(0, configuration);
                         setOption(8);
-                    }
+                    } 
                     /* If non-filter option is touched */
                     else if (tx >= 207 && tx <= 490 && ty >= 600 && ty <= 750)
                     {
                         option_selected = true;
                         configuration = 1;
+                        EEPROM.write(0, configuration);
                         setOption(8);
                     }
                     break;
@@ -432,21 +434,23 @@ void drawMainMenu()
     tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // White background
 
     // Boxes
-    tft.fillRoundRect(245, 95, 310, 160, 25, 0b0011101111100111);  // This is the start button's border
-    tft.fillRoundRect(250, 100, 300, 150, 25, 0b0000000000000000); // This is the start button
+    tft.fillRoundRect(245, 195, 310, 85, 25, 0b0011101111100111);  // This is the start button's border
+    tft.fillRoundRect(250, 200, 300, 75, 25, 0b0000000000000000); // This is the test history button
     tft.fillRoundRect(245, 295, 310, 85, 25, 0b0111101111101111);  // This is the configuration button's border
     tft.fillRoundRect(250, 300, 300, 75, 25, RA8875_BLACK);        // This is the configuration button
+    tft.fillRect(170, 40, 465, 140, RA8875_BLACK);                // Title box outline
+    tft.fillRect(175, 45, 450, 125, RA8875_WHITE);                // Title box fill
 
     // Write text in boxes
     tft.textMode();              // Switch from graphics mode to text mode
-    tft.textSetCursor(320, 155); // Location of text in first box
+    tft.textSetCursor(320, 220); // Location of text in first box
     tft.textEnlarge(1);          // Make text larger
     tft.textTransparent(RA8875_WHITE);
     tft.textWrite("Start Test");
     tft.textSetCursor(290, 320);
     tft.textColor(RA8875_WHITE, RA8875_BLACK);
     tft.textWrite("Configurations");
-    tft.textSetCursor(50, 400);
+    tft.textSetCursor(130, 400);
     tft.textColor(RA8875_BLACK, RA8875_WHITE);
     if (configuration == 0)
     {
@@ -458,8 +462,12 @@ void drawMainMenu()
     }
     else
     {
-        tft.textWrite("Current configuration: NULL");
+        tft.textWrite("Current configuration: Default");
     }
+    tft.textEnlarge(3);
+    tft.textSetCursor(250, 70);
+    tft.textWrite("Main Menu");
+    tft.textEnlarge(1);
 }
 
 void drawPreTestMenu(int state)
@@ -586,12 +594,12 @@ void drawResultsMenu()
         tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_RED); // PIM progess box post completion
     }
 
-    if (!getSignalAlarm(SOLENOIDVALVEOP) && !getSignalAlarm(PUMPPOWEROP) && configuration == 0)
+    if (!getSignalAlarm(SOLENOIDVALVEOP) && !getSignalAlarm(PUMPPOWEROP) && configuration != 1)
     {
         tft.fillRoundRect(300, 200, 160, 160, 15, RA8875_BLACK); // Outline for PUMP progress box
         tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_GREEN); // PUMP progess box post completion
     }
-    else if (configuration == 0)
+    else if (configuration != 1)
     {
         tft.fillRoundRect(300, 200, 160, 160, 15, RA8875_BLACK); // Outline for PUMP progress box
         tft.fillRoundRect(305, 205, 150, 150, 15, RA8875_RED);   // PUMP progess box post completion
@@ -626,7 +634,7 @@ void drawResultsMenu()
     tft.textSetCursor(55, 260);
     tft.textEnlarge(1);
     tft.textWrite("PIM Test");
-    if (configuration == 0)
+    if (configuration != 1)
     {
         tft.textSetCursor(310, 260);
         tft.textWrite("Pump Test");
@@ -910,9 +918,9 @@ void drawConfigurationMenu()
     }
     else
     {
-        tft.textWrite("Selected: NULL");
+        tft.textWrite("Selected: Default");
     }
-    tft.textSetCursor(200, 50); // Title location
+    tft.textSetCursor(210, 50); // Title location
     tft.textColor(RA8875_BLACK, RA8875_WHITE); // Title color
     tft.textEnlarge(2); // Title size
     tft.textWrite("Configurations"); // Title text
