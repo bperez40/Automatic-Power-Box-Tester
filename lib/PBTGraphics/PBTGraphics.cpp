@@ -607,7 +607,7 @@ void touchCheck()
             {
                 cd.status = millis();
                 tft.textMode();
-                tft.textSetCursor(530, 60);
+                tft.textSetCursor(560, 100);
                 tft.textEnlarge(1);
                 if (digitalRead(PONSIG))
                 { // Remember, signals are open drain
@@ -619,7 +619,7 @@ void touchCheck()
                     tft.textColor(RA8875_BLACK, RA8875_GREEN);
                     tft.textWrite("ACTIVE");
                 }
-                tft.textSetCursor(500, 100);
+                tft.textSetCursor(560, 140);
                 if (digitalRead(BLPWRSIG)){
                     tft.textColor(RA8875_WHITE, RA8875_RED);
                     tft.textWrite("G");
@@ -628,7 +628,7 @@ void touchCheck()
                     tft.textColor(RA8875_BLACK, RA8875_GREEN);
                     tft.textWrite("G");
                 }
-                tft.textSetCursor(530, 100);
+                tft.textSetCursor(590, 140);
                 if (digitalRead(BLPWRNEUSIG)){
                     tft.textColor(RA8875_WHITE, RA8875_RED);
                     tft.textWrite("N");
@@ -637,7 +637,7 @@ void touchCheck()
                     tft.textColor(RA8875_BLACK, RA8875_GREEN);
                     tft.textWrite("N");
                 }
-                tft.textSetCursor(560, 100);
+                tft.textSetCursor(620, 140);
                 if (digitalRead(BLCTRLPWRSIG)){
                     tft.textColor(RA8875_WHITE, RA8875_RED);
                     tft.textWrite("CTRL");
@@ -645,6 +645,87 @@ void touchCheck()
                 else{
                     tft.textColor(RA8875_BLACK, RA8875_GREEN);
                     tft.textWrite("CTRL");
+                }
+                tft.textSetCursor(560, 180);
+                if (digitalRead(PWMLOWSIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("INACTIVE");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("ACTIVE");
+                }
+                tft.textSetCursor(560, 220);
+                if (digitalRead(GASVALVESIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("INACTIVE");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_RED);
+                    tft.textWrite("ACTIVE");
+                }
+                tft.textSetCursor(560, 260);
+                if (digitalRead(PWMHIGHSIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("INACTIVE");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("ACTIVE");
+                }
+                tft.textSetCursor(560, 300);
+                if (digitalRead(SVALVESIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("INACTIVE");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("ACTIVE");
+                }
+                tft.textSetCursor(560, 340);
+                if (digitalRead(PMPWRSIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("INACTIVE");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("ACTIVE");
+                }
+                tft.textSetCursor(560, 380);
+                if (digitalRead(BSKTPWRSIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("PWR");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("PWR");
+                }
+                tft.textSetCursor(620, 380);
+                if (digitalRead(LBSKTSIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("L");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("L");
+                }
+                tft.textSetCursor(650, 380);
+                if (digitalRead(RBSKTSIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("R");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("R");
+                }
+                tft.textSetCursor(560, 420);
+                if (digitalRead(ALARMSIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("INACTIVE");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("ACTIVE");
                 }
             }
         }
@@ -1201,24 +1282,22 @@ void drawDebugMenu()
     tft.textSetCursor(115, 400);
     tft.textWrite("Basket Toggle");
     tft.textColor(RA8875_BLACK, RA8875_WHITE);
-    tft.textSetCursor(380, 60);
-    tft.textWrite("Power On:");
     tft.textSetCursor(380, 100);
-    tft.textWrite("Blower:");
+    tft.textWrite("Power On:");
     tft.textSetCursor(380, 140);
-    tft.textWrite("L.D. Cycle:");
+    tft.textWrite("Blower:");
     tft.textSetCursor(380, 180);
-    tft.textWrite("Gas Valve:");
+    tft.textWrite("L.D. Cycle:");
     tft.textSetCursor(380, 220);
-    tft.textWrite("H.D. Cycle:");
+    tft.textWrite("Gas Valve:");
     tft.textSetCursor(380, 260);
-    tft.textWrite("S. Valve:");
+    tft.textWrite("H.D. Cycle:");
     tft.textSetCursor(380, 300);
-    tft.textWrite("Pump Power:");
+    tft.textWrite("S. Valve:");
     tft.textSetCursor(380, 340);
-    tft.textWrite("Basket Power:");
+    tft.textWrite("Pump Power:");
     tft.textSetCursor(380, 380);
-    tft.textWrite("BsktCtrl.:");
+    tft.textWrite("Basket:");
     tft.textSetCursor(380, 420);
     tft.textWrite("Alarm:");
 }
