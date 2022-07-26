@@ -607,7 +607,7 @@ void touchCheck()
             {
                 cd.status = millis();
                 tft.textMode();
-                tft.textSetCursor(525, 100);
+                tft.textSetCursor(530, 60);
                 tft.textEnlarge(1);
                 if (digitalRead(PONSIG))
                 { // Remember, signals are open drain
@@ -618,6 +618,33 @@ void touchCheck()
                 {
                     tft.textColor(RA8875_BLACK, RA8875_GREEN);
                     tft.textWrite("ACTIVE");
+                }
+                tft.textSetCursor(500, 100);
+                if (digitalRead(BLPWRSIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("G");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("G");
+                }
+                tft.textSetCursor(530, 100);
+                if (digitalRead(BLPWRNEUSIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("N");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("N");
+                }
+                tft.textSetCursor(560, 100);
+                if (digitalRead(BLCTRLPWRSIG)){
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("CTRL");
+                }
+                else{
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("CTRL");
                 }
             }
         }
@@ -635,9 +662,9 @@ void drawMainMenu()
     tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // White background
 
     // Boxes
-    tft.fillRoundRect(65, 195, 310, 85, 25, 0b0011101111100111); // This is the start button's border
-    tft.fillRoundRect(70, 200, 300, 75, 25, 0b0000000000000000); // This is the start button
-    tft.fillRoundRect(65, 295, 310, 85, 25, 0b0111101111101111); // This is the configuration button's border
+    tft.fillRoundRect(65, 195, 310, 85, 25, 0b0011101111100111); // This is the auto test button's border
+    tft.fillRoundRect(70, 200, 300, 75, 25, 0b0000000000000000); // This is the auto test button
+    tft.fillRoundRect(65, 295, 310, 85, 25, RA8875_YELLOW); // This is the configuration button's border
     tft.fillRoundRect(70, 300, 300, 75, 25, RA8875_BLACK);       // This is the configuration button
     tft.fillRoundRect(420, 195, 310, 85, 25, RA8875_RED);        // This is the debug button's border
     tft.fillRoundRect(425, 200, 300, 75, 25, RA8875_BLACK);      // This is the debug button
@@ -646,10 +673,10 @@ void drawMainMenu()
 
     // Write text in boxes
     tft.textMode();              // Switch from graphics mode to text mode
-    tft.textSetCursor(140, 220); // Location of text in first box
+    tft.textSetCursor(145, 220); // Location of text in first box
     tft.textEnlarge(1);          // Make text larger
     tft.textTransparent(RA8875_WHITE);
-    tft.textWrite("Start Test");
+    tft.textWrite("Auto Test");
     tft.textSetCursor(110, 320);
     tft.textColor(RA8875_WHITE, RA8875_BLACK);
     tft.textWrite("Configurations");
@@ -1174,11 +1201,24 @@ void drawDebugMenu()
     tft.textSetCursor(115, 400);
     tft.textWrite("Basket Toggle");
     tft.textColor(RA8875_BLACK, RA8875_WHITE);
-    tft.textSetCursor(380, 100);
+    tft.textSetCursor(380, 60);
     tft.textWrite("Power On:");
-    tft.textSetCursor(490, 25);
-    tft.textEnlarge(2);
-    tft.textColor(RA8875_BLACK, RA8875_WHITE);
-    tft.textWrite("Status"); // Subtitle
-    tft.fillRect(490, 70, 145, 5, RA8875_BLACK);
+    tft.textSetCursor(380, 100);
+    tft.textWrite("Blower:");
+    tft.textSetCursor(380, 140);
+    tft.textWrite("L.D. Cycle:");
+    tft.textSetCursor(380, 180);
+    tft.textWrite("Gas Valve:");
+    tft.textSetCursor(380, 220);
+    tft.textWrite("H.D. Cycle:");
+    tft.textSetCursor(380, 260);
+    tft.textWrite("S. Valve:");
+    tft.textSetCursor(380, 300);
+    tft.textWrite("Pump Power:");
+    tft.textSetCursor(380, 340);
+    tft.textWrite("Basket Power:");
+    tft.textSetCursor(380, 380);
+    tft.textWrite("BsktCtrl.:");
+    tft.textSetCursor(380, 420);
+    tft.textWrite("Alarm:");
 }
