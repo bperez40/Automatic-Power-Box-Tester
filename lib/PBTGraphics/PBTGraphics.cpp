@@ -609,6 +609,7 @@ void drawMainMenu()
     tft.fillScreen(RA8875_WHITE); // ^
     // With hardware acceleration this is instant
     tft.fillScreen(DARKRED);                               // Dark red border
+    tft.fillRoundRect(9, 12, 776, 450, 15, RA8875_BLACK);
     tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // White background
 
     // Boxes

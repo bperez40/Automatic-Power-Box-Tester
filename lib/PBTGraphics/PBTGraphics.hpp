@@ -34,6 +34,7 @@
 #define CONFIG 9
 #define DEBUG 10
 
+/* Don't recommend changing the below calibrations b/c they feel nice, but you can if you want */
 #define TOUCHREJECT 500 // Lower for more sensitive touches, higher for more touch rejection
 #define GLOBALCD 100 // Dictates the amount of time in milliseconds before you can push a button again
 
