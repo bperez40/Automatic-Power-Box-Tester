@@ -50,8 +50,6 @@ signalinfo_t LowDutyCycle;
 signalinfo_t HighDutyCycle;
 signalinfo_t Alarm;
 
-toggles *tgs = new toggles; // Heap allocating because we need to manually control the liftime of this struct
-
 int active_menu;
 
 int getActiveMenu()
@@ -296,6 +294,8 @@ void touchCheck()
     unsigned long current_time = millis();
     cooldowns cd;
     cd.basket = cd.heat = cd.default_config = cd.nonfilter = cd.power = cd.pump = cd.svalve = millis();
+    toggles tgs;
+    tgs.power_toggle = tgs.heat_toggle = tgs.pump_toggle = tgs.svalve_toggle = tgs.basket_toggle = false;
     /* Wait around for touch events */
     while (!option_selected)
     {
@@ -456,15 +456,10 @@ void touchCheck()
                     if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
                     {
                         /* Make sure all outputs are false upon leaving the menu */
-                        tgs->power_toggle = false;
                         digitalWrite(POWERCTRL, LOW);
-                        tgs->heat_toggle = false;
                         digitalWrite(THCALLCTRL, LOW);
-                        tgs->svalve_toggle = false;
                         digitalWrite(SVALVECTRL, LOW);
-                        tgs->pump_toggle = false;
                         digitalWrite(PUMPCTRL, LOW);
-                        tgs->basket_toggle = false;
                         digitalWrite(BSKTCTRL, LOW);
                         option_selected = true;
                         setOption(2);
@@ -480,16 +475,16 @@ void touchCheck()
                         tft.textMode(); // Going to rewrite some text in a second
                         tft.textSetCursor(120, 40);
                         tft.textEnlarge(1);
-                        if (tgs->power_toggle == false)
+                        if (tgs.power_toggle == false)
                         {
-                            tgs->power_toggle = true;
+                            tgs.power_toggle = true;
                             digitalWrite(POWERCTRL, HIGH);
                             tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_GREEN); // This is the first button
                             tft.textColor(RA8875_BLACK, RA8875_GREEN); // Recolor and rewrite the text over the new box
                         }
                         else
                         {
-                            tgs->power_toggle = false;
+                            tgs.power_toggle = false;
                             digitalWrite(POWERCTRL, LOW);
                             tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_RED); // This is the first button
                             tft.textColor(RA8875_WHITE, RA8875_RED); // Recolor and rewrite the text over the new box
@@ -502,16 +497,16 @@ void touchCheck()
                         tft.textMode(); // Going to rewrite some text in a second
                         tft.textSetCursor(106, 130);
                         tft.textEnlarge(1);
-                        if (tgs->heat_toggle == false)
+                        if (tgs.heat_toggle == false)
                         {
-                            tgs->heat_toggle = true;
+                            tgs.heat_toggle = true;
                             digitalWrite(THCALLCTRL, HIGH);
                             tft.fillRoundRect(100, 120, 240, 55, 25, RA8875_GREEN); // This is the second button
                             tft.textColor(RA8875_BLACK, RA8875_GREEN);
                         }
                         else
                         {
-                            tgs->heat_toggle = false;
+                            tgs.heat_toggle = false;
                             digitalWrite(THCALLCTRL, LOW);
                             tft.fillRoundRect(100, 120, 240, 55, 25, RA8875_RED); // This is the second button
                             tft.textColor(RA8875_WHITE, RA8875_RED);
@@ -524,16 +519,16 @@ void touchCheck()
                         tft.textMode();
                         tft.textSetCursor(115, 220);
                         tft.textEnlarge(1);
-                        if (tgs->svalve_toggle == false)
+                        if (tgs.svalve_toggle == false)
                         {
-                            tgs->svalve_toggle = true;
+                            tgs.svalve_toggle = true;
                             digitalWrite(SVALVECTRL, HIGH);
                             tft.fillRoundRect(100, 210, 240, 55, 25, RA8875_GREEN); // Third button
                             tft.textColor(RA8875_BLACK, RA8875_GREEN);
                         }
                         else
                         {
-                            tgs->svalve_toggle = false;
+                            tgs.svalve_toggle = false;
                             digitalWrite(SVALVECTRL, LOW);
                             tft.fillRoundRect(100, 210, 240, 55, 25, RA8875_RED); // Third button
                             tft.textColor(RA8875_WHITE, RA8875_RED);
@@ -546,16 +541,16 @@ void touchCheck()
                         tft.textMode();
                         tft.textSetCursor(130, 310);
                         tft.textEnlarge(1);
-                        if (tgs->pump_toggle == false)
+                        if (tgs.pump_toggle == false)
                         {
-                            tgs->pump_toggle = true;
+                            tgs.pump_toggle = true;
                             digitalWrite(PUMPCTRL, HIGH);
                             tft.fillRoundRect(100, 300, 240, 55, 25, RA8875_GREEN); // This is the fourth button
                             tft.textColor(RA8875_BLACK, RA8875_GREEN);
                         }
                         else
                         {
-                            tgs->pump_toggle = false;
+                            tgs.pump_toggle = false;
                             digitalWrite(PUMPCTRL, LOW);
                             tft.fillRoundRect(100, 300, 240, 55, 25, RA8875_RED); // This is the fourth button
                             tft.textColor(RA8875_WHITE, RA8875_RED);
@@ -568,16 +563,16 @@ void touchCheck()
                         tft.textMode();
                         tft.textSetCursor(115, 400);
                         tft.textEnlarge(1);
-                        if (tgs->basket_toggle == false)
+                        if (tgs.basket_toggle == false)
                         {
-                            tgs->basket_toggle = true;
+                            tgs.basket_toggle = true;
                             digitalWrite(BSKTCTRL, HIGH);
                             tft.fillRoundRect(100, 390, 240, 55, 25, RA8875_GREEN); // This is the fifth button
                             tft.textColor(RA8875_BLACK, RA8875_GREEN);
                         }
                         else
                         {
-                            tgs->basket_toggle = false;
+                            tgs.basket_toggle = false;
                             digitalWrite(BSKTCTRL, LOW);
                             tft.fillRoundRect(100, 390, 240, 55, 25, RA8875_RED); // This is the fifth button
                             tft.textColor(RA8875_WHITE, RA8875_RED);
@@ -1151,10 +1146,4 @@ void drawDebugMenu()
     tft.textWrite("Pump Toggle");
     tft.textSetCursor(115, 400);
     tft.textWrite("Basket Toggle");
-
-    tgs->power_toggle = false;
-    tgs->heat_toggle = false;
-    tgs->pump_toggle = false;
-    tgs->svalve_toggle = false;
-    tgs->basket_toggle = false;
 }
