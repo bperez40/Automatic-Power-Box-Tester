@@ -15,7 +15,8 @@ struct toggles
     bool basket_toggle;
 };
 
-struct cooldowns{
+struct cooldowns
+{
     unsigned long power;
     unsigned long heat;
     unsigned long svalve;
@@ -23,6 +24,7 @@ struct cooldowns{
     unsigned long basket;
     unsigned long default_config;
     unsigned long nonfilter;
+    unsigned long status;
 };
 
 typedef struct signalinfo_t
@@ -288,18 +290,20 @@ void touchCheck()
     float yScale = 1024.0F / tft.height();
     bool option_selected = false;
     setOption(-1);
-    bool untouched = false; // Checks to see when the screen has been untouched
+    bool untouched = false;   // Checks to see when the screen has been untouched
     bool prev_untouch = true; // Used to keep track if the screen was touched in the previous loop. Should start as true.
-    int tchaincount = 0; // Used to keep track of number of chained untouches
+    int tchaincount = 0;      // Used to keep track of number of chained untouches
     unsigned long current_time = millis();
     cooldowns cd;
-    cd.basket = cd.heat = cd.default_config = cd.nonfilter = cd.power = cd.pump = cd.svalve = millis();
+    cd.basket = cd.heat = cd.default_config = cd.nonfilter = cd.power = cd.pump = cd.svalve = cd.status = millis();
     toggles tgs;
     tgs.power_toggle = tgs.heat_toggle = tgs.pump_toggle = tgs.svalve_toggle = tgs.basket_toggle = false;
     /* Wait around for touch events */
     while (!option_selected)
     {
-        if (tchaincount == TOUCHREJECT){
+        current_time = millis(); // update time relative to cooldowns
+        if (tchaincount == TOUCHREJECT)
+        {
             untouched = true;
         }
         if (tft.touched())
@@ -451,7 +455,7 @@ void touchCheck()
                     }
                     break;
                 case DEBUG:
-                    current_time = millis(); // update time relative to cooldowns
+                    /* Check status and update screen appropriately */
                     /* If back is touched */
                     if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
                     {
@@ -472,7 +476,7 @@ void touchCheck()
                     else if (tx >= 140 && tx <= 465 && ty >= 170 && ty <= 260 && current_time - cd.power >= GLOBALCD)
                     {
                         cd.power = millis(); // Reset cooldown
-                        tft.textMode(); // Going to rewrite some text in a second
+                        tft.textMode();      // Going to rewrite some text in a second
                         tft.textSetCursor(120, 40);
                         tft.textEnlarge(1);
                         if (tgs.power_toggle == false)
@@ -480,14 +484,14 @@ void touchCheck()
                             tgs.power_toggle = true;
                             digitalWrite(POWERCTRL, HIGH);
                             tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_GREEN); // This is the first button
-                            tft.textColor(RA8875_BLACK, RA8875_GREEN); // Recolor and rewrite the text over the new box
+                            tft.textColor(RA8875_BLACK, RA8875_GREEN);             // Recolor and rewrite the text over the new box
                         }
                         else
                         {
                             tgs.power_toggle = false;
                             digitalWrite(POWERCTRL, LOW);
                             tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_RED); // This is the first button
-                            tft.textColor(RA8875_WHITE, RA8875_RED); // Recolor and rewrite the text over the new box
+                            tft.textColor(RA8875_WHITE, RA8875_RED);             // Recolor and rewrite the text over the new box
                         }
                         tft.textWrite("Power Toggle");
                     }
@@ -583,16 +587,39 @@ void touchCheck()
                 }
             }
         }
-        else /* Used to prevent accidental inputs */
+        else /* Used to prevent accidental inputs and update non-touch events*/
         {
-            if (!prev_untouch){ /* untouches need to be chained in order to count towards complete finger removal. */
+            /* Start touch rejection */
+            if (!prev_untouch)
+            { /* untouches need to be chained in order to count towards complete finger removal. */
                 tchaincount = 0;
             }
-            else{
+            else
+            {
                 tchaincount += 1;
             }
             prev_untouch = true;
             tx = ty = 0;
+            /* End touch rejection */
+
+            /* Signal status on debug screen */
+            if (active_menu == DEBUG && current_time - cd.status >= GLOBALCD) // Cooldown otherwise this takes soooo long
+            {
+                cd.status = millis();
+                tft.textMode();
+                tft.textSetCursor(525, 100);
+                tft.textEnlarge(1);
+                if (digitalRead(PONSIG))
+                { // Remember, signals are open drain
+                    tft.textColor(RA8875_WHITE, RA8875_RED);
+                    tft.textWrite("INACTIVE");
+                }
+                else
+                {
+                    tft.textColor(RA8875_BLACK, RA8875_GREEN);
+                    tft.textWrite("ACTIVE");
+                }
+            }
         }
     }
 }
@@ -603,7 +630,7 @@ void drawMainMenu()
     tft.fillScreen(0x0);          // If you don't do this, expect glitches galore
     tft.fillScreen(RA8875_WHITE); // ^
     // With hardware acceleration this is instant
-    tft.fillScreen(DARKRED);                               // Dark red border
+    tft.fillScreen(DARKRED); // Dark red border
     tft.fillRoundRect(9, 12, 776, 450, 15, RA8875_BLACK);
     tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // White background
 
@@ -627,7 +654,7 @@ void drawMainMenu()
     tft.textColor(RA8875_WHITE, RA8875_BLACK);
     tft.textWrite("Configurations");
     tft.textSetCursor(530, 220);
-    tft.textWrite("Debug");
+    tft.textWrite("Manual");
     tft.textSetCursor(130, 400);
     tft.textColor(RA8875_BLACK, RA8875_WHITE);
     if (configuration == 0)
@@ -1146,4 +1173,12 @@ void drawDebugMenu()
     tft.textWrite("Pump Toggle");
     tft.textSetCursor(115, 400);
     tft.textWrite("Basket Toggle");
+    tft.textColor(RA8875_BLACK, RA8875_WHITE);
+    tft.textSetCursor(380, 100);
+    tft.textWrite("Power On:");
+    tft.textSetCursor(490, 25);
+    tft.textEnlarge(2);
+    tft.textColor(RA8875_BLACK, RA8875_WHITE);
+    tft.textWrite("Status"); // Subtitle
+    tft.fillRect(490, 70, 145, 5, RA8875_BLACK);
 }
