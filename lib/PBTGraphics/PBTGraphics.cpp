@@ -290,15 +290,21 @@ void touchCheck()
     float yScale = 1024.0F / tft.height();
     bool option_selected = false;
     setOption(-1);
-    bool untouched = false;
+    bool untouched = false; // Checks to see when the screen has been untouched
+    bool prev_untouch = true; // Used to keep track if the screen was touched in the previous loop. Should start as true.
+    int tchaincount = 0; // Used to keep track of number of chained untouches
+    unsigned long current_time = millis();
     cooldowns cd;
     cd.basket = cd.heat = cd.default_config = cd.nonfilter = cd.power = cd.pump = cd.svalve = millis();
-    unsigned long current_time = millis(); 
     /* Wait around for touch events */
     while (!option_selected)
     {
+        if (tchaincount == TOUCHREJECT){
+            untouched = true;
+        }
         if (tft.touched())
         {
+            prev_untouch = false;
             tft.touchRead(&tx, &ty);
             /*
             Serial.print(tx);
@@ -445,7 +451,7 @@ void touchCheck()
                     }
                     break;
                 case DEBUG:
-                    current_time = millis(); // Update current time (relative to cooldowns)
+                    current_time = millis(); // update time relative to cooldowns
                     /* If back is touched */
                     if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
                     {
@@ -470,7 +476,7 @@ void touchCheck()
                      */
                     else if (tx >= 140 && tx <= 465 && ty >= 170 && ty <= 260 && current_time - cd.power >= GLOBALCD)
                     {
-                        cd.power = millis();
+                        cd.power = millis(); // Reset cooldown
                         if (tgs->power_toggle == false)
                         {
                             tgs->power_toggle = true;
@@ -554,8 +560,14 @@ void touchCheck()
         }
         else /* Used to prevent accidental inputs */
         {
+            if (!prev_untouch){ /* untouches need to be chained in order to count towards complete finger removal. */
+                tchaincount = 0;
+            }
+            else{
+                tchaincount += 1;
+            }
+            prev_untouch = true;
             tx = ty = 0;
-            untouched = true;
         }
     }
 }

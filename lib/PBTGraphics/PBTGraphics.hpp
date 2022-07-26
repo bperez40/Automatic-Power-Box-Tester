@@ -34,8 +34,8 @@
 #define CONFIG 9
 #define DEBUG 10
 
-#define GLOBALCD 200
-#define GLOBALCHAINS 100
+#define TOUCHREJECT 500 // Lower for more sensitive touches, higher for more touch rejection
+#define GLOBALCD 100 // Dictates the amount of time in milliseconds before you can push a button again
 
 int getActiveMenu();
 
