@@ -298,6 +298,7 @@ void touchCheck()
     cd.basket = cd.heat = cd.default_config = cd.nonfilter = cd.power = cd.pump = cd.svalve = cd.status = millis();
     toggles tgs;
     tgs.power_toggle = tgs.heat_toggle = tgs.pump_toggle = tgs.svalve_toggle = tgs.basket_toggle = false;
+    /* prevstatus structure needs to live outside of this function, so we'll heap allocate this one */
     /* Wait around for touch events */
     while (!option_selected)
     {
@@ -521,7 +522,7 @@ void touchCheck()
                     {
                         cd.svalve = millis();
                         tft.textMode();
-                        tft.textSetCursor(115, 220);
+                        tft.textSetCursor(110, 220);
                         tft.textEnlarge(1);
                         if (tgs.svalve_toggle == false)
                         {
@@ -537,7 +538,7 @@ void touchCheck()
                             tft.fillRoundRect(100, 210, 240, 55, 25, RA8875_RED); // Third button
                             tft.textColor(RA8875_WHITE, RA8875_RED);
                         }
-                        tft.textWrite("SValve Toggle");
+                        tft.textWrite("S.Valve Toggle");
                     }
                     else if (tx >= 140 && tx <= 465 && ty >= 610 && ty <= 705 && current_time - cd.pump >= GLOBALCD)
                     {
@@ -1154,8 +1155,8 @@ void drawDebugMenu()
     tft.textWrite("Power Toggle");
     tft.textSetCursor(106, 130);
     tft.textWrite("Heating Toggle");
-    tft.textSetCursor(115, 220);
-    tft.textWrite("SValve Toggle");
+    tft.textSetCursor(110, 220);
+    tft.textWrite("S.Valve Toggle");
     tft.textSetCursor(130, 310);
     tft.textWrite("Pump Toggle");
     tft.textSetCursor(115, 400);
@@ -1179,27 +1180,36 @@ void drawDebugMenu()
     tft.textWrite("Basket:");
     tft.textSetCursor(380, 420);
     tft.textWrite("Alarm:");
+    tft.textEnlarge(2);
+    tft.textSetCursor(475, 25);
+    tft.fillRect(390, 75, 300, 5, RA8875_BLACK);
+    tft.textWrite("STATUS");
 }
 
 /* To be used only on the manual screen. When used, updates only the status bars as a non touch
  * driven event instead of refreshing the whole screen. Returns a time to update the last time this
  * function ran.
  */
+
 unsigned long updateStatus()
 {
     tft.textMode();
+
     tft.textSetCursor(560, 100);
     tft.textEnlarge(1);
     if (digitalRead(PONSIG))
     { // Remember, signals are open drain
         tft.textColor(RA8875_WHITE, RA8875_RED);
-        tft.textWrite("INACTIVE");
+        tft.textWrite("OFF");
     }
     else
     {
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
-        tft.textWrite("ACTIVE");
+        tft.textWrite("ON");
+        tft.textColor(RA8875_WHITE, RA8875_WHITE);
+        tft.textWrite("F"); // Whites out the last bit of the other message
     }
+
     tft.textSetCursor(560, 140);
     if (digitalRead(BLPWRSIG))
     {
@@ -1211,6 +1221,7 @@ unsigned long updateStatus()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("G");
     }
+
     tft.textSetCursor(590, 140);
     if (digitalRead(BLPWRNEUSIG))
     {
@@ -1222,6 +1233,7 @@ unsigned long updateStatus()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("N");
     }
+
     tft.textSetCursor(620, 140);
     if (digitalRead(BLCTRLPWRSIG))
     {
@@ -1233,6 +1245,7 @@ unsigned long updateStatus()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("CTRL");
     }
+
     tft.textSetCursor(560, 180);
     if (digitalRead(PWMLOWSIG))
     {
@@ -1243,7 +1256,10 @@ unsigned long updateStatus()
     {
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("ACTIVE");
+        tft.textColor(RA8875_WHITE, RA8875_WHITE);
+        tft.textWrite("VE");
     }
+
     tft.textSetCursor(560, 220);
     if (digitalRead(GASVALVESIG))
     {
@@ -1252,9 +1268,12 @@ unsigned long updateStatus()
     }
     else
     {
-        tft.textColor(RA8875_BLACK, RA8875_RED);
+        tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("ACTIVE");
+        tft.textColor(RA8875_WHITE, RA8875_WHITE);
+        tft.textWrite("VE");
     }
+
     tft.textSetCursor(560, 260);
     if (digitalRead(PWMHIGHSIG))
     {
@@ -1265,7 +1284,10 @@ unsigned long updateStatus()
     {
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("ACTIVE");
+        tft.textColor(RA8875_WHITE, RA8875_WHITE);
+        tft.textWrite("VE");
     }
+
     tft.textSetCursor(560, 300);
     if (digitalRead(SVALVESIG))
     {
@@ -1276,7 +1298,10 @@ unsigned long updateStatus()
     {
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("ACTIVE");
+        tft.textColor(RA8875_WHITE, RA8875_WHITE);
+        tft.textWrite("VE");
     }
+
     tft.textSetCursor(560, 340);
     if (digitalRead(PMPWRSIG))
     {
@@ -1287,7 +1312,10 @@ unsigned long updateStatus()
     {
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("ACTIVE");
+        tft.textColor(RA8875_WHITE, RA8875_WHITE);
+        tft.textWrite("VE");
     }
+
     tft.textSetCursor(560, 380);
     if (digitalRead(BSKTPWRSIG))
     {
@@ -1299,6 +1327,7 @@ unsigned long updateStatus()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("PWR");
     }
+
     tft.textSetCursor(620, 380);
     if (digitalRead(LBSKTSIG))
     {
@@ -1310,6 +1339,7 @@ unsigned long updateStatus()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("L");
     }
+
     tft.textSetCursor(650, 380);
     if (digitalRead(RBSKTSIG))
     {
@@ -1321,6 +1351,7 @@ unsigned long updateStatus()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("R");
     }
+
     tft.textSetCursor(560, 420);
     if (digitalRead(ALARMSIG))
     {
@@ -1331,6 +1362,8 @@ unsigned long updateStatus()
     {
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("ACTIVE");
+        tft.textColor(RA8875_WHITE, RA8875_WHITE);
+        tft.textWrite("VE");
     }
     return millis();
 }
