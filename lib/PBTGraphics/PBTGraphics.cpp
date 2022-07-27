@@ -466,6 +466,7 @@ void touchCheck()
                         digitalWrite(SVALVECTRL, LOW);
                         digitalWrite(PUMPCTRL, LOW);
                         digitalWrite(BSKTCTRL, LOW);
+                        digitalWrite(SPD1, LOW);
                         option_selected = true;
                         setOption(2);
                     }
@@ -1220,16 +1221,18 @@ void drawDebugMenu()
     tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);         // Outline for back box
     tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);         // Back box
     tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE);    // Arrow in back box
-    tft.fillRoundRect(95, 25, 250, 65, 25, 0b0111101111101111);  // This is the first button's border
+    tft.fillRoundRect(95, 25, 250, 65, 25, RA8875_BLACK);  // This is the first button's border
     tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_RED);         // This is the first button
-    tft.fillRoundRect(95, 115, 250, 65, 25, 0b0111101111101111); // This is the second button's border
+    tft.fillRoundRect(95, 115, 250, 65, 25, RA8875_BLACK); // This is the second button's border
     tft.fillRoundRect(100, 120, 240, 55, 25, DARKGREY);          // This is the second button
-    tft.fillRoundRect(95, 205, 250, 65, 25, 0b0111101111101111); // This is the third button's border
+    tft.fillRoundRect(95, 205, 250, 65, 25, RA8875_BLACK); // This is the third button's border
     tft.fillRoundRect(100, 210, 240, 55, 25, DARKGREY);          // This is the third button
-    tft.fillRoundRect(95, 295, 250, 65, 25, 0b0111101111101111); // This is the fourth button's border
+    tft.fillRoundRect(95, 295, 250, 65, 25, RA8875_BLACK); // This is the fourth button's border
     tft.fillRoundRect(100, 300, 240, 55, 25, DARKGREY);          // This is the fourth button
-    tft.fillRoundRect(95, 385, 250, 65, 25, 0b0111101111101111); // This is the fifth button's border
+    tft.fillRoundRect(95, 385, 250, 65, 25, RA8875_BLACK); // This is the fifth button's border
     tft.fillRoundRect(100, 390, 240, 55, 25, DARKGREY);          // This is the fifth button
+    tft.fillRoundRect(20, 117, 65, 243, 25, RA8875_BLACK); // This is the flame sense button's border
+    tft.fillRoundRect(25, 122, 55, 233, 25, DARKGREY); // This is the flame sense button
 
     tft.textMode();
     tft.textSetCursor(120, 40);
@@ -1245,6 +1248,25 @@ void drawDebugMenu()
     tft.textWrite("Pump Toggle");
     tft.textSetCursor(115, 400);
     tft.textWrite("Basket Toggle");
+    /* Vertical text for flame sense button */
+    tft.textTransparent(RA8875_WHITE);
+    tft.textSetCursor(50, 130);
+    tft.textWrite("F");
+    tft.textSetCursor(45, 155);
+    tft.textWrite("l");
+    tft.textSetCursor(45, 170);
+    tft.textWrite(".");
+    tft.textSetCursor(45, 215);
+    tft.textWrite("S");
+    tft.textSetCursor(45, 240);
+    tft.textWrite("e");
+    tft.textSetCursor(45, 265);
+    tft.textWrite("n");
+    tft.textSetCursor(45, 290);
+    tft.textWrite("s");
+    tft.textSetCursor(45, 315);
+    tft.textWrite("e");
+
     tft.textColor(RA8875_BLACK, RA8875_WHITE);
     tft.textSetCursor(380, 100);
     tft.textWrite("Power On:");
