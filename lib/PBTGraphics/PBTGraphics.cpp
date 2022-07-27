@@ -13,6 +13,7 @@ struct toggles
     bool svalve_toggle;
     bool pump_toggle;
     bool basket_toggle;
+    bool flame_toggle;
 };
 
 struct cooldowns
@@ -25,6 +26,7 @@ struct cooldowns
     unsigned long default_config;
     unsigned long nonfilter;
     unsigned long status;
+    unsigned long flamesense;
 };
 
 typedef struct signalinfo_t
@@ -295,7 +297,7 @@ void touchCheck()
     int tchaincount = 0;      // Used to keep track of number of chained untouches
     unsigned long current_time = millis();
     cooldowns cd;
-    cd.basket = cd.heat = cd.default_config = cd.nonfilter = cd.power = cd.pump = cd.svalve = cd.status = millis();
+    cd.basket = cd.heat = cd.default_config = cd.nonfilter = cd.power = cd.pump = cd.svalve = cd.status = cd.flamesense = millis();
     toggles tgs;
     tgs.power_toggle = tgs.heat_toggle = tgs.pump_toggle = tgs.svalve_toggle = tgs.basket_toggle = false;
     /* prevstatus structure needs to live outside of this function, so we'll heap allocate this one */
@@ -311,11 +313,9 @@ void touchCheck()
         {
             prev_untouch = false;
             tft.touchRead(&tx, &ty);
-            /*
             Serial.print(tx);
             Serial.print(", ");
             Serial.println(ty);
-            */
             if (!untouched) /* Prevents accidental inputs */
             {
             }
@@ -667,6 +667,43 @@ void touchCheck()
                             }
                         }
                         tft.textWrite("Basket Toggle");
+                    }
+                    else if (tx >= 75 && tx <= 135 && ty >= 340 && ty <= 700 && current_time - cd.flamesense >= GLOBALCD)
+                    {
+                        cd.flamesense = millis();
+                        tft.textMode();
+                        tft.textEnlarge(1);
+                        if (tgs.flame_toggle == false)
+                        {
+                            tgs.flame_toggle = true;
+                            digitalWrite(SPD1, HIGH);
+                            tft.fillRoundRect(25, 122, 55, 233, 25, RA8875_GREEN); // This is the flame sense button
+                            tft.textTransparent(RA8875_BLACK);
+                        }
+                        else
+                        {
+                            tgs.flame_toggle = false;
+                            digitalWrite(SPD1, LOW);
+                            tft.fillRoundRect(25, 122, 55, 233, 25, RA8875_RED); // This is the flame sense button
+                            tft.textTransparent(RA8875_WHITE);
+                        }
+                        /* Vertical text */
+                        tft.textSetCursor(50, 130);
+                        tft.textWrite("F");
+                        tft.textSetCursor(45, 155);
+                        tft.textWrite("l");
+                        tft.textSetCursor(45, 170);
+                        tft.textWrite(".");
+                        tft.textSetCursor(45, 215);
+                        tft.textWrite("S");
+                        tft.textSetCursor(45, 240);
+                        tft.textWrite("e");
+                        tft.textSetCursor(45, 265);
+                        tft.textWrite("n");
+                        tft.textSetCursor(45, 290);
+                        tft.textWrite("s");
+                        tft.textSetCursor(45, 315);
+                        tft.textWrite("e");
                     }
                     break;
                 }
@@ -1218,21 +1255,21 @@ void drawDebugMenu()
 {
     tft.graphicsMode();
     tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
-    tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);         // Outline for back box
-    tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);         // Back box
-    tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE);    // Arrow in back box
-    tft.fillRoundRect(95, 25, 250, 65, 25, RA8875_BLACK);  // This is the first button's border
-    tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_RED);         // This is the first button
-    tft.fillRoundRect(95, 115, 250, 65, 25, RA8875_BLACK); // This is the second button's border
-    tft.fillRoundRect(100, 120, 240, 55, 25, DARKGREY);          // This is the second button
-    tft.fillRoundRect(95, 205, 250, 65, 25, RA8875_BLACK); // This is the third button's border
-    tft.fillRoundRect(100, 210, 240, 55, 25, DARKGREY);          // This is the third button
-    tft.fillRoundRect(95, 295, 250, 65, 25, RA8875_BLACK); // This is the fourth button's border
-    tft.fillRoundRect(100, 300, 240, 55, 25, DARKGREY);          // This is the fourth button
-    tft.fillRoundRect(95, 385, 250, 65, 25, RA8875_BLACK); // This is the fifth button's border
-    tft.fillRoundRect(100, 390, 240, 55, 25, DARKGREY);          // This is the fifth button
-    tft.fillRoundRect(20, 117, 65, 243, 25, RA8875_BLACK); // This is the flame sense button's border
-    tft.fillRoundRect(25, 122, 55, 233, 25, DARKGREY); // This is the flame sense button
+    tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
+    tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
+    tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+    tft.fillRoundRect(95, 25, 250, 65, 25, RA8875_BLACK);     // This is the first button's border
+    tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_RED);      // This is the first button
+    tft.fillRoundRect(95, 115, 250, 65, 25, RA8875_BLACK);    // This is the second button's border
+    tft.fillRoundRect(100, 120, 240, 55, 25, DARKGREY);       // This is the second button
+    tft.fillRoundRect(95, 205, 250, 65, 25, RA8875_BLACK);    // This is the third button's border
+    tft.fillRoundRect(100, 210, 240, 55, 25, DARKGREY);       // This is the third button
+    tft.fillRoundRect(95, 295, 250, 65, 25, RA8875_BLACK);    // This is the fourth button's border
+    tft.fillRoundRect(100, 300, 240, 55, 25, DARKGREY);       // This is the fourth button
+    tft.fillRoundRect(95, 385, 250, 65, 25, RA8875_BLACK);    // This is the fifth button's border
+    tft.fillRoundRect(100, 390, 240, 55, 25, DARKGREY);       // This is the fifth button
+    tft.fillRoundRect(20, 117, 65, 243, 25, RA8875_BLACK);    // This is the flame sense button's border
+    tft.fillRoundRect(25, 122, 55, 233, 25, RA8875_RED);      // This is the flame sense button
 
     tft.textMode();
     tft.textSetCursor(120, 40);
