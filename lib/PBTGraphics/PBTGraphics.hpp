@@ -4,6 +4,7 @@
 #include "PBTCheck.hpp"
 
 #define NAVYBLUE 0b0011100011101111
+#define DARKGREY 0b0011100111100111
 #define DARKRED 0b0111100011100011
 
 /* Signal Info Options */

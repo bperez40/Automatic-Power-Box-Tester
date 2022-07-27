@@ -478,23 +478,74 @@ void touchCheck()
                     {
                         cd.power = millis(); // Reset cooldown
                         tft.textMode();      // Going to rewrite some text in a second
-                        tft.textSetCursor(120, 40);
                         tft.textEnlarge(1);
                         if (tgs.power_toggle == false)
                         {
                             tgs.power_toggle = true;
                             digitalWrite(POWERCTRL, HIGH);
+                            tft.textSetCursor(120, 40);
                             tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_GREEN); // This is the first button
                             tft.textColor(RA8875_BLACK, RA8875_GREEN);             // Recolor and rewrite the text over the new box
+                            tft.textWrite("Power Toggle");
+
+                            /* Show that the rest of the options are now selectable */
+                            tft.fillRoundRect(100, 390, 240, 55, 25, RA8875_RED); // This is the fifth button
+                            tft.textColor(RA8875_WHITE, RA8875_RED);
+                            tft.textSetCursor(115, 400);
+                            tft.textWrite("Basket Toggle");
+
+                            tft.fillRoundRect(100, 300, 240, 55, 25, RA8875_RED); // This is the fourth button
+                            tft.textColor(RA8875_WHITE, RA8875_RED);
+                            tft.textSetCursor(130, 310);
+                            tft.textWrite("Pump Toggle");
+
+                            tft.fillRoundRect(100, 210, 240, 55, 25, RA8875_RED); // Third button
+                            tft.textColor(RA8875_WHITE, RA8875_RED);
+                            tft.textSetCursor(110, 220);
+                            tft.textWrite("S.Valve Toggle");
+
+                            tft.fillRoundRect(100, 120, 240, 55, 25, RA8875_RED); // This is the second button
+                            tft.textColor(RA8875_WHITE, RA8875_RED);
+                            tft.textSetCursor(106, 130);
+                            tft.textWrite("Heating Toggle");
                         }
                         else
-                        {
+                        { // Unlike the others, this should force EVERY output to turn off
+                            tgs.basket_toggle = false;
+                            digitalWrite(BSKTCTRL, LOW);
+                            tft.textSetCursor(115, 400);
+                            tft.fillRoundRect(100, 390, 240, 55, 25, DARKGREY); // This is the fifth button
+                            tft.textColor(RA8875_WHITE, DARKGREY);
+                            tft.textWrite("Basket Toggle");
+
+                            tgs.pump_toggle = false;
+                            digitalWrite(PUMPCTRL, LOW);
+                            tft.textSetCursor(130, 310);
+                            tft.fillRoundRect(100, 300, 240, 55, 25, DARKGREY); // This is the fourth button
+                            tft.textColor(RA8875_WHITE, DARKGREY);
+                            tft.textWrite("Pump Toggle");
+
+                            tgs.svalve_toggle = false;
+                            digitalWrite(SVALVECTRL, LOW);
+                            tft.textSetCursor(110, 220);
+                            tft.fillRoundRect(100, 210, 240, 55, 25, DARKGREY); // Third button
+                            tft.textColor(RA8875_WHITE, DARKGREY);
+                            tft.textWrite("S.Valve Toggle");
+
+                            tgs.heat_toggle = false;
+                            digitalWrite(THCALLCTRL, LOW);
+                            tft.textSetCursor(106, 130);
+                            tft.fillRoundRect(100, 120, 240, 55, 25, DARKGREY); // This is the second button
+                            tft.textColor(RA8875_WHITE, DARKGREY);
+                            tft.textWrite("Heating Toggle");
+
                             tgs.power_toggle = false;
                             digitalWrite(POWERCTRL, LOW);
+                            tft.textSetCursor(120, 40);
                             tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_RED); // This is the first button
                             tft.textColor(RA8875_WHITE, RA8875_RED);             // Recolor and rewrite the text over the new box
+                            tft.textWrite("Power Toggle");
                         }
-                        tft.textWrite("Power Toggle");
                     }
                     else if (tx >= 140 && tx <= 465 && ty >= 320 && ty <= 420 && current_time - cd.heat >= GLOBALCD)
                     {
@@ -502,7 +553,7 @@ void touchCheck()
                         tft.textMode(); // Going to rewrite some text in a second
                         tft.textSetCursor(106, 130);
                         tft.textEnlarge(1);
-                        if (tgs.heat_toggle == false)
+                        if (tgs.heat_toggle == false && tgs.power_toggle == true) // You should only be able to turn this on if power is on
                         {
                             tgs.heat_toggle = true;
                             digitalWrite(THCALLCTRL, HIGH);
@@ -513,8 +564,16 @@ void touchCheck()
                         {
                             tgs.heat_toggle = false;
                             digitalWrite(THCALLCTRL, LOW);
-                            tft.fillRoundRect(100, 120, 240, 55, 25, RA8875_RED); // This is the second button
-                            tft.textColor(RA8875_WHITE, RA8875_RED);
+                            if (tgs.power_toggle == false)
+                            {
+                                tft.fillRoundRect(100, 120, 240, 55, 25, DARKGREY); // This is the second button
+                                tft.textColor(RA8875_WHITE, DARKGREY);
+                            }
+                            else
+                            {
+                                tft.fillRoundRect(100, 120, 240, 55, 25, RA8875_RED); // This is the second button
+                                tft.textColor(RA8875_WHITE, RA8875_RED);
+                            }
                         }
                         tft.textWrite("Heating Toggle");
                     }
@@ -524,7 +583,7 @@ void touchCheck()
                         tft.textMode();
                         tft.textSetCursor(110, 220);
                         tft.textEnlarge(1);
-                        if (tgs.svalve_toggle == false)
+                        if (tgs.svalve_toggle == false && tgs.power_toggle == true)
                         {
                             tgs.svalve_toggle = true;
                             digitalWrite(SVALVECTRL, HIGH);
@@ -535,8 +594,16 @@ void touchCheck()
                         {
                             tgs.svalve_toggle = false;
                             digitalWrite(SVALVECTRL, LOW);
-                            tft.fillRoundRect(100, 210, 240, 55, 25, RA8875_RED); // Third button
-                            tft.textColor(RA8875_WHITE, RA8875_RED);
+                            if (tgs.power_toggle == false)
+                            {
+                                tft.fillRoundRect(100, 210, 240, 55, 25, DARKGREY); // Third button
+                                tft.textColor(RA8875_WHITE, DARKGREY);
+                            }
+                            else
+                            {
+                                tft.fillRoundRect(100, 210, 240, 55, 25, RA8875_RED); // Third button
+                                tft.textColor(RA8875_WHITE, RA8875_RED);
+                            }
                         }
                         tft.textWrite("S.Valve Toggle");
                     }
@@ -546,7 +613,7 @@ void touchCheck()
                         tft.textMode();
                         tft.textSetCursor(130, 310);
                         tft.textEnlarge(1);
-                        if (tgs.pump_toggle == false)
+                        if (tgs.pump_toggle == false && tgs.power_toggle == true)
                         {
                             tgs.pump_toggle = true;
                             digitalWrite(PUMPCTRL, HIGH);
@@ -557,8 +624,16 @@ void touchCheck()
                         {
                             tgs.pump_toggle = false;
                             digitalWrite(PUMPCTRL, LOW);
-                            tft.fillRoundRect(100, 300, 240, 55, 25, RA8875_RED); // This is the fourth button
-                            tft.textColor(RA8875_WHITE, RA8875_RED);
+                            if (tgs.power_toggle == false)
+                            {
+                                tft.fillRoundRect(100, 300, 240, 55, 25, DARKGREY); // This is the fourth button
+                                tft.textColor(RA8875_WHITE, DARKGREY);
+                            }
+                            else
+                            {
+                                tft.fillRoundRect(100, 300, 240, 55, 25, RA8875_RED); // This is the fourth button
+                                tft.textColor(RA8875_WHITE, RA8875_RED);
+                            }
                         }
                         tft.textWrite("Pump Toggle");
                     }
@@ -568,7 +643,7 @@ void touchCheck()
                         tft.textMode();
                         tft.textSetCursor(115, 400);
                         tft.textEnlarge(1);
-                        if (tgs.basket_toggle == false)
+                        if (tgs.basket_toggle == false && tgs.power_toggle == true)
                         {
                             tgs.basket_toggle = true;
                             digitalWrite(BSKTCTRL, HIGH);
@@ -579,8 +654,16 @@ void touchCheck()
                         {
                             tgs.basket_toggle = false;
                             digitalWrite(BSKTCTRL, LOW);
-                            tft.fillRoundRect(100, 390, 240, 55, 25, RA8875_RED); // This is the fifth button
-                            tft.textColor(RA8875_WHITE, RA8875_RED);
+                            if (tgs.power_toggle == false)
+                            {
+                                tft.fillRoundRect(100, 390, 240, 55, 25, DARKGREY); // This is the fifth button
+                                tft.textColor(RA8875_WHITE, DARKGREY);
+                            }
+                            else
+                            {
+                                tft.fillRoundRect(100, 390, 240, 55, 25, RA8875_RED); // This is the fifth button
+                                tft.textColor(RA8875_WHITE, RA8875_RED);
+                            }
                         }
                         tft.textWrite("Basket Toggle");
                     }
@@ -1140,19 +1223,20 @@ void drawDebugMenu()
     tft.fillRoundRect(95, 25, 250, 65, 25, 0b0111101111101111);  // This is the first button's border
     tft.fillRoundRect(100, 30, 240, 55, 25, RA8875_RED);         // This is the first button
     tft.fillRoundRect(95, 115, 250, 65, 25, 0b0111101111101111); // This is the second button's border
-    tft.fillRoundRect(100, 120, 240, 55, 25, RA8875_RED);        // This is the second button
+    tft.fillRoundRect(100, 120, 240, 55, 25, DARKGREY);          // This is the second button
     tft.fillRoundRect(95, 205, 250, 65, 25, 0b0111101111101111); // This is the third button's border
-    tft.fillRoundRect(100, 210, 240, 55, 25, RA8875_RED);        // This is the third button
+    tft.fillRoundRect(100, 210, 240, 55, 25, DARKGREY);          // This is the third button
     tft.fillRoundRect(95, 295, 250, 65, 25, 0b0111101111101111); // This is the fourth button's border
-    tft.fillRoundRect(100, 300, 240, 55, 25, RA8875_RED);        // This is the fourth button
+    tft.fillRoundRect(100, 300, 240, 55, 25, DARKGREY);          // This is the fourth button
     tft.fillRoundRect(95, 385, 250, 65, 25, 0b0111101111101111); // This is the fifth button's border
-    tft.fillRoundRect(100, 390, 240, 55, 25, RA8875_RED);        // This is the fifth button
+    tft.fillRoundRect(100, 390, 240, 55, 25, DARKGREY);          // This is the fifth button
 
     tft.textMode();
     tft.textSetCursor(120, 40);
     tft.textEnlarge(1);
     tft.textColor(RA8875_WHITE, RA8875_RED);
     tft.textWrite("Power Toggle");
+    tft.textColor(RA8875_WHITE, DARKGREY); // The rest should be visually unselectable on startup
     tft.textSetCursor(106, 130);
     tft.textWrite("Heating Toggle");
     tft.textSetCursor(110, 220);
