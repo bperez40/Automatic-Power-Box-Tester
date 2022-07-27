@@ -74,7 +74,8 @@ void loop()
       drawPreTestMenu(3);
 
       setSignalTimeout(GLOBAL_TIME_LIMIT, LOWDUTYCYCLEOP);
-      setSignalAlarm(dutyCheck(LDLB, LDHB, getSignalTimeout(LOWDUTYCYCLEOP)), LOWDUTYCYCLEOP);
+     
+      setSignalAlarm(waitUntilTriggered(PWMLOWSIG), LOWDUTYCYCLEOP); /* dutyCheck(LDLB, LDHB, getSignalTimeout(LOWDUTYCYCLEOP)) */
 
       drawPreTestMenu(4);
       setSignalTimeout(GLOBAL_TIME_LIMIT, GASVALVEOP);
@@ -89,7 +90,13 @@ void loop()
       drawPreTestMenu(6);
       
       setSignalTimeout(GLOBAL_TIME_LIMIT, HIGHDUTYCYCLEOP);
-      setSignalAlarm(dutyCheck(HDLB, HDHB, getSignalTimeout(HIGHDUTYCYCLEOP)), HIGHDUTYCYCLEOP);
+      /* For this first parameter, you can either use dutyCheck or waitUntilTriggered.
+       * Wait until triggered will utilize the hardware PWM detection built into the board.
+       * dutyCheck will use the firmware DSP approach
+       * Generally recommend using waitUntilTriggered for now as it tend to be more reliable.
+       * dutyCheck(HDLB, HDHB, getSignalTimeout(HIGHDUTYCYCLEOP))
+       */
+      setSignalAlarm(waitUntilTriggered(PWMHIGHSIG), HIGHDUTYCYCLEOP);
       /*
        *
        * End of PIM check

@@ -81,3 +81,5 @@ void drawAbortMenu();
 void drawConfigurationMenu();
 
 void drawDebugMenu();
+
+unsigned long updateStatus();
