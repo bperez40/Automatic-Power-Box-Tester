@@ -475,7 +475,7 @@ void touchCheck()
                      * we make note of the state and make a visual indication of what state it is in.
                      *
                      */
-                    else if (tx >= 140 && tx <= 465 && ty >= 170 && ty <= 260 && current_time - cd.power >= GLOBALCD)
+                    else if (tx >= 160 && tx <= 465 && ty >= 170 && ty <= 260 && current_time - cd.power >= GLOBALCD)
                     {
                         cd.power = millis(); // Reset cooldown
                         tft.textMode();      // Going to rewrite some text in a second
