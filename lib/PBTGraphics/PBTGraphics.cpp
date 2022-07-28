@@ -352,7 +352,7 @@ void touchCheck()
                         setOption(2);
                     }
                     /* If results button is touched */
-                    else if (tx >= 380 && tx <= 640 && ty >= 760 && ty <= 890)
+                    else if (tx >= 380 && tx <= 640 && ty >= 650 && ty <= 780)
                     {
                         option_selected = true;
                         setOption(3);
@@ -366,12 +366,15 @@ void touchCheck()
                         setOption(2);
                     }
                     /* If PIM test box is touched */
-                    else if (tx >= 88 && tx <= 295 && ty >= 450 && ty <= 720)
+                    else if (configuration != 1 && tx >= 88 && tx <= 295 && ty >= 450 && ty <= 720)
                     {
                         option_selected = true;
                         setOption(4);
                     }
-
+                    else if (configuration == 1 && tx >= 230 && tx <= 430 && ty >= 450 && ty <= 720){
+                        option_selected = true;
+                        setOption(4);
+                    }
                     /* If pump test box is touched. Should only be available if the pump test ran */
                     else if (tx >= 390 && tx <= 595 && ty >= 445 && ty <= 725 && configuration != 1)
                     {
@@ -379,8 +382,12 @@ void touchCheck()
                         setOption(5);
                     }
                     /* If basket test box is touched */
-                    else if (tx >= 700 && tx <= 900 && ty >= 440 && ty <= 730)
+                    else if (configuration != 1 && tx >= 700 && tx <= 900 && ty >= 440 && ty <= 730)
                     {
+                        option_selected = true;
+                        setOption(6);
+                    }
+                    else if (configuration == 1 && tx >= 630 && tx <= 800 && ty >= 440 && ty <= 730 ){
                         option_selected = true;
                         setOption(6);
                     }
@@ -855,8 +862,8 @@ void drawPostTestMenu(bool test_success)
     }
 
     // Boxes
-    tft.fillRoundRect(295, 380, 210, 60, 25, DARKRED);            // This is the result box's border
-    tft.fillRoundRect(300, 385, 200, 50, 25, 0b0000000000000000); // This is the result box
+    tft.fillRoundRect(295, 320, 210, 60, 25, DARKRED);            // This is the result box's border
+    tft.fillRoundRect(300, 325, 200, 50, 25, 0b0000000000000000); // This is the result box
     /* Drawing exit box */
     tft.fillRoundRect(40, 40, 40, 40, 5, RA8875_BLACK);     // Outline for exit box
     tft.fillRoundRect(45, 45, 30, 30, 5, RA8875_RED);       // Exit box
@@ -867,7 +874,7 @@ void drawPostTestMenu(bool test_success)
 
     // Write text in boxes
     tft.textMode();              // Switch from graphics mode to text mode
-    tft.textSetCursor(344, 390); // Location of text in results box
+    tft.textSetCursor(344, 330); // Location of text in results box
     tft.textEnlarge(1);          // Make text larger
     tft.textTransparent(RA8875_WHITE);
     tft.textWrite("Results");
@@ -954,7 +961,7 @@ void drawResultsMenu()
         tft.textSetCursor(165, 260);
         tft.textWrite("PIM Test");
     }
-    
+
     if (configuration != 1)
     {
         tft.textSetCursor(310, 260);
