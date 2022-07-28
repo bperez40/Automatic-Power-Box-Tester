@@ -1345,11 +1345,12 @@ void drawConnectionsMenu(){
 
     tft.fillRect(170, 340, 490, 90, RA8875_BLACK);
     tft.fillRect(175, 345, 480, 80, GREY); // Box color is grey
-    tft.fillTriangle(170, 340, 190, 240, 190, 340, RA8875_BLACK); // Left outline triangle
-    tft.fillTriangle(658, 340, 640, 240, 640, 340, RA8875_BLACK); // Right outline triangle
-    tft.fillTriangle(175, 340, 190, 245, 190, 340, GREY); // Left color triangle
-    tft.fillTriangle(653, 340, 640, 245, 640, 340, GREY); // Right color triangle
-    tft.fillRect(190, 240, 450, 100, GREY);
+    tft.fillTriangle(170, 340, 188, 240, 190, 340, RA8875_BLACK); // Left outline triangle
+    tft.fillTriangle(658, 340, 642, 240, 640, 340, RA8875_BLACK); // Right outline triangle
+    tft.fillRect(188, 238, 454, 101, RA8875_BLACK); // Middle box outline
+    tft.fillTriangle(175, 338, 190, 245, 190, 338, GREY); // Left color triangle
+    tft.fillTriangle(653, 338, 640, 245, 640, 338, GREY); // Right color triangle
+    tft.fillRect(190, 240, 450, 100, GREY); // Middle grey color box
 }
 
 /* To be used only on the manual screen. When used, updates only the status bars as a non touch
