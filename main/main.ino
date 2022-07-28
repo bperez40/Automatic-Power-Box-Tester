@@ -234,5 +234,10 @@ void loop()
   case 9:
     drawDebugMenu();
     setActiveMenu(DEBUG);
+    break;
+  case 10:
+    drawConnectionsMenu();
+    setActiveMenu(CONN);
+    break;
   }
 }

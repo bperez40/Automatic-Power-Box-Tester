@@ -6,6 +6,7 @@
 #define NAVYBLUE 0b0011100011101111
 #define DARKGREY 0b0011100111100111
 #define DARKRED 0b0111100011100011
+#define GREY 0b0111101111101111
 
 /* Signal Info Options */
 #define BASKETPOWEROP 0
@@ -33,6 +34,7 @@
 #define ABORTMENU 8
 #define CONFIG 9
 #define DEBUG 10
+#define CONN 11
 
 /* Don't recommend changing the below calibrations b/c they feel nice, but you can if you want */
 #define TOUCHREJECT 500 // Lower for more sensitive touches, higher for more touch rejection
@@ -79,5 +81,7 @@ void drawAbortMenu();
 void drawConfigurationMenu();
 
 void drawDebugMenu();
+
+void drawConnectionsMenu();
 
 unsigned long updateStatus();

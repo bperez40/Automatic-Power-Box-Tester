@@ -341,6 +341,10 @@ void touchCheck()
                         option_selected = true;
                         setOption(9);
                     }
+                    if (tx >= 550 && tx <= 910 && ty >= 630 && ty <= 760){
+                        option_selected = true;
+                        setOption(10);
+                    }
                     break;
                 case PRETEST:
                     break;
@@ -699,6 +703,14 @@ void touchCheck()
                         tft.textWrite("e");
                     }
                     break;
+                    case CONN:
+                    /* If back is touched */
+                    if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
+                    {
+                        option_selected = true;
+                        setOption(2);
+                    }
+                    break;
                 }
             }
         }
@@ -743,6 +755,8 @@ void drawMainMenu()
     tft.fillRoundRect(70, 300, 300, 75, 25, RA8875_BLACK);       // This is the configuration button
     tft.fillRoundRect(420, 195, 310, 85, 25, RA8875_RED);        // This is the debug button's border
     tft.fillRoundRect(425, 200, 300, 75, 25, RA8875_BLACK);      // This is the debug button
+    tft.fillRoundRect(420, 295, 310, 85, 25, RA8875_BLUE);        // This is the connection button's border
+    tft.fillRoundRect(425, 300, 300, 75, 25, RA8875_BLACK);      // This is the connection button
     tft.fillRect(170, 40, 465, 140, RA8875_BLACK);               // Title box outline
     tft.fillRect(175, 45, 450, 125, RA8875_WHITE);               // Title box fill
 
@@ -757,6 +771,8 @@ void drawMainMenu()
     tft.textWrite("Configurations");
     tft.textSetCursor(530, 220);
     tft.textWrite("Manual");
+    tft.textSetCursor(490, 320);
+    tft.textWrite("Connections");
     tft.textSetCursor(130, 400);
     tft.textColor(RA8875_BLACK, RA8875_WHITE);
     if (configuration == 0)
@@ -1245,7 +1261,7 @@ void drawConfigurationMenu()
 void drawDebugMenu()
 {
     tft.graphicsMode();
-    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);
+    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Background
     tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
     tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
     tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
@@ -1320,11 +1336,26 @@ void drawDebugMenu()
     tft.textWrite("STATUS");
 }
 
+void drawConnectionsMenu(){
+    tft.graphicsMode();
+    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Background
+    tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
+    tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
+    tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+
+    tft.fillRect(170, 340, 490, 90, RA8875_BLACK);
+    tft.fillRect(175, 345, 480, 80, GREY); // Box color is grey
+    tft.fillTriangle(170, 340, 190, 240, 190, 340, RA8875_BLACK); // Left outline triangle
+    tft.fillTriangle(658, 340, 640, 240, 640, 340, RA8875_BLACK); // Right outline triangle
+    tft.fillTriangle(175, 340, 190, 245, 190, 340, GREY); // Left color triangle
+    tft.fillTriangle(653, 340, 640, 245, 640, 340, GREY); // Right color triangle
+    tft.fillRect(190, 240, 450, 100, GREY);
+}
+
 /* To be used only on the manual screen. When used, updates only the status bars as a non touch
  * driven event instead of refreshing the whole screen. Returns a time to update the last time this
  * function ran.
  */
-
 unsigned long updateStatus()
 {
     tft.textMode();
