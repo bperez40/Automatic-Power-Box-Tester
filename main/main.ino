@@ -7,7 +7,7 @@
 #define LDHB 0.25
 #define LDLB 0.15
 
-#define GLOBAL_TIME_LIMIT 3000
+#define GLOBAL_TIME_LIMIT 300 // Change back to 3000
 
 bool test_status = false;
 
@@ -47,7 +47,7 @@ void loop()
      * notably in the left basket and right basket tests.
      */
 
-    if (getSignalAlarm(POWERONOP))
+    if (false)//getSignalAlarm(POWERONOP))
     {
       digitalWrite(POWERCTRL, LOW);
       drawAbortMenu();
@@ -72,9 +72,13 @@ void loop()
       setSignalAlarm(waitUntilTriggered(BLPWRNEUSIG, getSignalTimeout(BLOWERPOWERNEUTRALOP)), BLOWERPOWERNEUTRALOP);
 
       drawPreTestMenu(3);
-
       setSignalTimeout(GLOBAL_TIME_LIMIT, LOWDUTYCYCLEOP);
-     
+      /* For this first parameter, you can either use dutyCheck or waitUntilTriggered.
+       * Wait until triggered will utilize the hardware PWM detection built into the board.
+       * dutyCheck will use the firmware DSP approach
+       * Generally recommend using waitUntilTriggered for now as it tend to be more reliable.
+       * dutyCheck(LDLB, LDHB, getSignalTimeout(HIGHDUTYCYCLEOP))
+       */
       setSignalAlarm(waitUntilTriggered(PWMLOWSIG), LOWDUTYCYCLEOP); /* dutyCheck(LDLB, LDHB, getSignalTimeout(LOWDUTYCYCLEOP)) */
 
       drawPreTestMenu(4);
@@ -84,7 +88,7 @@ void loop()
       /* This is where spark detection would go */
 
       drawPreTestMenu(5);
-      setSignalTimeout(GLOBAL_TIME_LIMIT, ALARMOP);
+      setSignalTimeout(5000, ALARMOP); // Might require adjusting to wait for alarm signal to go high
       setSignalAlarm(waitUntilTriggered(ALARMSIG, getSignalTimeout(ALARMOP), HIGH), ALARMOP);
 
       drawPreTestMenu(6);
@@ -222,10 +226,6 @@ void loop()
   case 6:
     drawBasketInfoMenu();
     setActiveMenu(BSKTINFO);
-    break;
-  case 7:
-    drawRecommendationsMenu();
-    setActiveMenu(RECOM);
     break;
   case 8:
     drawConfigurationMenu();

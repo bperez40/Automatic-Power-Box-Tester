@@ -384,12 +384,6 @@ void touchCheck()
                         option_selected = true;
                         setOption(6);
                     }
-                    /* If recommendations box is touched */
-                    else if (tx >= 310 && tx <= 680 && ty >= 760 && ty <= 870)
-                    {
-                        option_selected = true;
-                        setOption(7);
-                    }
                     break;
                 case PIMINFO:
                     /* If back is touched */
@@ -408,14 +402,6 @@ void touchCheck()
                     }
                     break;
                 case BSKTINFO:
-                    /* If back is touched */
-                    if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
-                    {
-                        option_selected = true;
-                        setOption(3);
-                    }
-                    break;
-                case RECOM:
                     /* If back is touched */
                     if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
                     {
@@ -894,18 +880,23 @@ void drawResultsMenu()
     // Redraw screen for test completion
     tft.fillRect(150, 40, 485, 140, RA8875_BLACK);                // Title box outline
     tft.fillRect(155, 45, 470, 125, RA8875_WHITE);                // Title box fill
-    tft.fillRoundRect(230, 380, 300, 60, 15, RA8875_BLACK);       // Recommendations box outline
-    tft.fillRoundRect(235, 385, 290, 50, 15, RA8875_WHITE);       // Recommendations box fill
-    tft.fillTriangle(490, 395, 490, 425, 510, 410, RA8875_BLACK); // Arrow outline for recommendations box
-    tft.fillTriangle(493, 402, 493, 418, 505, 410, RA8875_GREEN); // Arrow fill for recommendations box
-    tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
-    if (!getSignalAlarm(HIGHDUTYCYCLEOP) && !getSignalAlarm(LOWDUTYCYCLEOP) && !getSignalAlarm(ALARMOP) && !getSignalAlarm(BLOWERPOWERNEUTRALOP) && !getSignalAlarm(BLOWERCONTROLOP) && !getSignalAlarm(GASVALVEOP) && !getSignalAlarm(BLOWERPOWEROP) && !getSignalAlarm(POWERONOP))
+    if (configuration != 1 && !getSignalAlarm(HIGHDUTYCYCLEOP) && !getSignalAlarm(LOWDUTYCYCLEOP) && !getSignalAlarm(ALARMOP) && !getSignalAlarm(BLOWERPOWERNEUTRALOP) && !getSignalAlarm(BLOWERCONTROLOP) && !getSignalAlarm(GASVALVEOP) && !getSignalAlarm(BLOWERPOWEROP) && !getSignalAlarm(POWERONOP))
     {
+        tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
         tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
     }
-    else
+    else if (configuration != 1)
     {
+        tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
         tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_RED); // PIM progess box post completion
+    }
+    else if (configuration == 1 && !getSignalAlarm(HIGHDUTYCYCLEOP) && !getSignalAlarm(LOWDUTYCYCLEOP) && !getSignalAlarm(ALARMOP) && !getSignalAlarm(BLOWERPOWERNEUTRALOP) && !getSignalAlarm(BLOWERCONTROLOP) && !getSignalAlarm(GASVALVEOP) && !getSignalAlarm(BLOWERPOWEROP) && !getSignalAlarm(POWERONOP)){
+        tft.fillRoundRect(150, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
+        tft.fillRoundRect(155, 205, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
+    }
+    else if (configuration == 1){
+        tft.fillRoundRect(150, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
+        tft.fillRoundRect(155, 205, 150, 150, 15, RA8875_RED); // PIM progess box post completion
     }
 
     if (!getSignalAlarm(SOLENOIDVALVEOP) && !getSignalAlarm(PUMPPOWEROP) && configuration != 1)
@@ -922,14 +913,23 @@ void drawResultsMenu()
     {
         /* If the pump test didn't run (non-filter option was selected), we shouldn't draw this result box */
     }
-    tft.fillRoundRect(550, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
-    if (!getSignalAlarm(BASKETPOWEROP) && !getSignalAlarm(RIGHTBASKETOP) && !getSignalAlarm(LEFTBASKETOP))
+    if (configuration != 1 && !getSignalAlarm(BASKETPOWEROP) && !getSignalAlarm(RIGHTBASKETOP) && !getSignalAlarm(LEFTBASKETOP))
     {
+        tft.fillRoundRect(550, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
         tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_GREEN); // Basket progess box post completion
     }
-    else
+    else if (configuration != 1)
     {
+        tft.fillRoundRect(550, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
         tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_RED); // Basket progess box post completion
+    }
+    else if (configuration == 1 && !getSignalAlarm(BASKETPOWEROP) && !getSignalAlarm(RIGHTBASKETOP) && !getSignalAlarm(LEFTBASKETOP)){
+        tft.fillRoundRect(470, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
+        tft.fillRoundRect(475, 205, 150, 150, 15, RA8875_GREEN); // Basket progess box post completion
+    }
+    else if (configuration == 1){
+        tft.fillRoundRect(470, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
+        tft.fillRoundRect(475, 205, 150, 150, 15, RA8875_RED); // Basket progess box post completion
     }
 
     /* Drawing exit box */
@@ -945,23 +945,37 @@ void drawResultsMenu()
     tft.textEnlarge(2);         // Make text larger
     tft.textTransparent(RA8875_BLACK);
     tft.textWrite("Select Result");
-    tft.textSetCursor(55, 260);
     tft.textEnlarge(1);
-    tft.textWrite("PIM Test");
+    if (configuration != 1){
+        tft.textSetCursor(55, 260);
+        tft.textWrite("PIM Test");
+    }
+    else{
+        tft.textSetCursor(165, 260);
+        tft.textWrite("PIM Test");
+    }
+    
     if (configuration != 1)
     {
         tft.textSetCursor(310, 260);
         tft.textWrite("Pump Test");
     }
+
+    if (configuration != 1){
     tft.textSetCursor(580, 245);
     tft.textWrite("Basket");
     tft.textSetCursor(580, 275);
     tft.textWrite("Test");
+    }
+    else{
+    tft.textSetCursor(500, 245);
+    tft.textWrite("Basket");
+    tft.textSetCursor(500, 275);
+    tft.textWrite("Test");
+    }
     tft.textSetCursor(165, 100); // Location of subtitle text
     tft.textEnlarge(1);
     tft.textWrite("(Tap on boxes for more info)");
-    tft.textSetCursor(240, 390);
-    tft.textWrite("Recommendations");
 }
 
 void drawPIMInfoMenu()
@@ -1148,36 +1162,6 @@ void drawBasketInfoMenu()
         tft.textEnlarge(1);
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("Right basket lift signal detected");
-    }
-}
-
-void drawRecommendationsMenu()
-{
-    tft.graphicsMode();
-    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Background
-    tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
-    tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
-    tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
-    tft.fillRect(180, 40, 410, 80, RA8875_BLACK);             // Title box outline
-    tft.fillRect(185, 45, 395, 65, RA8875_WHITE);             // Title box fill
-    tft.textMode();
-    tft.textSetCursor(200, 50);
-    tft.textColor(RA8875_BLACK, RA8875_WHITE);
-    tft.textEnlarge(2);
-    tft.textWrite("Recommendations");
-    tft.textEnlarge(1);
-    if (getSignalAlarm(HIGHDUTYCYCLEOP))
-    {
-        tft.textSetCursor(50, 150);
-        tft.textWrite("Check pin 6 on the blower connector.");
-        tft.textSetCursor(50, 190);
-        tft.textWrite("Make sure the wire is secure on both ends");
-        tft.textSetCursor(50, 230);
-        tft.textWrite("of the harness.");
-        tft.textSetCursor(50, 290);
-        tft.textWrite("Check inside the power box and ensure that");
-        tft.textSetCursor(50, 330);
-        tft.textWrite("the wire is routed correctly.");
     }
 }
 

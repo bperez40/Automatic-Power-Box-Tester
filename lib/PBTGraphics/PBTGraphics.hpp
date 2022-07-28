@@ -30,7 +30,6 @@
 #define PIMINFO 4
 #define PUMPINFO 5
 #define BSKTINFO 6
-#define RECOM 7
 #define ABORTMENU 8
 #define CONFIG 9
 #define DEBUG 10
@@ -74,8 +73,6 @@ void drawPIMInfoMenu();
 void drawPumpInfoMenu();
 
 void drawBasketInfoMenu();
-
-void drawRecommendationsMenu();
 
 void drawAbortMenu();
 
