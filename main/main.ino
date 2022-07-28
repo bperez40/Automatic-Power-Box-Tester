@@ -47,7 +47,7 @@ void loop()
      * notably in the left basket and right basket tests.
      */
 
-    if (false)//getSignalAlarm(POWERONOP))
+    if (getSignalAlarm(POWERONOP))
     {
       digitalWrite(POWERCTRL, LOW);
       drawAbortMenu();
