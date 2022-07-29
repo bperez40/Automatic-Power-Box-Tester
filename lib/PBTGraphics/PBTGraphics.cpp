@@ -1345,12 +1345,39 @@ void drawConnectionsMenu(){
 
     tft.fillRect(170, 340, 490, 90, RA8875_BLACK);
     tft.fillRect(175, 345, 480, 80, GREY); // Box color is grey
-    tft.fillTriangle(170, 340, 188, 240, 190, 340, RA8875_BLACK); // Left outline triangle
-    tft.fillTriangle(658, 340, 642, 240, 640, 340, RA8875_BLACK); // Right outline triangle
+    tft.fillTriangle(170, 340, 188, 240, 190, 340, RA8875_BLACK); // Left outline triangle, lower
+    tft.fillTriangle(658, 340, 642, 240, 640, 340, RA8875_BLACK); // Right outline triangle, lower
     tft.fillRect(188, 238, 454, 101, RA8875_BLACK); // Middle box outline
-    tft.fillTriangle(175, 338, 190, 245, 190, 338, GREY); // Left color triangle
-    tft.fillTriangle(653, 338, 640, 245, 640, 338, GREY); // Right color triangle
+    tft.fillTriangle(175, 338, 190, 245, 190, 338, GREY); // Left color triangle, lower
+    tft.fillTriangle(653, 338, 640, 245, 640, 338, GREY); // Right color triangle, lower
     tft.fillRect(190, 240, 450, 100, GREY); // Middle grey color box
+
+    tft.fillRect(188, 120, 455, 120, RA8875_BLACK); // Upper section outline box
+    tft.fillRect(198, 85, 435, 65, RA8875_BLACK); // Upper section upper outline box
+    tft.fillRect(193, 125, 445, 110, GREY); // Color for upper section
+    tft.fillRect(198, 90, 437, 30, GREY); // Color for top, middle fill section
+    tft.fillTriangle(188, 120, 198, 85, 198, 120, RA8875_BLACK); // Left triangle outline, upper
+    tft.fillTriangle(193, 119, 198, 90, 198, 119, GREY); // Left triangle color, upper
+    tft.fillTriangle(633, 120, 633, 85, 643, 120, RA8875_BLACK); // Right triangle outline, upper
+    tft.fillTriangle(633, 119, 633, 90, 638, 119, GREY); // Right triangle color, upper
+
+    digitalWrite(POWERCTRL, HIGH); // Turn on power (can't detect MP harness detection otherwise)
+    if (waitUntilTriggered(PONSIG, 100)){ // Connected
+        tft.fillRect(320, 94, 60, 20, RA8875_GREEN); // 12 pin connector front
+        tft.fillTriangle(380, 112, 380, 94, 385, 89, RA8875_GREEN); // 12 pin side, triangle 1
+        tft.fillTriangle(380, 113, 385, 105, 385, 89, RA8875_GREEN); // 12 pin side, triangle 2
+        tft.fillTriangle(320, 94, 380, 94, 385, 89, RA8875_GREEN); // Top of 12 pin, triangle 1
+        tft.fillTriangle(320, 94, 326, 87, 385, 87, RA8875_GREEN); // Top of 12 pin, triangle 2
+    }
+    else{ // Not connected
+        tft.fillRect(320, 94, 60, 20, RA8875_RED); // 12 pin connector front
+        tft.fillTriangle(380, 112, 380, 94, 385, 89, RA8875_RED); // 12 pin side, triangle 1
+        tft.fillTriangle(380, 113, 385, 105, 385, 89, RA8875_RED); // 12 pin side, triangle 2
+        tft.fillTriangle(320, 94, 380, 94, 385, 89, RA8875_RED); // Top of 12 pin, triangle 1
+        tft.fillTriangle(320, 94, 326, 87, 385, 87, RA8875_RED); // Top of 12 pin, triangle 2
+    }
+    digitalWrite(POWERCTRL, LOW);
+
 }
 
 /* To be used only on the manual screen. When used, updates only the status bars as a non touch
