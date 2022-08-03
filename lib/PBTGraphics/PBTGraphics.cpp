@@ -1409,7 +1409,7 @@ unsigned long updateStatus()
 
     tft.textSetCursor(560, 100);
     tft.textEnlarge(1);
-    if (digitalRead(PONSIG))
+    if (!sampleAndAverage(PONSIG))
     { // Remember, signals are open drain
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("OFF");
@@ -1423,7 +1423,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 140);
-    if (digitalRead(BLPWRSIG))
+    if (!sampleAndAverage(BLPWRSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("G");
@@ -1435,7 +1435,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(590, 140);
-    if (digitalRead(BLPWRNEUSIG))
+    if (!sampleAndAverage(BLPWRNEUSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("N");
@@ -1447,7 +1447,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(620, 140);
-    if (digitalRead(BLCTRLPWRSIG))
+    if (!sampleAndAverage(BLCTRLPWRSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("CTRL");
@@ -1459,7 +1459,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 180);
-    if (digitalRead(PWMLOWSIG))
+    if (!sampleAndAverage(PWMLOWSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("INACTIVE");
@@ -1473,7 +1473,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 220);
-    if (digitalRead(GASVALVESIG))
+    if (!sampleAndAverage(GASVALVESIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("INACTIVE");
@@ -1487,7 +1487,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 260);
-    if (digitalRead(PWMHIGHSIG))
+    if (!sampleAndAverage(PWMHIGHSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("INACTIVE");
@@ -1501,7 +1501,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 300);
-    if (digitalRead(SVALVESIG))
+    if (!sampleAndAverage(SVALVESIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("INACTIVE");
@@ -1515,7 +1515,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 340);
-    if (digitalRead(PMPWRSIG))
+    if (!sampleAndAverage(PMPWRSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("INACTIVE");
@@ -1529,7 +1529,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 380);
-    if (digitalRead(BSKTPWRSIG))
+    if (!sampleAndAverage(BSKTPWRSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("120");
@@ -1541,7 +1541,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(620, 380);
-    if (digitalRead(LBSKTSIG) || digitalRead(PONSIG))
+    if (!sampleAndAverage(LBSKTSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("L");
@@ -1553,7 +1553,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(650, 380);
-    if (digitalRead(RBSKTSIG) || digitalRead(PONSIG))
+    if (!sampleAndAverage(RBSKTSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("R");
@@ -1565,7 +1565,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 420);
-    if (digitalRead(ALARMSIG))
+    if (!sampleAndAverage(ALARMSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("INACTIVE");

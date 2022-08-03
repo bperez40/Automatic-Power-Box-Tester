@@ -7,7 +7,7 @@
 #define LDHB 0.25
 #define LDLB 0.15
 
-#define GLOBAL_TIME_LIMIT 300 // Change back to 3000
+#define GLOBAL_TIME_LIMIT 3000
 
 bool test_status = false;
 

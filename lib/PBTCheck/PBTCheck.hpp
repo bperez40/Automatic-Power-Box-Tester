@@ -19,3 +19,4 @@ bool waitUntilTriggered(int pin, unsigned long timeout = 1000, int event = LOW);
 bool dutyCheck(double low_threshold, double high_threshold, unsigned long pwm_time);
 void runCheck();
 void halt();
+bool sampleAndAverage(int pin, int samples = 100, int event = LOW, double minActivePercentage = 0.2);

@@ -81,3 +81,19 @@ void halt(){
     while(true){
     }
 }
+
+// Meant to be used for manual test status. For auto test, use waitUntilTriggered
+bool sampleAndAverage(int pin, int samples = 100, int event = LOW, double minActivePercentage = 0.2){
+    int numActive = 0;
+    for (int i = 0; i < samples; i++){
+        if(digitalRead(pin) == event){ // Open drain means line is active when pin is pulled low;
+            numActive++;
+        }
+    }
+    if (numActive/samples >= samples*minActivePercentage){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
