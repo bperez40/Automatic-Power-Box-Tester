@@ -1343,41 +1343,60 @@ void drawConnectionsMenu(){
     tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
     tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
 
-    tft.fillRect(170, 340, 490, 90, RA8875_BLACK);
-    tft.fillRect(175, 345, 480, 80, GREY); // Box color is grey
+    tft.fillTriangle(632, 400, 620, 300, 641, 250, GREY); // Side panel fill
+    tft.fillRect(170, 338, 461, 92, RA8875_BLACK); // Outline for front, bottom plate
+    tft.fillRect(175, 345, 451, 80, GREY); // Box color is grey
     tft.fillTriangle(170, 340, 188, 240, 190, 340, RA8875_BLACK); // Left outline triangle, lower
-    tft.fillTriangle(658, 340, 642, 240, 640, 340, RA8875_BLACK); // Right outline triangle, lower
-    tft.fillRect(188, 238, 454, 101, RA8875_BLACK); // Middle box outline
+    tft.fillTriangle(630, 338, 641, 240, 620, 338, RA8875_BLACK); // Right outline triangle, lower
+    //tft.fillRect(188, 238, 454, 101, RA8875_BLACK); // Middle box outline
     tft.fillTriangle(175, 338, 190, 245, 190, 338, GREY); // Left color triangle, lower
-    tft.fillTriangle(653, 338, 640, 245, 640, 338, GREY); // Right color triangle, lower
-    tft.fillRect(190, 240, 450, 100, GREY); // Middle grey color box
+    tft.fillTriangle(625, 338, 639, 240, 615, 338, GREY); // Right color triangle, lower
+    tft.fillTriangle(620, 340, 620, 240, 638, 240, GREY); // Patch color triangle
+    tft.fillRect(190, 240, 430, 100, GREY); // Middle grey color box
+
+    tft.fillTriangle(631, 429, 636, 429, 650, 220, RA8875_BLACK); // Lower right side triangle outline
+    tft.fillTriangle(641, 270, 641, 230, 638, 230, RA8875_BLACK); // Lower right side triangle outline vertical
+    tft.fillTriangle(645, 220, 645, 100, 647, 100, RA8875_BLACK);
 
     tft.fillRect(188, 120, 455, 120, RA8875_BLACK); // Upper section outline box
-    tft.fillRect(198, 85, 435, 65, RA8875_BLACK); // Upper section upper outline box
+    tft.fillRect(198, 85, 444, 65, RA8875_BLACK); // Upper section upper outline box
     tft.fillRect(193, 125, 445, 110, GREY); // Color for upper section
-    tft.fillRect(198, 90, 437, 30, GREY); // Color for top, middle fill section
+    tft.fillRect(198, 90, 444, 30, GREY); // Color for top, middle fill section
     tft.fillTriangle(188, 120, 198, 85, 198, 120, RA8875_BLACK); // Left triangle outline, upper
     tft.fillTriangle(193, 119, 198, 90, 198, 119, GREY); // Left triangle color, upper
-    tft.fillTriangle(633, 120, 633, 85, 643, 120, RA8875_BLACK); // Right triangle outline, upper
-    tft.fillTriangle(633, 119, 633, 90, 638, 119, GREY); // Right triangle color, upper
+    tft.fillTriangle(633, 120, 648, 85, 643, 120, RA8875_BLACK); // Right triangle outline, upper
+    tft.fillTriangle(640, 94, 640, 85, 648, 85, RA8875_BLACK); // Right triangle patch outline, upper
+    tft.fillTriangle(633, 119, 645, 90, 638, 119, GREY); // Right triangle color, upper
+    tft.fillTriangle(640, 94, 640, 90, 645, 90, GREY); // Right triangle patch color, upper
 
-    digitalWrite(POWERCTRL, HIGH); // Turn on power (can't detect MP harness detection otherwise)
-    if (waitUntilTriggered(PONSIG, 100)){ // Connected
-        tft.fillRect(320, 94, 60, 20, RA8875_GREEN); // 12 pin connector front
-        tft.fillTriangle(380, 112, 380, 94, 385, 89, RA8875_GREEN); // 12 pin side, triangle 1
-        tft.fillTriangle(380, 113, 385, 105, 385, 89, RA8875_GREEN); // 12 pin side, triangle 2
-        tft.fillTriangle(320, 94, 380, 94, 385, 89, RA8875_GREEN); // Top of 12 pin, triangle 1
-        tft.fillTriangle(320, 94, 326, 87, 385, 87, RA8875_GREEN); // Top of 12 pin, triangle 2
-    }
-    else{ // Not connected
-        tft.fillRect(320, 94, 60, 20, RA8875_RED); // 12 pin connector front
-        tft.fillTriangle(380, 112, 380, 94, 385, 89, RA8875_RED); // 12 pin side, triangle 1
-        tft.fillTriangle(380, 113, 385, 105, 385, 89, RA8875_RED); // 12 pin side, triangle 2
-        tft.fillTriangle(320, 94, 380, 94, 385, 89, RA8875_RED); // Top of 12 pin, triangle 1
-        tft.fillTriangle(320, 94, 326, 87, 385, 87, RA8875_RED); // Top of 12 pin, triangle 2
-    }
-    digitalWrite(POWERCTRL, LOW);
+    // MP Harness
+    tft.fillRect(320, 94, 60, 20, RA8875_BLACK); // 12 pin connector front
+    tft.fillTriangle(380, 112, 380, 94, 385, 89, RA8875_BLACK); // 12 pin side, triangle 1
+    tft.fillTriangle(380, 113, 385, 105, 385, 89, RA8875_BLACK); // 12 pin side, triangle 2
+    tft.fillTriangle(320, 94, 380, 94, 385, 89, RA8875_BLACK); // Top of 12 pin, triangle 1
+    tft.fillTriangle(320, 94, 326, 87, 385, 87, RA8875_BLACK); // Top of 12 pin, triangle 2
 
+    // SVALVE
+    tft.fillRect(420, 94, 20, 20, RA8875_BLACK); // 4 pin connector front
+    tft.fillTriangle(440, 112, 440, 94, 451, 81, RA8875_BLACK); // 4 pin side, triangle 1
+    tft.fillTriangle(440, 113, 451, 99, 451, 81, RA8875_BLACK); // 4 pin side, triangle 2
+    tft.fillTriangle(420, 94, 440, 94, 451, 81, RA8875_BLACK); // Top of 4 pin, triangle 1
+    tft.fillTriangle(420, 94, 432, 81, 451, 81, RA8875_BLACK); // Top of 4 pin, triangle 2
+
+    // Pump
+
+    tft.fillRect(490, 94, 20, 20, RA8875_BLACK); // 2 pin connector front
+    tft.fillTriangle(510, 112, 510, 94, 515, 89, RA8875_BLACK); // 2 pin side, triangle 1
+    tft.fillTriangle(510, 113, 515, 105, 515, 89, RA8875_BLACK); // 2 pin side, triangle 2
+    tft.fillTriangle(490, 94, 510, 94, 515, 89, RA8875_BLACK); // Top of 2 pin, triangle 1
+    tft.fillTriangle(490, 94, 496, 87, 515, 87, RA8875_BLACK); // Top of 2 pin, triangle 2
+
+    // Blower
+    tft.fillRect(550, 94, 40, 20, RA8875_BLACK); // 6 pin connector front
+    tft.fillTriangle(590, 112, 590, 94, 595, 89, RA8875_BLACK); // 6 pin side, triangle 1
+    tft.fillTriangle(590, 113, 595, 105, 595, 89, RA8875_BLACK); // 6 pin side, triangle 2
+    tft.fillTriangle(550, 94, 590, 94, 595, 89, RA8875_BLACK); // Top of 6 pin, triangle 1
+    tft.fillTriangle(550, 94, 556, 87, 595, 87, RA8875_BLACK); // Top of 6 pin, triangle 2
 }
 
 /* To be used only on the manual screen. When used, updates only the status bars as a non touch
@@ -1513,16 +1532,16 @@ unsigned long updateStatus()
     if (digitalRead(BSKTPWRSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
-        tft.textWrite("PWR");
+        tft.textWrite("120");
     }
     else
     {
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
-        tft.textWrite("PWR");
+        tft.textWrite("120");
     }
 
     tft.textSetCursor(620, 380);
-    if (digitalRead(LBSKTSIG))
+    if (digitalRead(LBSKTSIG) || digitalRead(PONSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("L");
@@ -1534,7 +1553,7 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(650, 380);
-    if (digitalRead(RBSKTSIG))
+    if (digitalRead(RBSKTSIG) || digitalRead(PONSIG))
     {
         tft.textColor(RA8875_WHITE, RA8875_RED);
         tft.textWrite("R");
