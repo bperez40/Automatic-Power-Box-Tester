@@ -7,8 +7,8 @@
 #define LDHB 0.25
 #define LDLB 0.15
 
-#define GLOBAL_TIME_LIMIT 3000
-
+#define GLOBAL_TIME_LIMIT 8000 // Important define: Sets the time for a signal detection during auto test
+#define PIM_TIME_LIMIT 10000
 bool test_status = false;
 
 void setup()
@@ -38,7 +38,7 @@ void loop()
      */
     digitalWrite(POWERCTRL, HIGH);
     
-    setSignalTimeout(GLOBAL_TIME_LIMIT, POWERONOP);
+    setSignalTimeout(PIM_TIME_LIMIT, POWERONOP);
     setSignalAlarm(waitUntilTriggered(PONSIG, getSignalTimeout(POWERONOP)), POWERONOP);
 
     /* IMPORTANT
@@ -62,17 +62,23 @@ void loop()
        */
       drawPreTestMenu(2);
 
-      setSignalTimeout(GLOBAL_TIME_LIMIT, BLOWERPOWEROP);
+      setSignalTimeout(PIM_TIME_LIMIT, BLOWERPOWEROP);
       setSignalAlarm(waitUntilTriggered(BLPWRSIG, getSignalTimeout(BLOWERPOWEROP)), BLOWERPOWEROP);
 
-      setSignalTimeout(GLOBAL_TIME_LIMIT, BLOWERCONTROLOP);
+      setSignalTimeout(PIM_TIME_LIMIT, BLOWERCONTROLOP);
       setSignalAlarm(waitUntilTriggered(BLCTRLPWRSIG, getSignalTimeout(BLOWERCONTROLOP)), BLOWERCONTROLOP);
 
-      setSignalTimeout(GLOBAL_TIME_LIMIT, BLOWERPOWERNEUTRALOP);
+      setSignalTimeout(PIM_TIME_LIMIT, BLOWERPOWERNEUTRALOP);
       setSignalAlarm(waitUntilTriggered(BLPWRNEUSIG, getSignalTimeout(BLOWERPOWERNEUTRALOP)), BLOWERPOWERNEUTRALOP);
 
+      drawPreTestMenu(4);
+      setSignalTimeout(PIM_TIME_LIMIT, GASVALVEOP);
+      setSignalAlarm(waitUntilTriggered(GASVALVESIG, getSignalTimeout(GASVALVEOP)), GASVALVEOP);
+
+      /* This is where spark detection would go */
+
       drawPreTestMenu(3);
-      setSignalTimeout(GLOBAL_TIME_LIMIT, LOWDUTYCYCLEOP);
+      setSignalTimeout(PIM_TIME_LIMIT, LOWDUTYCYCLEOP);
       /* For this first parameter, you can either use dutyCheck or waitUntilTriggered.
        * Wait until triggered will utilize the hardware PWM detection built into the board.
        * dutyCheck will use the firmware DSP approach
@@ -81,26 +87,20 @@ void loop()
        */
       setSignalAlarm(waitUntilTriggered(PWMLOWSIG), LOWDUTYCYCLEOP); /* dutyCheck(LDLB, LDHB, getSignalTimeout(LOWDUTYCYCLEOP)) */
 
-      drawPreTestMenu(4);
-      setSignalTimeout(GLOBAL_TIME_LIMIT, GASVALVEOP);
-      setSignalAlarm(waitUntilTriggered(GASVALVESIG, getSignalTimeout(GASVALVEOP)), GASVALVEOP);
-
-      /* This is where spark detection would go */
-
       drawPreTestMenu(5);
-      setSignalTimeout(5000, ALARMOP); // Might require adjusting to wait for alarm signal to go high
+      setSignalTimeout(500, ALARMOP); // Might require adjusting to wait for alarm signal to go high
       setSignalAlarm(waitUntilTriggered(ALARMSIG, getSignalTimeout(ALARMOP), HIGH), ALARMOP);
 
       drawPreTestMenu(6);
       
-      setSignalTimeout(GLOBAL_TIME_LIMIT, HIGHDUTYCYCLEOP);
+      setSignalTimeout(PIM_TIME_LIMIT, HIGHDUTYCYCLEOP);
       /* For this first parameter, you can either use dutyCheck or waitUntilTriggered.
        * Wait until triggered will utilize the hardware PWM detection built into the board.
        * dutyCheck will use the firmware DSP approach
        * Generally recommend using waitUntilTriggered for now as it tend to be more reliable.
        * dutyCheck(HDLB, HDHB, getSignalTimeout(HIGHDUTYCYCLEOP))
        */
-      setSignalAlarm(waitUntilTriggered(PWMHIGHSIG), HIGHDUTYCYCLEOP);
+      setSignalAlarm(waitUntilTriggered(PWMHIGHSIG, getSignalTimeout(HIGHDUTYCYCLEOP)), HIGHDUTYCYCLEOP);
       /*
        *
        * End of PIM check
@@ -115,26 +115,26 @@ void loop()
       if (getConfiguration() == 1){
       }
       else{
-      drawPreTestMenu(7);
-      setSignalTimeout(GLOBAL_TIME_LIMIT, SOLENOIDVALVEOP);
-      setSignalAlarm(waitUntilTriggered(SVALVESIG, getSignalTimeout(SOLENOIDVALVEOP), HIGH), SOLENOIDVALVEOP);
-
-      /* If this part succeeds, test will progress */
-      digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
-      drawPreTestMenu(8);
-      setSignalAlarm(waitUntilTriggered(SVALVESIG, getSignalTimeout(SOLENOIDVALVEOP)), SOLENOIDVALVEOP);
-      /* Note that this pump check needs to happen after
-       * the solenoid valve is activated, otherwise, it
-       * will not be powered — even if the pump motor relay
-       * is activated
-       */
-
       drawPreTestMenu(9);
 
       digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
 
       setSignalTimeout(GLOBAL_TIME_LIMIT, PUMPPOWEROP);
       setSignalAlarm(waitUntilTriggered(PMPWRSIG, getSignalTimeout(PUMPPOWEROP)), PUMPPOWEROP);
+      drawPreTestMenu(7);
+      digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
+      setSignalTimeout(GLOBAL_TIME_LIMIT, SOLENOIDVALVEOP);
+      setSignalAlarm(waitUntilTriggered(SVALVESIG, getSignalTimeout(SOLENOIDVALVEOP), HIGH), SOLENOIDVALVEOP);
+
+      /* If this part succeeds, test will progress */
+      drawPreTestMenu(8);
+      digitalWrite(SVALVECTRL, LOW);
+      setSignalAlarm(waitUntilTriggered(SVALVESIG, getSignalTimeout(SOLENOIDVALVEOP)), SOLENOIDVALVEOP);
+      /* Note that this solenoid check needs to happen after
+       * the pump relay is activated, otherwise, it
+       * will not be powered — even if the pump motor relay
+       * is activated
+       */
       }
       /*
        * Basket lift check
@@ -149,12 +149,12 @@ void loop()
 
       drawPreTestMenu(11);
 
-      setSignalTimeout(GLOBAL_TIME_LIMIT, LEFTBASKETOP);
+      setSignalTimeout(100, LEFTBASKETOP);
       setSignalAlarm(waitUntilTriggered(LBSKTSIG, getSignalTimeout(LEFTBASKETOP)), LEFTBASKETOP);
 
       drawPreTestMenu(12);
 
-      setSignalTimeout(GLOBAL_TIME_LIMIT, RIGHTBASKETOP);
+      setSignalTimeout(100, RIGHTBASKETOP);
       setSignalAlarm(waitUntilTriggered(RBSKTSIG, getSignalTimeout(RIGHTBASKETOP)), RIGHTBASKETOP);
 
       /*
