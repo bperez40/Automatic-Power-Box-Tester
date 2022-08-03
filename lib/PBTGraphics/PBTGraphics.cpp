@@ -313,9 +313,11 @@ void touchCheck()
         {
             prev_untouch = false;
             tft.touchRead(&tx, &ty);
+            /*
             Serial.print(tx);
             Serial.print(", ");
             Serial.println(ty);
+            */
             if (!untouched) /* Prevents accidental inputs */
             {
             }
