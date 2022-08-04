@@ -124,7 +124,7 @@ plink.exe -load {SAVED-PROFILE}
 
 Where the saved profile is one that you've previously set up. If plink.exe isn't found, make sure it's part of your PATH environment.
 
-# Power Box Tester Setup
+# Power Box Tester Assembly
 Originally, the power box tester was intended to be a single board to which you attach connectors to. Were it not for the 25 kV ignition, this would be possible. However, because we need to keep this seperate from the rest of the electronics and due to time limitations, the setup requires a great deal more complexity and care, so pay heed to this part of the guide.
 
 Setting up the main board is very straightforward. Assemble the board in its entirety. There are no minor adjustments required. Ideally, this board would be assembled by the PCB manufacturer.
@@ -136,6 +136,7 @@ First, start by assembling the required components of the spark interface board.
 - R3
 - R4
 - D1
+- Quick connect tab on the holes labeled "spark wire connect"
 
 After those are assembled, you will also need to place a jumper wire in one location, with the solder joints being circled in this image:\
 ![link](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/Screenshot%202022-08-04%20151634.png)
@@ -145,4 +146,7 @@ As a result, it will look something like this:\
 
 The idea here is we're trying to short the path that leads between the spark wire interface and the rectification circuit. Instead of that circuit being closed by a +3.3v relay (as it originally was supposed to be), it is being closed by a 120 VAC contactor. We had to change those out as the contactor could handle the higher voltage rating on its contacts (effectively, it prevented the high voltage line from arcing when in its open position due to the larger air gaps).
 
-Now, we need to make a few connections.
+Now, we need to make a few connections. Terminal for reference:\
+![link](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/Screenshot%202022-08-04%20152729.png)
+
+Start by connecting the left most AGND to the interior of the chassis (requires a ring terminal crimp). Next, connect the right AGND to a wire nut. From that wire nut, you need to attach two more wires to two separate locations: One back to AGND OPT, and the other to one side of the contactor's coil (requires a quick connect crimp). You know this is done incorrectly if the device is never able to rectify the signal (no path to ground) or if there is arcing occuring between the AGND and AGND OPT traces (unequal potentials between these two signals).
