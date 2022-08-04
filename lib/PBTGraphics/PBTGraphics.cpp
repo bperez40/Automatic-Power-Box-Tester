@@ -1340,10 +1340,13 @@ void drawDebugMenu()
 
 void drawConnectionsMenu(){
     tft.graphicsMode();
+
     tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Background
     tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
     tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
     tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+
+    tft.fillRect(635, 85, 10, 175, GREY); // Color fill for right side of box
 
     tft.fillTriangle(632, 400, 620, 300, 641, 250, GREY); // Side panel fill
     tft.fillRect(170, 338, 461, 92, RA8875_BLACK); // Outline for front, bottom plate
@@ -1356,7 +1359,7 @@ void drawConnectionsMenu(){
     tft.fillTriangle(620, 340, 620, 240, 638, 240, GREY); // Patch color triangle
     tft.fillRect(190, 240, 430, 100, GREY); // Middle grey color box
 
-    tft.fillTriangle(631, 429, 636, 429, 650, 220, RA8875_BLACK); // Lower right side triangle outline
+    tft.fillTriangle(626, 429, 630, 429, 645, 220, RA8875_BLACK); // Lower right side triangle outline
     tft.fillTriangle(641, 270, 641, 230, 638, 230, RA8875_BLACK); // Lower right side triangle outline vertical
     tft.fillTriangle(645, 220, 645, 100, 647, 100, RA8875_BLACK);
 

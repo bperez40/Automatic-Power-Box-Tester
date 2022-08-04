@@ -123,3 +123,18 @@ If you want to start putty in your terminal of choice, run the following command
 plink.exe -load {SAVED-PROFILE}
 
 Where the saved profile is one that you've previously set up. If plink.exe isn't found, make sure it's part of your PATH environment.
+
+# Power Box Tester Setup
+Originally, the power box tester was intended to be a single board to which you attach connectors to. Were it not for the 25 kV ignition, this would be possible. However, because we need to keep this seperate from the rest of the electronics and due to time limitations, the setup requires a great deal more complexity and care, so pay heed to this part of the guide.
+
+Setting up the main board is very straightforward. Assemble the board in its entirety. There are no minor adjustments required. Ideally, this board would be assembled by the PCB manufacturer.
+
+The spark interface board is a supplementary board to the main board. It required major adjustments after production, so this is where the complexity comes in.
+
+First, start by assembling the required components of the spark interface board. Adjustments were made to exclude parts of the board, so you will only need to assemble:
+- J1
+- R3
+- R4
+- D1
+
+After those are assembled, you will also need to place a jumper wire in one location
