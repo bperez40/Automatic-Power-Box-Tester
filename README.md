@@ -137,10 +137,10 @@ First, start by assembling the required components of the spark interface board.
 - R4
 - D1
 
-After those are assembled, you will also need to place a jumper wire in one location, with the solder joints being circled in this image:
+After those are assembled, you will also need to place a jumper wire in one location, with the solder joints being circled in this image:\
 ![link](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/Screenshot%202022-08-04%20151634.png)
 
-As a result, it will look something like this:
+As a result, it will look something like this:\
 ![link](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/PXL_20220804_192004840.jpg)
 
 The idea here is we're trying to short the path that leads between the spark wire interface and the rectification circuit. Instead of that circuit being closed by a +3.3v relay (as it originally was supposed to be), it is being closed by a 120 VAC contactor. We had to change those out as the contactor could handle the higher voltage rating on its contacts (effectively, it prevented the high voltage line from arcing when in its open position due to the larger air gaps).
