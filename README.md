@@ -127,10 +127,10 @@ Where the saved profile is one that you've previously set up. If plink.exe isn't
 # Power Box Tester Assembly
 Hardware design files can be found in util/HardwareDesignFiles
 They include the EAGLE EDA files, gerber files, BOM, and pick and place for each board
-You can also view each board on AISLER with the following links:
-[Auto Power Box Tester v1.1](https://aisler.net/p/JCLNWTRR)
-[Spark Wire Interface Board v1.0](https://aisler.net/p/PQONZLWA)
-[Auto Power Box Tester v1.0](https://aisler.net/p/SKLRNZQZ)
+You can also view each board on AISLER with the following links.\
+[Auto Power Box Tester v1.1](https://aisler.net/p/JCLNWTRR)\
+[Spark Wire Interface Board v1.0](https://aisler.net/p/PQONZLWA)\
+[Auto Power Box Tester v1.0](https://aisler.net/p/SKLRNZQZ)\
 
 Originally, the power box tester was intended to be a single board to which you attach connectors to. Were it not for the 25 kV ignition, this would be possible. However, because we need to keep this seperate from the rest of the electronics and due to time limitations, the setup requires a great deal more complexity and care, so pay heed to this part of the guide.
 
