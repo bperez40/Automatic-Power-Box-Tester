@@ -2,6 +2,14 @@
 #include "Arduino.h"
 #include "iodefs.hpp"
 #include "PWM.hpp"
+
+/* Duty cycle bound options */
+#define HDHB 0.73
+#define HDLB 0.67
+#define LDHB 0.24
+#define LDLB 0.18
+
+
 /*
  * Defines how many samples the ADC should collect when sampling.
  * Adjust this value if so desired.
@@ -16,7 +24,7 @@
 
 void ADCSetup();
 bool waitUntilTriggered(int pin, unsigned long timeout = 1000, int event = LOW);
-bool dutyCheck(double low_threshold, double high_threshold, unsigned long pwm_time);
+bool dutyCheck(double low_threshold, double high_threshold);
 void runCheck();
 void halt();
 bool sampleAndAverage(int pin, int samples = 100, int event = LOW, double minActivePercentage = 0.05);

@@ -1,12 +1,6 @@
 #include <SPI.h>
 #include "PBTGraphics.hpp"
 
-/* Duty cycle bound options */
-#define HDHB 0.70
-#define HDLB 0.55
-#define LDHB 0.25
-#define LDLB 0.15
-
 #define GLOBAL_TIME_LIMIT 8000 // Important define: Sets the time for a signal detection during auto test
 #define PIM_TIME_LIMIT 10000
 bool test_status = false;
@@ -85,7 +79,7 @@ void loop()
        * Generally recommend using waitUntilTriggered for now as it tend to be more reliable.
        * dutyCheck(LDLB, LDHB, getSignalTimeout(HIGHDUTYCYCLEOP))
        */
-      setSignalAlarm(waitUntilTriggered(PWMLOWSIG), LOWDUTYCYCLEOP); /* dutyCheck(LDLB, LDHB, getSignalTimeout(LOWDUTYCYCLEOP)) */
+      setSignalAlarm(dutyCheck(LDLB, LDHB), LOWDUTYCYCLEOP); /* dutyCheck(LDLB, LDHB, getSignalTimeout(LOWDUTYCYCLEOP)) */
 
       drawPreTestMenu(5);
       setSignalTimeout(500, ALARMOP); // Might require adjusting to wait for alarm signal to go high
@@ -100,7 +94,7 @@ void loop()
        * Generally recommend using waitUntilTriggered for now as it tend to be more reliable.
        * dutyCheck(HDLB, HDHB, getSignalTimeout(HIGHDUTYCYCLEOP))
        */
-      setSignalAlarm(waitUntilTriggered(PWMHIGHSIG, getSignalTimeout(HIGHDUTYCYCLEOP)), HIGHDUTYCYCLEOP);
+      setSignalAlarm(dutyCheck(HDLB, HDHB), HIGHDUTYCYCLEOP);
       /*
        *
        * End of PIM check

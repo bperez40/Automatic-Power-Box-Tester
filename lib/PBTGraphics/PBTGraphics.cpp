@@ -5,6 +5,9 @@ uint16_t tx, ty;
 Adafruit_RA8875 tft = Adafruit_RA8875(CS, RST);
 int option;
 int configuration = EEPROM.read(0);
+unsigned long PWM_low_cooldown;
+unsigned long PWM_high_cooldown;
+unsigned long PWM_cooldown_time;
 
 struct toggles
 {
@@ -15,6 +18,8 @@ struct toggles
     bool basket_toggle;
     bool flame_toggle;
 };
+
+toggles tgs;
 
 struct cooldowns
 {
@@ -298,7 +303,6 @@ void touchCheck()
     unsigned long current_time = millis();
     cooldowns cd;
     cd.basket = cd.heat = cd.default_config = cd.nonfilter = cd.power = cd.pump = cd.svalve = cd.status = cd.flamesense = millis();
-    toggles tgs;
     tgs.power_toggle = tgs.heat_toggle = tgs.pump_toggle = tgs.svalve_toggle = tgs.basket_toggle = false;
     /* prevstatus structure needs to live outside of this function, so we'll heap allocate this one */
     /* Wait around for touch events */
@@ -342,6 +346,7 @@ void touchCheck()
                     {
                         option_selected = true;
                         setOption(9);
+                        PWM_low_cooldown = PWM_high_cooldown = millis();
                     }
                     if (tx >= 550 && tx <= 910 && ty >= 630 && ty <= 760){
                         option_selected = true;
@@ -1411,7 +1416,7 @@ void drawConnectionsMenu(){
 unsigned long updateStatus()
 {
     tft.textMode();
-
+    PWM_cooldown_time = millis();
     tft.textSetCursor(560, 100);
     tft.textEnlarge(1);
     if (!sampleAndAverage(PONSIG))
@@ -1464,17 +1469,20 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 180);
-    if (!sampleAndAverage(PWMLOWSIG))
-    {
-        tft.textColor(RA8875_WHITE, RA8875_RED);
-        tft.textWrite("INACTIVE");
-    }
-    else
-    {
-        tft.textColor(RA8875_BLACK, RA8875_GREEN);
-        tft.textWrite("ACTIVE");
-        tft.textColor(RA8875_WHITE, RA8875_WHITE);
-        tft.textWrite("VE");
+    if(PWM_cooldown_time - PWM_low_cooldown >= 500){ // only do this every half second
+        PWM_low_cooldown = millis();
+        if (!tgs.power_toggle)
+        {
+            tft.textColor(RA8875_WHITE, RA8875_RED);
+            tft.textWrite("INACTIVE");
+        }
+        else if (!dutyCheck(LDLB, LDHB))
+        {
+            tft.textColor(RA8875_BLACK, RA8875_GREEN);
+            tft.textWrite("ACTIVE");
+            tft.textColor(RA8875_WHITE, RA8875_WHITE);
+            tft.textWrite("VE");
+        }
     }
 
     tft.textSetCursor(560, 220);
@@ -1492,17 +1500,20 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 260);
-    if (!sampleAndAverage(PWMHIGHSIG))
-    {
-        tft.textColor(RA8875_WHITE, RA8875_RED);
-        tft.textWrite("INACTIVE");
-    }
-    else
-    {
-        tft.textColor(RA8875_BLACK, RA8875_GREEN);
-        tft.textWrite("ACTIVE");
-        tft.textColor(RA8875_WHITE, RA8875_WHITE);
-        tft.textWrite("VE");
+    if(PWM_cooldown_time - PWM_high_cooldown >= 500){ // Only do this every half second
+        PWM_high_cooldown = millis();
+        if (!tgs.power_toggle)
+        {
+            tft.textColor(RA8875_WHITE, RA8875_RED);
+            tft.textWrite("INACTIVE");
+        }
+        else if (!dutyCheck(HDLB, HDHB))
+        {
+            tft.textColor(RA8875_BLACK, RA8875_GREEN);
+            tft.textWrite("ACTIVE");
+            tft.textColor(RA8875_WHITE, RA8875_WHITE);
+            tft.textWrite("VE");
+        }
     }
 
     tft.textSetCursor(560, 300);

@@ -79,7 +79,7 @@ If something here doesn't work, use your brain. Or Google.
 # Running Python Scripts
 This part assumes you're running Windows.
 
-If you don't have it installed, install Python.
+If you don't already have it installed, install Python.
 
 Once Python is installed, open a terminal in VSCode. 
 
@@ -125,8 +125,8 @@ plink.exe -load {SAVED-PROFILE}
 Where the saved profile is one that you've previously set up. If plink.exe isn't found, make sure it's part of your PATH environment.
 
 # Power Box Tester Assembly
-Hardware design files can be found in util/HardwareDesignFiles
-They include the EAGLE EDA files, gerber files, BOM, and pick and place for each board
+Hardware design files can be found in util/HardwareDesignFiles.\
+They include the EAGLE EDA files, gerber files, BOM, and pick and place for each board.\
 You can also view each board on AISLER with the following links.\
 [Auto Power Box Tester v1.1](https://aisler.net/p/JCLNWTRR)\
 [Spark Wire Interface Board v1.0](https://aisler.net/p/PQONZLWA)\
