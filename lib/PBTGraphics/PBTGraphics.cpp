@@ -1471,7 +1471,7 @@ unsigned long updateStatus()
     tft.textSetCursor(560, 180);
     if(PWM_cooldown_time - PWM_low_cooldown >= 500){ // only do this every half second
         PWM_low_cooldown = millis();
-        if (!tgs.power_toggle)
+        if (!tgs.heat_toggle) // When a new ignition cycle is started, or at the start, reset this such that it is resampled
         {
             tft.textColor(RA8875_WHITE, RA8875_RED);
             tft.textWrite("INACTIVE");
@@ -1502,7 +1502,7 @@ unsigned long updateStatus()
     tft.textSetCursor(560, 260);
     if(PWM_cooldown_time - PWM_high_cooldown >= 500){ // Only do this every half second
         PWM_high_cooldown = millis();
-        if (!tgs.power_toggle)
+        if (!tgs.heat_toggle) // When a new ignition cycle is started, or at the start, reset this such that it is resampled
         {
             tft.textColor(RA8875_WHITE, RA8875_RED);
             tft.textWrite("INACTIVE");
