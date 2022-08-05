@@ -150,3 +150,15 @@ Now, we need to make a few connections. Terminal for reference:\
 ![link](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/Screenshot%202022-08-04%20152729.png)
 
 Start by connecting the left most AGND to the interior of the chassis (requires a ring terminal crimp). Next, connect the right AGND to a wire nut. From that wire nut, you need to attach two more wires to two separate locations: One back to AGND OPT, and the other to one side of the contactor's coil (requires a quick connect crimp). You know this is done incorrectly if the device is never able to rectify the signal (no path to ground) or if there is arcing occuring between the AGND and AGND OPT traces (unequal potentials between these two signals).
+
+After the two boards are assembled properly, you'll need to make connections to the breadboard and contactor. Usually, the breadboard would be integrated onto the spark interface board, but since there wasn't enough time remaining in the internship to do so, we had to settle for this.
+
+The breadboard is a corrected circuit of what the spark interface board should have been, and it requires the following
+- NPN transistor (like the MPSA06): 1
+- 270 ohm resistor: 1
+- 3700 ohm resistor: 2
+- [J104D2C3VDC.15S or equivalent 3.3v relay](https://www.digikey.com/en/products/detail/cit-relay-and-switch/J104D2C3VDC-15S/12502634)
+- [CPC1976Y, AQY212GHAX, or something similar](https://www.digikey.com/en/products/detail/ixys-integrated-circuits-division/CPC1976Y/1277138)
+
+Using these, you need to build the following circuit:\
+![Schematic](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/Screenshot%202022-08-05%20092843.png)
