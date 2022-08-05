@@ -127,7 +127,7 @@ Where the saved profile is one that you've previously set up. If plink.exe isn't
 # Power Box Tester Assembly
 Originally, the power box tester was intended to be a single board to which you attach connectors to. Were it not for the 25 kV ignition, this would be possible. However, because we need to keep this seperate from the rest of the electronics and due to time limitations, the setup requires a great deal more complexity and care, so pay heed to this part of the guide.
 
-Setting up the main board is very straightforward. Assemble the board in its entirety. There are no minor adjustments required. Ideally, this board would be assembled by the PCB manufacturer.
+Setting up the main board is very straightforward. Assemble the board in its entirety. There are no minor adjustments required. Ideally, this board would be assembled by the PCB manufacturer. The connectors are also all assembled with each connection as is with the exception of the pump motor connector. Each of these connectors have a Mini-Fit Jr. receptacle on one end and a Mini-Fit Jr. panel mount plug on the other end.
 
 The spark interface board is a supplementary board to the main board. It required major adjustments after production, so this is where the complexity comes in.
 
@@ -162,3 +162,7 @@ The breadboard is a corrected circuit of what the spark interface board should h
 
 Using these, you need to build the following circuit:\
 ![Schematic](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/Screenshot%202022-08-05%20092843.png)
+
+To finish these connections, we need to connect the rest of the contactor's connections. We've already attached the necessary wires to the coil ends, but we need to set up the spark wire to connect to the terminal. One side of a terminal should by connected directly to the power box's spark wire (usually we connect the spark wire to a QC terminal on the workbench and have another wire leading into the Auto Power Box Tester's chassis, where it then connects to one of the contactor's terminal). The other side of that terminal should be connected to the quick connect labeled "SPARK WIRE CONNECT" on the spark wire interface board.
+
+Effectively, what all this was for was to allow the Arduino to be able to control when the spark wire's signal is being recitified or not. The circuit on the breadboard allows the Arduino to control a 120 VAC signal (on the pump motor connector's second wire), which in turn triggers the contactor on and off.
