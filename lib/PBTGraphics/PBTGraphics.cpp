@@ -732,293 +732,296 @@ void touchCheck()
                         option_selected = true;
                         setOption(2);
                     }
-                    else if (tx >= 205 && tx <= 290 && ty >= 220 && ty <= 350)
+                    if (manualLock == 1)
                     {
-                        if (passcode[0] == -1)
+                        if (tx >= 205 && tx <= 290 && ty >= 220 && ty <= 350)
                         {
-                            passcode[0] = 1;
+                            if (passcode[0] == -1)
+                            {
+                                passcode[0] = 1;
+                                tft.textSetCursor(485, 180);
+                                tft.textWrite("1");
+                            }
+                            else if (passcode[1] == -1)
+                            {
+                                passcode[1] = 1;
+                                tft.textSetCursor(555, 180);
+                                tft.textWrite("1");
+                            }
+                            else if (passcode[2] == -1)
+                            {
+                                passcode[2] = 1;
+                                tft.textSetCursor(625, 180);
+                                tft.textWrite("1");
+                            }
+                            else if (passcode[3] == -1)
+                            {
+                                passcode[3] = 1;
+                                tft.textSetCursor(695, 180);
+                                tft.textWrite("1");
+                            }
+                        }
+                        else if (tx >= 330 && tx <= 400 && ty >= 200 && ty <= 350)
+                        {
+                            if (passcode[0] == -1)
+                            {
+                                passcode[0] = 2;
+                                tft.textSetCursor(485, 180);
+                                tft.textWrite("2");
+                            }
+                            else if (passcode[1] == -1)
+                            {
+                                passcode[1] = 2;
+                                tft.textSetCursor(555, 180);
+                                tft.textWrite("2");
+                            }
+                            else if (passcode[2] == -1)
+                            {
+                                passcode[2] = 2;
+                                tft.textSetCursor(625, 180);
+                                tft.textWrite("2");
+                            }
+                            else if (passcode[3] == -1)
+                            {
+                                passcode[3] = 2;
+                                tft.textSetCursor(695, 180);
+                                tft.textWrite("2");
+                            }
+                        }
+                        else if (tx >= 450 && tx <= 530 && ty >= 200 && ty <= 350)
+                        {
+                            if (passcode[0] == -1)
+                            {
+                                passcode[0] = 3;
+                                tft.textSetCursor(485, 180);
+                                tft.textWrite("3");
+                            }
+                            else if (passcode[1] == -1)
+                            {
+                                passcode[1] = 3;
+                                tft.textSetCursor(555, 180);
+                                tft.textWrite("3");
+                            }
+                            else if (passcode[2] == -1)
+                            {
+                                passcode[2] = 3;
+                                tft.textSetCursor(625, 180);
+                                tft.textWrite("3");
+                            }
+                            else if (passcode[3] == -1)
+                            {
+                                passcode[3] = 3;
+                                tft.textSetCursor(695, 180);
+                                tft.textWrite("3");
+                            }
+                        }
+                        else if (tx >= 205 && tx <= 290 && ty >= 370 && ty <= 500)
+                        {
+                            if (passcode[0] == -1)
+                            {
+                                passcode[0] = 4;
+                                tft.textSetCursor(485, 180);
+                                tft.textWrite("4");
+                            }
+                            else if (passcode[1] == -1)
+                            {
+                                passcode[1] = 4;
+                                tft.textSetCursor(555, 180);
+                                tft.textWrite("4");
+                            }
+                            else if (passcode[2] == -1)
+                            {
+                                passcode[2] = 4;
+                                tft.textSetCursor(625, 180);
+                                tft.textWrite("4");
+                            }
+                            else if (passcode[3] == -1)
+                            {
+                                passcode[3] = 4;
+                                tft.textSetCursor(695, 180);
+                                tft.textWrite("4");
+                            }
+                        }
+                        else if (tx >= 330 && tx <= 400 && ty >= 370 && ty <= 500)
+                        {
+                            if (passcode[0] == -1)
+                            {
+                                passcode[0] = 5;
+                                tft.textSetCursor(485, 180);
+                                tft.textWrite("5");
+                            }
+                            else if (passcode[1] == -1)
+                            {
+                                passcode[1] = 5;
+                                tft.textSetCursor(555, 180);
+                                tft.textWrite("5");
+                            }
+                            else if (passcode[2] == -1)
+                            {
+                                passcode[2] = 5;
+                                tft.textSetCursor(625, 180);
+                                tft.textWrite("5");
+                            }
+                            else if (passcode[3] == -1)
+                            {
+                                passcode[3] = 5;
+                                tft.textSetCursor(695, 180);
+                                tft.textWrite("5");
+                            }
+                        }
+                        else if (tx >= 450 && tx <= 530 && ty >= 370 && ty <= 500)
+                        {
+                            if (passcode[0] == -1)
+                            {
+                                passcode[0] = 6;
+                                tft.textSetCursor(485, 180);
+                                tft.textWrite("6");
+                            }
+                            else if (passcode[1] == -1)
+                            {
+                                passcode[1] = 6;
+                                tft.textSetCursor(555, 180);
+                                tft.textWrite("6");
+                            }
+                            else if (passcode[2] == -1)
+                            {
+                                passcode[2] = 6;
+                                tft.textSetCursor(625, 180);
+                                tft.textWrite("6");
+                            }
+                            else if (passcode[3] == -1)
+                            {
+                                passcode[3] = 6;
+                                tft.textSetCursor(695, 180);
+                                tft.textWrite("6");
+                            }
+                        }
+                        else if (tx >= 205 && tx <= 290 && ty >= 540 && ty <= 670)
+                        {
+                            if (passcode[0] == -1)
+                            {
+                                passcode[0] = 7;
+                                tft.textSetCursor(485, 180);
+                                tft.textWrite("7");
+                            }
+                            else if (passcode[1] == -1)
+                            {
+                                passcode[1] = 7;
+                                tft.textSetCursor(555, 180);
+                                tft.textWrite("7");
+                            }
+                            else if (passcode[2] == -1)
+                            {
+                                passcode[2] = 7;
+                                tft.textSetCursor(625, 180);
+                                tft.textWrite("7");
+                            }
+                            else if (passcode[3] == -1)
+                            {
+                                passcode[3] = 7;
+                                tft.textSetCursor(695, 180);
+                                tft.textWrite("7");
+                            }
+                        }
+                        else if (tx >= 330 && tx <= 400 && ty >= 540 && ty <= 670)
+                        {
+                            if (passcode[0] == -1)
+                            {
+                                passcode[0] = 8;
+                                tft.textSetCursor(485, 180);
+                                tft.textWrite("8");
+                            }
+                            else if (passcode[1] == -1)
+                            {
+                                passcode[1] = 8;
+                                tft.textSetCursor(555, 180);
+                                tft.textWrite("8");
+                            }
+                            else if (passcode[2] == -1)
+                            {
+                                passcode[2] = 8;
+                                tft.textSetCursor(625, 180);
+                                tft.textWrite("8");
+                            }
+                            else if (passcode[3] == -1)
+                            {
+                                passcode[3] = 8;
+                                tft.textSetCursor(695, 180);
+                                tft.textWrite("8");
+                            }
+                        }
+                        else if (tx >= 450 && tx <= 530 && ty >= 540 && ty <= 670)
+                        {
+                            if (passcode[0] == -1)
+                            {
+                                passcode[0] = 9;
+                                tft.textSetCursor(485, 180);
+                                tft.textWrite("9");
+                            }
+                            else if (passcode[1] == -1)
+                            {
+                                passcode[1] = 9;
+                                tft.textSetCursor(555, 180);
+                                tft.textWrite("9");
+                            }
+                            else if (passcode[2] == -1)
+                            {
+                                passcode[2] = 9;
+                                tft.textSetCursor(625, 180);
+                                tft.textWrite("9");
+                            }
+                            else if (passcode[3] == -1)
+                            {
+                                passcode[3] = 9;
+                                tft.textSetCursor(695, 180);
+                                tft.textWrite("9");
+                            }
+                        }
+                        else if (tx >= 330 && tx <= 400 && ty >= 700 && ty <= 830)
+                        {
+                            if (passcode[0] == -1)
+                            {
+                                passcode[0] = 0;
+                                tft.textSetCursor(485, 180);
+                                tft.textWrite("0");
+                            }
+                            else if (passcode[1] == -1)
+                            {
+                                passcode[1] = 0;
+                                tft.textSetCursor(555, 180);
+                                tft.textWrite("0");
+                            }
+                            else if (passcode[2] == -1)
+                            {
+                                passcode[2] = 0;
+                                tft.textSetCursor(625, 180);
+                                tft.textWrite("0");
+                            }
+                            else if (passcode[3] == -1)
+                            {
+                                passcode[3] = 0;
+                                tft.textSetCursor(695, 180);
+                                tft.textWrite("0");
+                            }
+                        }
+                        else if (tx >= 460 && tx <= 530 && ty >= 735 && ty <= 850)
+                        {
+                            tft.textColor(RA8875_WHITE, RA8875_WHITE);
                             tft.textSetCursor(485, 180);
-                            tft.textWrite("1");
-                        }
-                        else if (passcode[1] == -1)
-                        {
-                            passcode[1] = 1;
+                            tft.textWrite("CL");
                             tft.textSetCursor(555, 180);
-                            tft.textWrite("1");
-                        }
-                        else if (passcode[2] == -1)
-                        {
-                            passcode[2] = 1;
+                            tft.textWrite("CL");
                             tft.textSetCursor(625, 180);
-                            tft.textWrite("1");
-                        }
-                        else if (passcode[3] == -1)
-                        {
-                            passcode[3] = 1;
+                            tft.textWrite("CL");
                             tft.textSetCursor(695, 180);
-                            tft.textWrite("1");
+                            tft.textWrite("CL");
+                            for (int i = 0; i < sizeof(passcode) / sizeof(int); i++)
+                            {
+                                passcode[i] = -1;
+                            }
                         }
                     }
-                    else if (tx >= 330 && tx <= 400 && ty >= 200 && ty <= 350)
-                    {
-                        if (passcode[0] == -1)
-                        {
-                            passcode[0] = 2;
-                            tft.textSetCursor(485, 180);
-                            tft.textWrite("2");
-                        }
-                        else if (passcode[1] == -1)
-                        {
-                            passcode[1] = 2;
-                            tft.textSetCursor(555, 180);
-                            tft.textWrite("2");
-                        }
-                        else if (passcode[2] == -1)
-                        {
-                            passcode[2] = 2;
-                            tft.textSetCursor(625, 180);
-                            tft.textWrite("2");
-                        }
-                        else if (passcode[3] == -1)
-                        {
-                            passcode[3] = 2;
-                            tft.textSetCursor(695, 180);
-                            tft.textWrite("2");
-                        }
-                    }
-                    else if (tx >= 450 && tx <= 530 && ty >= 200 && ty <= 350)
-                    {
-                        if (passcode[0] == -1)
-                        {
-                            passcode[0] = 3;
-                            tft.textSetCursor(485, 180);
-                            tft.textWrite("3");
-                        }
-                        else if (passcode[1] == -1)
-                        {
-                            passcode[1] = 3;
-                            tft.textSetCursor(555, 180);
-                            tft.textWrite("3");
-                        }
-                        else if (passcode[2] == -1)
-                        {
-                            passcode[2] = 3;
-                            tft.textSetCursor(625, 180);
-                            tft.textWrite("3");
-                        }
-                        else if (passcode[3] == -1)
-                        {
-                            passcode[3] = 3;
-                            tft.textSetCursor(695, 180);
-                            tft.textWrite("3");
-                        }
-                    }
-                    else if (tx >= 205 && tx <= 290 && ty >= 370 && ty <= 500)
-                    {
-                        if (passcode[0] == -1)
-                        {
-                            passcode[0] = 4;
-                            tft.textSetCursor(485, 180);
-                            tft.textWrite("4");
-                        }
-                        else if (passcode[1] == -1)
-                        {
-                            passcode[1] = 4;
-                            tft.textSetCursor(555, 180);
-                            tft.textWrite("4");
-                        }
-                        else if (passcode[2] == -1)
-                        {
-                            passcode[2] = 4;
-                            tft.textSetCursor(625, 180);
-                            tft.textWrite("4");
-                        }
-                        else if (passcode[3] == -1)
-                        {
-                            passcode[3] = 4;
-                            tft.textSetCursor(695, 180);
-                            tft.textWrite("4");
-                        }
-                    }
-                    else if (tx >= 330 && tx <= 400 && ty >= 370 && ty <= 500)
-                    {
-                        if (passcode[0] == -1)
-                        {
-                            passcode[0] = 5;
-                            tft.textSetCursor(485, 180);
-                            tft.textWrite("5");
-                        }
-                        else if (passcode[1] == -1)
-                        {
-                            passcode[1] = 5;
-                            tft.textSetCursor(555, 180);
-                            tft.textWrite("5");
-                        }
-                        else if (passcode[2] == -1)
-                        {
-                            passcode[2] = 5;
-                            tft.textSetCursor(625, 180);
-                            tft.textWrite("5");
-                        }
-                        else if (passcode[3] == -1)
-                        {
-                            passcode[3] = 5;
-                            tft.textSetCursor(695, 180);
-                            tft.textWrite("5");
-                        }
-                    }
-                    else if (tx >= 450 && tx <= 530 && ty >= 370 && ty <= 500)
-                    {
-                        if (passcode[0] == -1)
-                        {
-                            passcode[0] = 6;
-                            tft.textSetCursor(485, 180);
-                            tft.textWrite("6");
-                        }
-                        else if (passcode[1] == -1)
-                        {
-                            passcode[1] = 6;
-                            tft.textSetCursor(555, 180);
-                            tft.textWrite("6");
-                        }
-                        else if (passcode[2] == -1)
-                        {
-                            passcode[2] = 6;
-                            tft.textSetCursor(625, 180);
-                            tft.textWrite("6");
-                        }
-                        else if (passcode[3] == -1)
-                        {
-                            passcode[3] = 6;
-                            tft.textSetCursor(695, 180);
-                            tft.textWrite("6");
-                        }
-                    }
-                    else if (tx >= 205 && tx <= 290 && ty >= 540 && ty <= 670)
-                    {
-                        if (passcode[0] == -1)
-                        {
-                            passcode[0] = 7;
-                            tft.textSetCursor(485, 180);
-                            tft.textWrite("7");
-                        }
-                        else if (passcode[1] == -1)
-                        {
-                            passcode[1] = 7;
-                            tft.textSetCursor(555, 180);
-                            tft.textWrite("7");
-                        }
-                        else if (passcode[2] == -1)
-                        {
-                            passcode[2] = 7;
-                            tft.textSetCursor(625, 180);
-                            tft.textWrite("7");
-                        }
-                        else if (passcode[3] == -1)
-                        {
-                            passcode[3] = 7;
-                            tft.textSetCursor(695, 180);
-                            tft.textWrite("7");
-                        }
-                    }
-                    else if (tx >= 330 && tx <= 400 && ty >= 540 && ty <= 670)
-                    {
-                        if (passcode[0] == -1)
-                        {
-                            passcode[0] = 8;
-                            tft.textSetCursor(485, 180);
-                            tft.textWrite("8");
-                        }
-                        else if (passcode[1] == -1)
-                        {
-                            passcode[1] = 8;
-                            tft.textSetCursor(555, 180);
-                            tft.textWrite("8");
-                        }
-                        else if (passcode[2] == -1)
-                        {
-                            passcode[2] = 8;
-                            tft.textSetCursor(625, 180);
-                            tft.textWrite("8");
-                        }
-                        else if (passcode[3] == -1)
-                        {
-                            passcode[3] = 8;
-                            tft.textSetCursor(695, 180);
-                            tft.textWrite("8");
-                        }
-                    }
-                    else if (tx >= 450 && tx <= 530 && ty >= 540 && ty <= 670)
-                    {
-                        if (passcode[0] == -1)
-                        {
-                            passcode[0] = 9;
-                            tft.textSetCursor(485, 180);
-                            tft.textWrite("9");
-                        }
-                        else if (passcode[1] == -1)
-                        {
-                            passcode[1] = 9;
-                            tft.textSetCursor(555, 180);
-                            tft.textWrite("9");
-                        }
-                        else if (passcode[2] == -1)
-                        {
-                            passcode[2] = 9;
-                            tft.textSetCursor(625, 180);
-                            tft.textWrite("9");
-                        }
-                        else if (passcode[3] == -1)
-                        {
-                            passcode[3] = 9;
-                            tft.textSetCursor(695, 180);
-                            tft.textWrite("9");
-                        }
-                    }
-                    else if (tx >= 330 && tx <= 400 && ty >= 700 && ty <= 830)
-                    {
-                        if (passcode[0] == -1)
-                        {
-                            passcode[0] = 0;
-                            tft.textSetCursor(485, 180);
-                            tft.textWrite("0");
-                        }
-                        else if (passcode[1] == -1)
-                        {
-                            passcode[1] = 0;
-                            tft.textSetCursor(555, 180);
-                            tft.textWrite("0");
-                        }
-                        else if (passcode[2] == -1)
-                        {
-                            passcode[2] = 0;
-                            tft.textSetCursor(625, 180);
-                            tft.textWrite("0");
-                        }
-                        else if (passcode[3] == -1)
-                        {
-                            passcode[3] = 0;
-                            tft.textSetCursor(695, 180);
-                            tft.textWrite("0");
-                        }
-                    }
-                    else if (tx >= 460 && tx <= 530 && ty >= 735 && ty <= 850)
-                    {
-                        tft.textColor(RA8875_WHITE, RA8875_WHITE);
-                        tft.textSetCursor(485, 180);
-                        tft.textWrite("CL");
-                        tft.textSetCursor(555, 180);
-                        tft.textWrite("CL");
-                        tft.textSetCursor(625, 180);
-                        tft.textWrite("CL");
-                        tft.textSetCursor(695, 180);
-                        tft.textWrite("CL");
-                        for (int i = 0; i < sizeof(passcode) / sizeof(int); i++)
-                        {
-                            passcode[i] = -1;
-                        }
-                    }
-                    else if (tx >= 600 && tx <= 900 && ty >= 600 && ty <= 750)
+                    if (tx >= 600 && tx <= 900 && ty >= 600 && ty <= 750)
                     {
                         if (manualLock == 1)
                         {
@@ -1114,12 +1117,12 @@ void drawMainMenu()
     tft.textSetCursor(110, 320);
     tft.textColor(RA8875_WHITE, RA8875_BLACK);
     tft.textWrite("Configurations");
-    tft.textSetCursor(530, 220);
+    tft.textSetCursor(480, 220);
     if (manualLock == 1)
     {
         tft.textColor(RA8875_WHITE, DARKGREY);
     }
-    tft.textWrite("Manual");
+    tft.textWrite("Manual Test");
     tft.textColor(RA8875_WHITE, RA8875_BLACK);
     tft.textSetCursor(500, 320);
     tft.textWrite("Lock Menu");
@@ -1795,7 +1798,7 @@ void drawLockMenu()
         tft.fillRoundRect(150, 75, 60, 60, 15, DARKGREY);      // 1
         tft.fillRoundRect(250, 75, 60, 60, 15, DARKGREY);      // 2
         tft.fillRoundRect(350, 75, 60, 60, 15, DARKGREY);      // 3
-        tft.fillRoundRect(150, 175, 60, 60, 15, RA8875_BLACK); // 4
+        tft.fillRoundRect(150, 175, 60, 60, 15, DARKGREY); // 4
         tft.fillRoundRect(250, 175, 60, 60, 15, DARKGREY);     // 5
         tft.fillRoundRect(350, 175, 60, 60, 15, DARKGREY);     // 6
         tft.fillRoundRect(150, 275, 60, 60, 15, DARKGREY);     // 7

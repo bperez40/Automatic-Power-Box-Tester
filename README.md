@@ -173,3 +173,12 @@ Using these, you need to build the following circuit:\
 To finish these connections, we need to connect the rest of the contactor's connections. We've already attached the necessary wires to the coil ends, but we need to set up the spark wire to connect to the terminal. One side of a terminal should by connected directly to the power box's spark wire (usually we connect the spark wire to a QC terminal on the workbench and have another wire leading into the Auto Power Box Tester's chassis, where it then connects to one of the contactor's terminal). The other side of that terminal should be connected to the quick connect labeled "SPARK WIRE CONNECT" on the spark wire interface board.
 
 Effectively, what all this was for was to allow the Arduino to be able to control when the spark wire's signal is being recitified or not. The circuit on the breadboard allows the Arduino to control a 120 VAC signal (on the pump motor connector's second wire), which in turn triggers the contactor on and off.
+
+# Changing the lock screen password
+I recognize that this is incredibly insecure, but it's highly unlikely anyone who would abuse this would come looking here to do so.
+
+To change the lockscreen password, navigate to PBTGraphics.cpp and change the line with...
+
+int actual_passcode[4] = {#, #, #, #}; /*!! SET PASSCODE HERE !!*/
+
+...by setting the # to whatever you want it to be, in the order you want them to be entered. Then build and upload the project to the arduino.
