@@ -36,13 +36,15 @@ bool waitUntilTriggered(int pin, unsigned long timeout, int event = LOW)
 {
     unsigned long start_time = millis();
     unsigned long end_time = start_time;
-    bool event_triggered = false;
-    while (!event_triggered)
+    int events_met = 0;
+    while (true)
     {
         end_time = millis();
         if (digitalRead(pin) == event)
         {
-            event_triggered = true;
+            events_met += 1;
+        }
+        if (events_met >= 50){ // Requires this signal to be sampled multiple times to be valid
             return false; // Returns whether alarm should be active or not
         }
         else if (end_time - start_time >= timeout){
