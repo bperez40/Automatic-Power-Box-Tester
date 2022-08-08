@@ -68,11 +68,6 @@ bool dutyCheck(double low_threshold, double high_threshold)
     return !pwm_met; // Is opposite because we're returning whether the "alarm" was triggered or not
 }
 
-void halt(){
-    while(true){
-    }
-}
-
 // Meant to be used for manual test status. For auto test, use waitUntilTriggered
 bool sampleAndAverage(int pin, int samples = 100, int event = LOW, double minActivePercentage = 0.05){
     int numActive = 0;

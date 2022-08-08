@@ -2,7 +2,7 @@
 #include "PBTGraphics.hpp"
 
 #define GLOBAL_TIME_LIMIT 8000 // Important define: Sets the time for a signal detection during auto test
-#define PIM_TIME_LIMIT 10000
+#define PIM_TIME_LIMIT 8000
 bool test_status = false;
 
 void setup()
@@ -31,9 +31,16 @@ void loop()
      * Start of PIM check
      */
     digitalWrite(POWERCTRL, HIGH);
-    
     setSignalTimeout(PIM_TIME_LIMIT, POWERONOP);
-    setSignalAlarm(waitUntilTriggered(PONSIG, getSignalTimeout(POWERONOP)), POWERONOP);
+    if (sampleAndAverage(PONSIG) == true)
+    {
+      setSignalAlarm(false, POWERONOP);
+    }
+    else
+    {
+      setSignalAlarm(true, POWERONOP);
+    }
+    waitUntilTriggered(PONSIG, getSignalTimeout(POWERONOP));
 
     /* IMPORTANT
      * You must have an abort exception if the relay on the PBT board is not powered
@@ -57,17 +64,49 @@ void loop()
       drawPreTestMenu(2);
 
       setSignalTimeout(PIM_TIME_LIMIT, BLOWERPOWEROP);
-      setSignalAlarm(waitUntilTriggered(BLPWRSIG, getSignalTimeout(BLOWERPOWEROP)), BLOWERPOWEROP);
+      if (sampleAndAverage(BLOWERPOWEROP) == true)
+      {
+        setSignalAlarm(false, BLOWERPOWEROP);
+      }
+      else
+      {
+        setSignalAlarm(true, BLOWERPOWEROP);
+      }
+      waitUntilTriggered(BLPWRSIG, getSignalTimeout(BLOWERPOWEROP));
 
       setSignalTimeout(PIM_TIME_LIMIT, BLOWERCONTROLOP);
-      setSignalAlarm(waitUntilTriggered(BLCTRLPWRSIG, getSignalTimeout(BLOWERCONTROLOP)), BLOWERCONTROLOP);
+      if (sampleAndAverage(BLCTRLPWRSIG) == true)
+      {
+        setSignalAlarm(false, BLOWERCONTROLOP);
+      }
+      else
+      {
+        setSignalAlarm(true, BLOWERCONTROLOP);
+      }
+      waitUntilTriggered(BLCTRLPWRSIG, getSignalTimeout(BLOWERCONTROLOP));
 
       setSignalTimeout(PIM_TIME_LIMIT, BLOWERPOWERNEUTRALOP);
-      setSignalAlarm(waitUntilTriggered(BLPWRNEUSIG, getSignalTimeout(BLOWERPOWERNEUTRALOP)), BLOWERPOWERNEUTRALOP);
+      if (sampleAndAverage(BLPWRNEUSIG) == true)
+      {
+        setSignalAlarm(false, BLOWERPOWERNEUTRALOP);
+      }
+      else
+      {
+        setSignalAlarm(true, BLOWERPOWERNEUTRALOP);
+      }
+      waitUntilTriggered(BLPWRNEUSIG, getSignalTimeout(BLOWERPOWERNEUTRALOP));
 
       drawPreTestMenu(4);
       setSignalTimeout(PIM_TIME_LIMIT, GASVALVEOP);
-      setSignalAlarm(waitUntilTriggered(GASVALVESIG, getSignalTimeout(GASVALVEOP)), GASVALVEOP);
+      if (sampleAndAverage(GASVALVESIG) == true)
+      {
+        setSignalAlarm(false, GASVALVEOP);
+      }
+      else
+      {
+        setSignalAlarm(true, GASVALVEOP);
+      }
+      waitUntilTriggered(GASVALVESIG, getSignalTimeout(GASVALVEOP));
 
       /* This is where spark detection would go */
 
@@ -79,14 +118,9 @@ void loop()
        * Generally recommend using waitUntilTriggered for now as it tend to be more reliable.
        * dutyCheck(LDLB, LDHB, getSignalTimeout(HIGHDUTYCYCLEOP))
        */
-      setSignalAlarm(dutyCheck(LDLB, LDHB), LOWDUTYCYCLEOP); /* dutyCheck(LDLB, LDHB, getSignalTimeout(LOWDUTYCYCLEOP)) */
-
-      drawPreTestMenu(5);
-      setSignalTimeout(500, ALARMOP); // Might require adjusting to wait for alarm signal to go high
-      setSignalAlarm(waitUntilTriggered(ALARMSIG, getSignalTimeout(ALARMOP), HIGH), ALARMOP);
+      setSignalAlarm(dutyCheck(LDLB, LDHB), LOWDUTYCYCLEOP);
 
       drawPreTestMenu(6);
-      
       setSignalTimeout(PIM_TIME_LIMIT, HIGHDUTYCYCLEOP);
       /* For this first parameter, you can either use dutyCheck or waitUntilTriggered.
        * Wait until triggered will utilize the hardware PWM detection built into the board.
@@ -95,6 +129,18 @@ void loop()
        * dutyCheck(HDLB, HDHB, getSignalTimeout(HIGHDUTYCYCLEOP))
        */
       setSignalAlarm(dutyCheck(HDLB, HDHB), HIGHDUTYCYCLEOP);
+
+      drawPreTestMenu(5);
+      setSignalTimeout(1000, ALARMOP); // Might require adjusting to wait for alarm signal to go high
+      if (sampleAndAverage(ALARMOP) == true)
+      {
+        setSignalAlarm(false, ALARMOP);
+      }
+      else
+      {
+        setSignalAlarm(true, ALARMOP);
+      }
+      waitUntilTriggered(ALARMSIG, getSignalTimeout(ALARMOP));
       /*
        *
        * End of PIM check
@@ -106,29 +152,31 @@ void loop()
        * If configuration is set to 1 (non-filter), then we should skip the filter system tests.
        * Otherwise, we'll execute the filter system tests.
        */
-      if (getConfiguration() == 1){
+      if (getConfiguration() == 1)
+      {
       }
-      else{
-      drawPreTestMenu(9);
+      else
+      {
+        drawPreTestMenu(9);
 
-      digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
+        digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
 
-      setSignalTimeout(GLOBAL_TIME_LIMIT, PUMPPOWEROP);
-      setSignalAlarm(waitUntilTriggered(PMPWRSIG, getSignalTimeout(PUMPPOWEROP)), PUMPPOWEROP);
-      drawPreTestMenu(7);
-      digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
-      setSignalTimeout(GLOBAL_TIME_LIMIT, SOLENOIDVALVEOP);
-      setSignalAlarm(waitUntilTriggered(SVALVESIG, getSignalTimeout(SOLENOIDVALVEOP), HIGH), SOLENOIDVALVEOP);
+        setSignalTimeout(GLOBAL_TIME_LIMIT, PUMPPOWEROP);
+        setSignalAlarm(waitUntilTriggered(PMPWRSIG, getSignalTimeout(PUMPPOWEROP)), PUMPPOWEROP);
+        drawPreTestMenu(7);
+        digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
+        setSignalTimeout(GLOBAL_TIME_LIMIT, SOLENOIDVALVEOP);
+        setSignalAlarm(waitUntilTriggered(SVALVESIG, getSignalTimeout(SOLENOIDVALVEOP), HIGH), SOLENOIDVALVEOP);
 
-      /* If this part succeeds, test will progress */
-      drawPreTestMenu(8);
-      digitalWrite(SVALVECTRL, LOW);
-      setSignalAlarm(waitUntilTriggered(SVALVESIG, getSignalTimeout(SOLENOIDVALVEOP)), SOLENOIDVALVEOP);
-      /* Note that this solenoid check needs to happen after
-       * the pump relay is activated, otherwise, it
-       * will not be powered — even if the pump motor relay
-       * is activated
-       */
+        /* If this part succeeds, test will progress */
+        drawPreTestMenu(8);
+        digitalWrite(SVALVECTRL, LOW);
+        setSignalAlarm(waitUntilTriggered(SVALVESIG, getSignalTimeout(SOLENOIDVALVEOP)), SOLENOIDVALVEOP);
+        /* Note that this solenoid check needs to happen after
+         * the pump relay is activated, otherwise, it
+         * will not be powered — even if the pump motor relay
+         * is activated
+         */
       }
       /*
        * Basket lift check
@@ -154,9 +202,10 @@ void loop()
       /*
        * End of basket lift check
        */
-      switch(getConfiguration()){
+      switch (getConfiguration())
+      {
       case 0:
-        if (getSignalAlarm(HIGHDUTYCYCLEOP) || getSignalAlarm(LOWDUTYCYCLEOP)|| getSignalAlarm(ALARMOP) || getSignalAlarm(BASKETPOWEROP) || getSignalAlarm(BLOWERPOWERNEUTRALOP) || getSignalAlarm(BLOWERCONTROLOP) || getSignalAlarm(RIGHTBASKETOP) || getSignalAlarm(SOLENOIDVALVEOP) || getSignalAlarm(PUMPPOWEROP) || getSignalAlarm(GASVALVEOP) || getSignalAlarm(BLOWERPOWEROP) || getSignalAlarm(POWERONOP))
+        if (getSignalAlarm(HIGHDUTYCYCLEOP) || getSignalAlarm(LOWDUTYCYCLEOP) || getSignalAlarm(ALARMOP) || getSignalAlarm(BASKETPOWEROP) || getSignalAlarm(BLOWERPOWERNEUTRALOP) || getSignalAlarm(BLOWERCONTROLOP) || getSignalAlarm(RIGHTBASKETOP) || getSignalAlarm(SOLENOIDVALVEOP) || getSignalAlarm(PUMPPOWEROP) || getSignalAlarm(GASVALVEOP) || getSignalAlarm(BLOWERPOWEROP) || getSignalAlarm(POWERONOP))
         {
           test_status = false;
         }
@@ -166,7 +215,7 @@ void loop()
         }
         break;
       case 1:
-        if (getSignalAlarm(HIGHDUTYCYCLEOP) || getSignalAlarm(LOWDUTYCYCLEOP)|| getSignalAlarm(ALARMOP) || getSignalAlarm(BASKETPOWEROP) || getSignalAlarm(BLOWERPOWERNEUTRALOP) || getSignalAlarm(BLOWERCONTROLOP) || getSignalAlarm(RIGHTBASKETOP) || getSignalAlarm(GASVALVEOP) || getSignalAlarm(BLOWERPOWEROP) || getSignalAlarm(POWERONOP))
+        if (getSignalAlarm(HIGHDUTYCYCLEOP) || getSignalAlarm(LOWDUTYCYCLEOP) || getSignalAlarm(ALARMOP) || getSignalAlarm(BASKETPOWEROP) || getSignalAlarm(BLOWERPOWERNEUTRALOP) || getSignalAlarm(BLOWERCONTROLOP) || getSignalAlarm(RIGHTBASKETOP) || getSignalAlarm(GASVALVEOP) || getSignalAlarm(BLOWERPOWEROP) || getSignalAlarm(POWERONOP))
         {
           test_status = false;
         }
@@ -176,7 +225,7 @@ void loop()
         }
         break;
       default:
-        if (getSignalAlarm(HIGHDUTYCYCLEOP) || getSignalAlarm(LOWDUTYCYCLEOP)|| getSignalAlarm(ALARMOP) || getSignalAlarm(BASKETPOWEROP) || getSignalAlarm(BLOWERPOWERNEUTRALOP) || getSignalAlarm(BLOWERCONTROLOP) || getSignalAlarm(RIGHTBASKETOP) || getSignalAlarm(SOLENOIDVALVEOP) || getSignalAlarm(PUMPPOWEROP) || getSignalAlarm(GASVALVEOP) || getSignalAlarm(BLOWERPOWEROP) || getSignalAlarm(POWERONOP))
+        if (getSignalAlarm(HIGHDUTYCYCLEOP) || getSignalAlarm(LOWDUTYCYCLEOP) || getSignalAlarm(ALARMOP) || getSignalAlarm(BASKETPOWEROP) || getSignalAlarm(BLOWERPOWERNEUTRALOP) || getSignalAlarm(BLOWERCONTROLOP) || getSignalAlarm(RIGHTBASKETOP) || getSignalAlarm(SOLENOIDVALVEOP) || getSignalAlarm(PUMPPOWEROP) || getSignalAlarm(GASVALVEOP) || getSignalAlarm(BLOWERPOWEROP) || getSignalAlarm(POWERONOP))
         {
           test_status = false;
         }
@@ -230,8 +279,8 @@ void loop()
     setActiveMenu(DEBUG);
     break;
   case 10:
-    drawConnectionsMenu();
-    setActiveMenu(CONN);
+    drawLockMenu();
+    setActiveMenu(LOCK);
     break;
   }
 }

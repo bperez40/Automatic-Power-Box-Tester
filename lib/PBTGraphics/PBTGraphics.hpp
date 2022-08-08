@@ -35,6 +35,7 @@
 #define CONFIG 9
 #define DEBUG 10
 #define CONN 11
+#define LOCK 12
 
 /* Don't recommend changing the below calibrations b/c they feel nice, but you can if you want */
 #define TOUCHREJECT 500 // Lower for more sensitive touches, higher for more touch rejection
@@ -83,5 +84,7 @@ void drawConfigurationMenu();
 void drawDebugMenu();
 
 void drawConnectionsMenu();
+
+void drawLockMenu();
 
 unsigned long updateStatus();

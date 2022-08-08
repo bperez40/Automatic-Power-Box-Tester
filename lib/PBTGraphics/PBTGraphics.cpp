@@ -8,6 +8,8 @@ int configuration = EEPROM.read(0);
 unsigned long PWM_low_cooldown;
 unsigned long PWM_high_cooldown;
 unsigned long PWM_cooldown_time;
+int manualLock = 1;
+int passcode[4] = {-1, -1, -1, -1};
 
 struct toggles
 {
@@ -342,13 +344,14 @@ void touchCheck()
                         option_selected = true;
                         setOption(8);
                     }
-                    if (tx >= 530 && tx <= 920 && ty >= 435 && ty <= 600)
+                    if (tx >= 530 && tx <= 920 && ty >= 435 && ty <= 600 && manualLock != 1) // Can't access this menu when the device is locked
                     {
                         option_selected = true;
-                        setOption(9);
+                        setOption(9); // Manual Test
                         PWM_low_cooldown = PWM_high_cooldown = millis();
                     }
-                    if (tx >= 550 && tx <= 910 && ty >= 630 && ty <= 760){
+                    if (tx >= 550 && tx <= 910 && ty >= 630 && ty <= 760)
+                    {
                         option_selected = true;
                         setOption(10);
                     }
@@ -382,7 +385,8 @@ void touchCheck()
                         option_selected = true;
                         setOption(4);
                     }
-                    else if (configuration == 1 && tx >= 230 && tx <= 430 && ty >= 450 && ty <= 720){
+                    else if (configuration == 1 && tx >= 230 && tx <= 430 && ty >= 450 && ty <= 720)
+                    {
                         option_selected = true;
                         setOption(4);
                     }
@@ -398,7 +402,8 @@ void touchCheck()
                         option_selected = true;
                         setOption(6);
                     }
-                    else if (configuration == 1 && tx >= 630 && tx <= 800 && ty >= 440 && ty <= 730 ){
+                    else if (configuration == 1 && tx >= 630 && tx <= 800 && ty >= 440 && ty <= 730)
+                    {
                         option_selected = true;
                         setOption(6);
                     }
@@ -710,12 +715,337 @@ void touchCheck()
                         tft.textWrite("e");
                     }
                     break;
-                    case CONN:
+                case CONN:
                     /* If back is touched */
                     if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
                     {
                         option_selected = true;
                         setOption(2);
+                    }
+                    break;
+                case LOCK:
+                    tft.textMode();
+                    tft.textColor(RA8875_BLACK, RA8875_WHITE);
+                    /* If back is touched */
+                    if (tx >= 80 && tx <= 145 && ty >= 740 && ty <= 850)
+                    {
+                        option_selected = true;
+                        setOption(2);
+                    }
+                    else if (tx >= 205 && tx <= 290 && ty >= 220 && ty <= 350)
+                    {
+                        if (passcode[0] == -1)
+                        {
+                            passcode[0] = 1;
+                            tft.textSetCursor(485, 180);
+                            tft.textWrite("1");
+                        }
+                        else if (passcode[1] == -1)
+                        {
+                            passcode[1] = 1;
+                            tft.textSetCursor(555, 180);
+                            tft.textWrite("1");
+                        }
+                        else if (passcode[2] == -1)
+                        {
+                            passcode[2] = 1;
+                            tft.textSetCursor(625, 180);
+                            tft.textWrite("1");
+                        }
+                        else if (passcode[3] == -1)
+                        {
+                            passcode[3] = 1;
+                            tft.textSetCursor(695, 180);
+                            tft.textWrite("1");
+                        }
+                    }
+                    else if (tx >= 330 && tx <= 400 && ty >= 200 && ty <= 350)
+                    {
+                        if (passcode[0] == -1)
+                        {
+                            passcode[0] = 2;
+                            tft.textSetCursor(485, 180);
+                            tft.textWrite("2");
+                        }
+                        else if (passcode[1] == -1)
+                        {
+                            passcode[1] = 2;
+                            tft.textSetCursor(555, 180);
+                            tft.textWrite("2");
+                        }
+                        else if (passcode[2] == -1)
+                        {
+                            passcode[2] = 2;
+                            tft.textSetCursor(625, 180);
+                            tft.textWrite("2");
+                        }
+                        else if (passcode[3] == -1)
+                        {
+                            passcode[3] = 2;
+                            tft.textSetCursor(695, 180);
+                            tft.textWrite("2");
+                        }
+                    }
+                    else if (tx >= 450 && tx <= 530 && ty >= 200 && ty <= 350)
+                    {
+                        if (passcode[0] == -1)
+                        {
+                            passcode[0] = 3;
+                            tft.textSetCursor(485, 180);
+                            tft.textWrite("3");
+                        }
+                        else if (passcode[1] == -1)
+                        {
+                            passcode[1] = 3;
+                            tft.textSetCursor(555, 180);
+                            tft.textWrite("3");
+                        }
+                        else if (passcode[2] == -1)
+                        {
+                            passcode[2] = 3;
+                            tft.textSetCursor(625, 180);
+                            tft.textWrite("3");
+                        }
+                        else if (passcode[3] == -1)
+                        {
+                            passcode[3] = 3;
+                            tft.textSetCursor(695, 180);
+                            tft.textWrite("3");
+                        }
+                    }
+                    else if (tx >= 205 && tx <= 290 && ty >= 370 && ty <= 500)
+                    {
+                        if (passcode[0] == -1)
+                        {
+                            passcode[0] = 4;
+                            tft.textSetCursor(485, 180);
+                            tft.textWrite("4");
+                        }
+                        else if (passcode[1] == -1)
+                        {
+                            passcode[1] = 4;
+                            tft.textSetCursor(555, 180);
+                            tft.textWrite("4");
+                        }
+                        else if (passcode[2] == -1)
+                        {
+                            passcode[2] = 4;
+                            tft.textSetCursor(625, 180);
+                            tft.textWrite("4");
+                        }
+                        else if (passcode[3] == -1)
+                        {
+                            passcode[3] = 4;
+                            tft.textSetCursor(695, 180);
+                            tft.textWrite("4");
+                        }
+                    }
+                    else if (tx >= 330 && tx <= 400 && ty >= 370 && ty <= 500)
+                    {
+                        if (passcode[0] == -1)
+                        {
+                            passcode[0] = 5;
+                            tft.textSetCursor(485, 180);
+                            tft.textWrite("5");
+                        }
+                        else if (passcode[1] == -1)
+                        {
+                            passcode[1] = 5;
+                            tft.textSetCursor(555, 180);
+                            tft.textWrite("5");
+                        }
+                        else if (passcode[2] == -1)
+                        {
+                            passcode[2] = 5;
+                            tft.textSetCursor(625, 180);
+                            tft.textWrite("5");
+                        }
+                        else if (passcode[3] == -1)
+                        {
+                            passcode[3] = 5;
+                            tft.textSetCursor(695, 180);
+                            tft.textWrite("5");
+                        }
+                    }
+                    else if (tx >= 450 && tx <= 530 && ty >= 370 && ty <= 500)
+                    {
+                        if (passcode[0] == -1)
+                        {
+                            passcode[0] = 6;
+                            tft.textSetCursor(485, 180);
+                            tft.textWrite("6");
+                        }
+                        else if (passcode[1] == -1)
+                        {
+                            passcode[1] = 6;
+                            tft.textSetCursor(555, 180);
+                            tft.textWrite("6");
+                        }
+                        else if (passcode[2] == -1)
+                        {
+                            passcode[2] = 6;
+                            tft.textSetCursor(625, 180);
+                            tft.textWrite("6");
+                        }
+                        else if (passcode[3] == -1)
+                        {
+                            passcode[3] = 6;
+                            tft.textSetCursor(695, 180);
+                            tft.textWrite("6");
+                        }
+                    }
+                    else if (tx >= 205 && tx <= 290 && ty >= 540 && ty <= 670)
+                    {
+                        if (passcode[0] == -1)
+                        {
+                            passcode[0] = 7;
+                            tft.textSetCursor(485, 180);
+                            tft.textWrite("7");
+                        }
+                        else if (passcode[1] == -1)
+                        {
+                            passcode[1] = 7;
+                            tft.textSetCursor(555, 180);
+                            tft.textWrite("7");
+                        }
+                        else if (passcode[2] == -1)
+                        {
+                            passcode[2] = 7;
+                            tft.textSetCursor(625, 180);
+                            tft.textWrite("7");
+                        }
+                        else if (passcode[3] == -1)
+                        {
+                            passcode[3] = 7;
+                            tft.textSetCursor(695, 180);
+                            tft.textWrite("7");
+                        }
+                    }
+                    else if (tx >= 330 && tx <= 400 && ty >= 540 && ty <= 670)
+                    {
+                        if (passcode[0] == -1)
+                        {
+                            passcode[0] = 8;
+                            tft.textSetCursor(485, 180);
+                            tft.textWrite("8");
+                        }
+                        else if (passcode[1] == -1)
+                        {
+                            passcode[1] = 8;
+                            tft.textSetCursor(555, 180);
+                            tft.textWrite("8");
+                        }
+                        else if (passcode[2] == -1)
+                        {
+                            passcode[2] = 8;
+                            tft.textSetCursor(625, 180);
+                            tft.textWrite("8");
+                        }
+                        else if (passcode[3] == -1)
+                        {
+                            passcode[3] = 8;
+                            tft.textSetCursor(695, 180);
+                            tft.textWrite("8");
+                        }
+                    }
+                    else if (tx >= 450 && tx <= 530 && ty >= 540 && ty <= 670)
+                    {
+                        if (passcode[0] == -1)
+                        {
+                            passcode[0] = 9;
+                            tft.textSetCursor(485, 180);
+                            tft.textWrite("9");
+                        }
+                        else if (passcode[1] == -1)
+                        {
+                            passcode[1] = 9;
+                            tft.textSetCursor(555, 180);
+                            tft.textWrite("9");
+                        }
+                        else if (passcode[2] == -1)
+                        {
+                            passcode[2] = 9;
+                            tft.textSetCursor(625, 180);
+                            tft.textWrite("9");
+                        }
+                        else if (passcode[3] == -1)
+                        {
+                            passcode[3] = 9;
+                            tft.textSetCursor(695, 180);
+                            tft.textWrite("9");
+                        }
+                    }
+                    else if (tx >= 330 && tx <= 400 && ty >= 700 && ty <= 830)
+                    {
+                        if (passcode[0] == -1)
+                        {
+                            passcode[0] = 0;
+                            tft.textSetCursor(485, 180);
+                            tft.textWrite("0");
+                        }
+                        else if (passcode[1] == -1)
+                        {
+                            passcode[1] = 0;
+                            tft.textSetCursor(555, 180);
+                            tft.textWrite("0");
+                        }
+                        else if (passcode[2] == -1)
+                        {
+                            passcode[2] = 0;
+                            tft.textSetCursor(625, 180);
+                            tft.textWrite("0");
+                        }
+                        else if (passcode[3] == -1)
+                        {
+                            passcode[3] = 0;
+                            tft.textSetCursor(695, 180);
+                            tft.textWrite("0");
+                        }
+                    }
+                    else if (tx >= 460 && tx <= 530 && ty >= 735 && ty <= 850)
+                    {
+                        tft.textColor(RA8875_WHITE, RA8875_WHITE);
+                        tft.textSetCursor(485, 180);
+                        tft.textWrite("CL");
+                        tft.textSetCursor(555, 180);
+                        tft.textWrite("CL");
+                        tft.textSetCursor(625, 180);
+                        tft.textWrite("CL");
+                        tft.textSetCursor(695, 180);
+                        tft.textWrite("CL");
+                        for (int i = 0; i < sizeof(passcode) / sizeof(int); i++)
+                        {
+                            passcode[i] = -1;
+                        }
+                    }
+                    else if (tx >= 600 && tx <= 900 && ty >= 600 && ty <= 750)
+                    {
+                        if (manualLock == 1)
+                        {
+                            int actual_passcode[4] = {3, 1, 2, 5}; /*!! SET PASSCODE HERE !!*/
+                            int pscounter = 0;
+                            for (int i = 0; i <= sizeof(passcode) / sizeof(int); i++)
+                            {
+                                if (passcode[i] == actual_passcode[i])
+                                {
+                                    pscounter += 1;
+                                }
+                            }
+                            if (pscounter == 4)
+                            {
+                                manualLock = 0;
+                                for (int i = 0; i <= sizeof(passcode) / sizeof(int); i++)
+                                {
+                                    passcode[i] = -1;
+                                }
+                                drawLockMenu();
+                            }
+                        }
+                        else
+                        {
+                            manualLock = 1;
+                            drawLockMenu();
+                        }
                     }
                     break;
                 }
@@ -760,12 +1090,20 @@ void drawMainMenu()
     tft.fillRoundRect(70, 200, 300, 75, 25, 0b0000000000000000); // This is the auto test button
     tft.fillRoundRect(65, 295, 310, 85, 25, RA8875_YELLOW);      // This is the configuration button's border
     tft.fillRoundRect(70, 300, 300, 75, 25, RA8875_BLACK);       // This is the configuration button
-    tft.fillRoundRect(420, 195, 310, 85, 25, RA8875_RED);        // This is the debug button's border
-    tft.fillRoundRect(425, 200, 300, 75, 25, RA8875_BLACK);      // This is the debug button
-    tft.fillRoundRect(420, 295, 310, 85, 25, RA8875_BLUE);        // This is the connection button's border
-    tft.fillRoundRect(425, 300, 300, 75, 25, RA8875_BLACK);      // This is the connection button
-    tft.fillRect(170, 40, 465, 140, RA8875_BLACK);               // Title box outline
-    tft.fillRect(175, 45, 450, 125, RA8875_WHITE);               // Title box fill
+    if (manualLock == 1)
+    {
+        tft.fillRoundRect(420, 195, 310, 85, 25, RA8875_BLACK); // This is the manual button's border
+        tft.fillRoundRect(425, 200, 300, 75, 25, DARKGREY);     // This is the manual button
+    }
+    else
+    {
+        tft.fillRoundRect(420, 195, 310, 85, 25, RA8875_RED);   // This is the manual button's border
+        tft.fillRoundRect(425, 200, 300, 75, 25, RA8875_BLACK); // This is the manual button
+    }
+    tft.fillRoundRect(420, 295, 310, 85, 25, RA8875_BLUE);  // This is the lock button's border
+    tft.fillRoundRect(425, 300, 300, 75, 25, RA8875_BLACK); // This is the lock button
+    tft.fillRect(170, 40, 465, 140, RA8875_BLACK);          // Title box outline
+    tft.fillRect(175, 45, 450, 125, RA8875_WHITE);          // Title box fill
 
     // Write text in boxes
     tft.textMode();              // Switch from graphics mode to text mode
@@ -777,9 +1115,14 @@ void drawMainMenu()
     tft.textColor(RA8875_WHITE, RA8875_BLACK);
     tft.textWrite("Configurations");
     tft.textSetCursor(530, 220);
+    if (manualLock == 1)
+    {
+        tft.textColor(RA8875_WHITE, DARKGREY);
+    }
     tft.textWrite("Manual");
-    tft.textSetCursor(490, 320);
-    tft.textWrite("Connections");
+    tft.textColor(RA8875_WHITE, RA8875_BLACK);
+    tft.textSetCursor(500, 320);
+    tft.textWrite("Lock Menu");
     tft.textSetCursor(130, 400);
     tft.textColor(RA8875_BLACK, RA8875_WHITE);
     if (configuration == 0)
@@ -908,25 +1251,27 @@ void drawResultsMenu()
     tft.graphicsMode();
     tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE); // Could make the background a different color
     // Redraw screen for test completion
-    tft.fillRect(150, 40, 485, 140, RA8875_BLACK);                // Title box outline
-    tft.fillRect(155, 45, 470, 125, RA8875_WHITE);                // Title box fill
+    tft.fillRect(150, 40, 485, 140, RA8875_BLACK); // Title box outline
+    tft.fillRect(155, 45, 470, 125, RA8875_WHITE); // Title box fill
     if (configuration != 1 && !getSignalAlarm(HIGHDUTYCYCLEOP) && !getSignalAlarm(LOWDUTYCYCLEOP) && !getSignalAlarm(ALARMOP) && !getSignalAlarm(BLOWERPOWERNEUTRALOP) && !getSignalAlarm(BLOWERCONTROLOP) && !getSignalAlarm(GASVALVEOP) && !getSignalAlarm(BLOWERPOWEROP) && !getSignalAlarm(POWERONOP))
     {
-        tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
+        tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
         tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
     }
     else if (configuration != 1)
     {
-        tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
-        tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_RED); // PIM progess box post completion
+        tft.fillRoundRect(40, 200, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
+        tft.fillRoundRect(45, 205, 150, 150, 15, RA8875_RED);   // PIM progess box post completion
     }
-    else if (configuration == 1 && !getSignalAlarm(HIGHDUTYCYCLEOP) && !getSignalAlarm(LOWDUTYCYCLEOP) && !getSignalAlarm(ALARMOP) && !getSignalAlarm(BLOWERPOWERNEUTRALOP) && !getSignalAlarm(BLOWERCONTROLOP) && !getSignalAlarm(GASVALVEOP) && !getSignalAlarm(BLOWERPOWEROP) && !getSignalAlarm(POWERONOP)){
-        tft.fillRoundRect(150, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
+    else if (configuration == 1 && !getSignalAlarm(HIGHDUTYCYCLEOP) && !getSignalAlarm(LOWDUTYCYCLEOP) && !getSignalAlarm(ALARMOP) && !getSignalAlarm(BLOWERPOWERNEUTRALOP) && !getSignalAlarm(BLOWERCONTROLOP) && !getSignalAlarm(GASVALVEOP) && !getSignalAlarm(BLOWERPOWEROP) && !getSignalAlarm(POWERONOP))
+    {
+        tft.fillRoundRect(150, 200, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
         tft.fillRoundRect(155, 205, 150, 150, 15, RA8875_GREEN); // PIM progess box post completion
     }
-    else if (configuration == 1){
-        tft.fillRoundRect(150, 200, 160, 160, 15, RA8875_BLACK);       // Outline for PIM progress box
-        tft.fillRoundRect(155, 205, 150, 150, 15, RA8875_RED); // PIM progess box post completion
+    else if (configuration == 1)
+    {
+        tft.fillRoundRect(150, 200, 160, 160, 15, RA8875_BLACK); // Outline for PIM progress box
+        tft.fillRoundRect(155, 205, 150, 150, 15, RA8875_RED);   // PIM progess box post completion
     }
 
     if (!getSignalAlarm(SOLENOIDVALVEOP) && !getSignalAlarm(PUMPPOWEROP) && configuration != 1)
@@ -951,15 +1296,17 @@ void drawResultsMenu()
     else if (configuration != 1)
     {
         tft.fillRoundRect(550, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
-        tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_RED); // Basket progess box post completion
+        tft.fillRoundRect(555, 205, 150, 150, 15, RA8875_RED);   // Basket progess box post completion
     }
-    else if (configuration == 1 && !getSignalAlarm(BASKETPOWEROP) && !getSignalAlarm(RIGHTBASKETOP) && !getSignalAlarm(LEFTBASKETOP)){
+    else if (configuration == 1 && !getSignalAlarm(BASKETPOWEROP) && !getSignalAlarm(RIGHTBASKETOP) && !getSignalAlarm(LEFTBASKETOP))
+    {
         tft.fillRoundRect(470, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
         tft.fillRoundRect(475, 205, 150, 150, 15, RA8875_GREEN); // Basket progess box post completion
     }
-    else if (configuration == 1){
+    else if (configuration == 1)
+    {
         tft.fillRoundRect(470, 200, 160, 160, 15, RA8875_BLACK); // Outline for basket progress box
-        tft.fillRoundRect(475, 205, 150, 150, 15, RA8875_RED); // Basket progess box post completion
+        tft.fillRoundRect(475, 205, 150, 150, 15, RA8875_RED);   // Basket progess box post completion
     }
 
     /* Drawing exit box */
@@ -976,11 +1323,13 @@ void drawResultsMenu()
     tft.textTransparent(RA8875_BLACK);
     tft.textWrite("Select Result");
     tft.textEnlarge(1);
-    if (configuration != 1){
+    if (configuration != 1)
+    {
         tft.textSetCursor(55, 260);
         tft.textWrite("PIM Test");
     }
-    else{
+    else
+    {
         tft.textSetCursor(165, 260);
         tft.textWrite("PIM Test");
     }
@@ -991,17 +1340,19 @@ void drawResultsMenu()
         tft.textWrite("Pump Test");
     }
 
-    if (configuration != 1){
-    tft.textSetCursor(580, 245);
-    tft.textWrite("Basket");
-    tft.textSetCursor(580, 275);
-    tft.textWrite("Test");
+    if (configuration != 1)
+    {
+        tft.textSetCursor(580, 245);
+        tft.textWrite("Basket");
+        tft.textSetCursor(580, 275);
+        tft.textWrite("Test");
     }
-    else{
-    tft.textSetCursor(500, 245);
-    tft.textWrite("Basket");
-    tft.textSetCursor(500, 275);
-    tft.textWrite("Test");
+    else
+    {
+        tft.textSetCursor(500, 245);
+        tft.textWrite("Basket");
+        tft.textSetCursor(500, 275);
+        tft.textWrite("Test");
     }
     tft.textSetCursor(165, 100); // Location of subtitle text
     tft.textEnlarge(1);
@@ -1343,7 +1694,9 @@ void drawDebugMenu()
     tft.textWrite("STATUS");
 }
 
-void drawConnectionsMenu(){
+// Mostly scrapped, but keeping it around anyways
+void drawConnectionsMenu()
+{
     tft.graphicsMode();
 
     tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Background
@@ -1353,60 +1706,155 @@ void drawConnectionsMenu(){
 
     tft.fillRect(635, 85, 10, 175, GREY); // Color fill for right side of box
 
-    tft.fillTriangle(632, 400, 620, 300, 641, 250, GREY); // Side panel fill
-    tft.fillRect(170, 338, 461, 92, RA8875_BLACK); // Outline for front, bottom plate
-    tft.fillRect(175, 345, 451, 80, GREY); // Box color is grey
+    tft.fillTriangle(632, 400, 620, 300, 641, 250, GREY);         // Side panel fill
+    tft.fillRect(170, 338, 461, 92, RA8875_BLACK);                // Outline for front, bottom plate
+    tft.fillRect(175, 345, 451, 80, GREY);                        // Box color is grey
     tft.fillTriangle(170, 340, 188, 240, 190, 340, RA8875_BLACK); // Left outline triangle, lower
     tft.fillTriangle(630, 338, 641, 240, 620, 338, RA8875_BLACK); // Right outline triangle, lower
-    //tft.fillRect(188, 238, 454, 101, RA8875_BLACK); // Middle box outline
+    // tft.fillRect(188, 238, 454, 101, RA8875_BLACK); // Middle box outline
     tft.fillTriangle(175, 338, 190, 245, 190, 338, GREY); // Left color triangle, lower
     tft.fillTriangle(625, 338, 639, 240, 615, 338, GREY); // Right color triangle, lower
     tft.fillTriangle(620, 340, 620, 240, 638, 240, GREY); // Patch color triangle
-    tft.fillRect(190, 240, 430, 100, GREY); // Middle grey color box
+    tft.fillRect(190, 240, 430, 100, GREY);               // Middle grey color box
 
     tft.fillTriangle(626, 429, 630, 429, 645, 220, RA8875_BLACK); // Lower right side triangle outline
     tft.fillTriangle(641, 270, 641, 230, 638, 230, RA8875_BLACK); // Lower right side triangle outline vertical
     tft.fillTriangle(645, 220, 645, 100, 647, 100, RA8875_BLACK);
 
-    tft.fillRect(188, 120, 455, 120, RA8875_BLACK); // Upper section outline box
-    tft.fillRect(198, 85, 444, 65, RA8875_BLACK); // Upper section upper outline box
-    tft.fillRect(193, 125, 445, 110, GREY); // Color for upper section
-    tft.fillRect(198, 90, 444, 30, GREY); // Color for top, middle fill section
+    tft.fillRect(188, 120, 455, 120, RA8875_BLACK);              // Upper section outline box
+    tft.fillRect(198, 85, 444, 65, RA8875_BLACK);                // Upper section upper outline box
+    tft.fillRect(193, 125, 445, 110, GREY);                      // Color for upper section
+    tft.fillRect(198, 90, 444, 30, GREY);                        // Color for top, middle fill section
     tft.fillTriangle(188, 120, 198, 85, 198, 120, RA8875_BLACK); // Left triangle outline, upper
-    tft.fillTriangle(193, 119, 198, 90, 198, 119, GREY); // Left triangle color, upper
+    tft.fillTriangle(193, 119, 198, 90, 198, 119, GREY);         // Left triangle color, upper
     tft.fillTriangle(633, 120, 648, 85, 643, 120, RA8875_BLACK); // Right triangle outline, upper
-    tft.fillTriangle(640, 94, 640, 85, 648, 85, RA8875_BLACK); // Right triangle patch outline, upper
-    tft.fillTriangle(633, 119, 645, 90, 638, 119, GREY); // Right triangle color, upper
-    tft.fillTriangle(640, 94, 640, 90, 645, 90, GREY); // Right triangle patch color, upper
+    tft.fillTriangle(640, 94, 640, 85, 648, 85, RA8875_BLACK);   // Right triangle patch outline, upper
+    tft.fillTriangle(633, 119, 645, 90, 638, 119, GREY);         // Right triangle color, upper
+    tft.fillTriangle(640, 94, 640, 90, 645, 90, GREY);           // Right triangle patch color, upper
 
     // MP Harness
-    tft.fillRect(320, 94, 60, 20, RA8875_BLACK); // 12 pin connector front
-    tft.fillTriangle(380, 112, 380, 94, 385, 89, RA8875_BLACK); // 12 pin side, triangle 1
+    tft.fillRect(320, 94, 60, 20, RA8875_BLACK);                 // 12 pin connector front
+    tft.fillTriangle(380, 112, 380, 94, 385, 89, RA8875_BLACK);  // 12 pin side, triangle 1
     tft.fillTriangle(380, 113, 385, 105, 385, 89, RA8875_BLACK); // 12 pin side, triangle 2
-    tft.fillTriangle(320, 94, 380, 94, 385, 89, RA8875_BLACK); // Top of 12 pin, triangle 1
-    tft.fillTriangle(320, 94, 326, 87, 385, 87, RA8875_BLACK); // Top of 12 pin, triangle 2
+    tft.fillTriangle(320, 94, 380, 94, 385, 89, RA8875_BLACK);   // Top of 12 pin, triangle 1
+    tft.fillTriangle(320, 94, 326, 87, 385, 87, RA8875_BLACK);   // Top of 12 pin, triangle 2
 
     // SVALVE
-    tft.fillRect(420, 94, 20, 20, RA8875_BLACK); // 4 pin connector front
+    tft.fillRect(420, 94, 20, 20, RA8875_BLACK);                // 4 pin connector front
     tft.fillTriangle(440, 112, 440, 94, 451, 81, RA8875_BLACK); // 4 pin side, triangle 1
     tft.fillTriangle(440, 113, 451, 99, 451, 81, RA8875_BLACK); // 4 pin side, triangle 2
-    tft.fillTriangle(420, 94, 440, 94, 451, 81, RA8875_BLACK); // Top of 4 pin, triangle 1
-    tft.fillTriangle(420, 94, 432, 81, 451, 81, RA8875_BLACK); // Top of 4 pin, triangle 2
+    tft.fillTriangle(420, 94, 440, 94, 451, 81, RA8875_BLACK);  // Top of 4 pin, triangle 1
+    tft.fillTriangle(420, 94, 432, 81, 451, 81, RA8875_BLACK);  // Top of 4 pin, triangle 2
 
     // Pump
 
-    tft.fillRect(490, 94, 20, 20, RA8875_BLACK); // 2 pin connector front
-    tft.fillTriangle(510, 112, 510, 94, 515, 89, RA8875_BLACK); // 2 pin side, triangle 1
+    tft.fillRect(490, 94, 20, 20, RA8875_BLACK);                 // 2 pin connector front
+    tft.fillTriangle(510, 112, 510, 94, 515, 89, RA8875_BLACK);  // 2 pin side, triangle 1
     tft.fillTriangle(510, 113, 515, 105, 515, 89, RA8875_BLACK); // 2 pin side, triangle 2
-    tft.fillTriangle(490, 94, 510, 94, 515, 89, RA8875_BLACK); // Top of 2 pin, triangle 1
-    tft.fillTriangle(490, 94, 496, 87, 515, 87, RA8875_BLACK); // Top of 2 pin, triangle 2
+    tft.fillTriangle(490, 94, 510, 94, 515, 89, RA8875_BLACK);   // Top of 2 pin, triangle 1
+    tft.fillTriangle(490, 94, 496, 87, 515, 87, RA8875_BLACK);   // Top of 2 pin, triangle 2
 
     // Blower
-    tft.fillRect(550, 94, 40, 20, RA8875_BLACK); // 6 pin connector front
-    tft.fillTriangle(590, 112, 590, 94, 595, 89, RA8875_BLACK); // 6 pin side, triangle 1
+    tft.fillRect(550, 94, 40, 20, RA8875_BLACK);                 // 6 pin connector front
+    tft.fillTriangle(590, 112, 590, 94, 595, 89, RA8875_BLACK);  // 6 pin side, triangle 1
     tft.fillTriangle(590, 113, 595, 105, 595, 89, RA8875_BLACK); // 6 pin side, triangle 2
-    tft.fillTriangle(550, 94, 590, 94, 595, 89, RA8875_BLACK); // Top of 6 pin, triangle 1
-    tft.fillTriangle(550, 94, 556, 87, 595, 87, RA8875_BLACK); // Top of 6 pin, triangle 2
+    tft.fillTriangle(550, 94, 590, 94, 595, 89, RA8875_BLACK);   // Top of 6 pin, triangle 1
+    tft.fillTriangle(550, 94, 556, 87, 595, 87, RA8875_BLACK);   // Top of 6 pin, triangle 2
+}
+
+void drawLockMenu()
+{
+    Serial.println(manualLock);
+    tft.fillRoundRect(14, 17, 766, 440, 15, RA8875_WHITE);    // Background
+    tft.fillRoundRect(40, 390, 40, 40, 5, RA8875_BLACK);      // Outline for back box
+    tft.fillRoundRect(45, 395, 30, 30, 5, RA8875_WHITE);      // Back box
+    tft.fillTriangle(50, 410, 65, 395, 65, 425, RA8875_BLUE); // Arrow in back box
+
+    /* Keypad */
+    if (manualLock == 1)
+    {
+        tft.fillRoundRect(150, 75, 60, 60, 15, RA8875_BLACK);  // 1
+        tft.fillRoundRect(250, 75, 60, 60, 15, RA8875_BLACK);  // 2
+        tft.fillRoundRect(350, 75, 60, 60, 15, RA8875_BLACK);  // 3
+        tft.fillRoundRect(150, 175, 60, 60, 15, RA8875_BLACK); // 4
+        tft.fillRoundRect(250, 175, 60, 60, 15, RA8875_BLACK); // 5
+        tft.fillRoundRect(350, 175, 60, 60, 15, RA8875_BLACK); // 6
+        tft.fillRoundRect(150, 275, 60, 60, 15, RA8875_BLACK); // 7
+        tft.fillRoundRect(250, 275, 60, 60, 15, RA8875_BLACK); // 8
+        tft.fillRoundRect(350, 275, 60, 60, 15, RA8875_BLACK); // 9
+        tft.fillRoundRect(250, 375, 60, 60, 15, RA8875_BLACK); // 0
+        tft.fillRoundRect(350, 375, 60, 60, 15, RA8875_BLACK); // Delete
+        tft.fillRect(365, 390, 30, 30, RA8875_RED);
+        tft.fillTriangle(385, 405, 395, 392, 395, 418, RA8875_BLACK);
+        tft.fillTriangle(365, 392, 377, 405, 365, 418, RA8875_BLACK);
+        tft.fillTriangle(380, 400, 370, 390, 390, 390, RA8875_BLACK);
+        tft.fillTriangle(380, 410, 370, 420, 390, 420, RA8875_BLACK);
+    }
+    else
+    {
+        tft.fillRoundRect(150, 75, 60, 60, 15, DARKGREY);      // 1
+        tft.fillRoundRect(250, 75, 60, 60, 15, DARKGREY);      // 2
+        tft.fillRoundRect(350, 75, 60, 60, 15, DARKGREY);      // 3
+        tft.fillRoundRect(150, 175, 60, 60, 15, RA8875_BLACK); // 4
+        tft.fillRoundRect(250, 175, 60, 60, 15, DARKGREY);     // 5
+        tft.fillRoundRect(350, 175, 60, 60, 15, DARKGREY);     // 6
+        tft.fillRoundRect(150, 275, 60, 60, 15, DARKGREY);     // 7
+        tft.fillRoundRect(250, 275, 60, 60, 15, DARKGREY);     // 8
+        tft.fillRoundRect(350, 275, 60, 60, 15, DARKGREY);     // 9
+        tft.fillRoundRect(250, 375, 60, 60, 15, DARKGREY);     // 0
+        tft.fillRoundRect(350, 375, 60, 60, 15, DARKGREY);     // Delete
+    }
+    tft.fillRect(470, 215, 50, 5, RA8875_BLACK); // Slot 1
+    tft.fillRect(540, 215, 50, 5, RA8875_BLACK); // Slot 2
+    tft.fillRect(610, 215, 50, 5, RA8875_BLACK); // Slot 3
+    tft.fillRect(680, 215, 50, 5, RA8875_BLACK); // Slot 4
+    if (manualLock == 1)
+    {
+        tft.fillRoundRect(475, 310, 250, 65, 25, RA8875_RED);   // This is the lock button's border
+        tft.fillRoundRect(480, 315, 240, 55, 25, RA8875_BLACK); // This is the lock button
+    }
+    else
+    {
+        tft.fillRoundRect(475, 310, 250, 65, 25, RA8875_GREEN); // This is the lock button's border
+        tft.fillRoundRect(480, 315, 240, 55, 25, RA8875_BLACK); // This is the lock button
+    }
+
+    tft.textMode();
+    if (manualLock == 1)
+    {
+        tft.textColor(RA8875_WHITE, RA8875_BLACK);
+        tft.textSetCursor(173, 88);
+        tft.textWrite("1");
+        tft.textSetCursor(273, 88);
+        tft.textWrite("2");
+        tft.textSetCursor(373, 88);
+        tft.textWrite("3");
+        tft.textSetCursor(173, 188);
+        tft.textWrite("4");
+        tft.textSetCursor(273, 188);
+        tft.textWrite("5");
+        tft.textSetCursor(373, 188);
+        tft.textWrite("6");
+        tft.textSetCursor(173, 288);
+        tft.textWrite("7");
+        tft.textSetCursor(273, 288);
+        tft.textWrite("8");
+        tft.textSetCursor(373, 288);
+        tft.textWrite("9");
+        tft.textSetCursor(273, 388);
+        tft.textWrite("0");
+    }
+    if (manualLock == 1)
+    {
+        tft.textSetCursor(550, 325);
+        tft.textWrite("Unlock");
+    }
+    else
+    {
+        tft.textSetCursor(570, 325);
+        tft.textColor(RA8875_WHITE, RA8875_BLACK);
+        tft.textWrite("Lock");
+    }
 }
 
 /* To be used only on the manual screen. When used, updates only the status bars as a non touch
@@ -1469,7 +1917,8 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 180);
-    if(PWM_cooldown_time - PWM_low_cooldown >= 500){ // only do this every half second
+    if (PWM_cooldown_time - PWM_low_cooldown >= 500)
+    { // only do this every half second
         PWM_low_cooldown = millis();
         if (!tgs.heat_toggle) // When a new ignition cycle is started, or at the start, reset this such that it is resampled
         {
@@ -1500,7 +1949,8 @@ unsigned long updateStatus()
     }
 
     tft.textSetCursor(560, 260);
-    if(PWM_cooldown_time - PWM_high_cooldown >= 500){ // Only do this every half second
+    if (PWM_cooldown_time - PWM_high_cooldown >= 500)
+    { // Only do this every half second
         PWM_high_cooldown = millis();
         if (!tgs.heat_toggle) // When a new ignition cycle is started, or at the start, reset this such that it is resampled
         {

@@ -26,5 +26,4 @@ void ADCSetup();
 bool waitUntilTriggered(int pin, unsigned long timeout = 1000, int event = LOW);
 bool dutyCheck(double low_threshold, double high_threshold);
 void runCheck();
-void halt();
 bool sampleAndAverage(int pin, int samples = 100, int event = LOW, double minActivePercentage = 0.05);
