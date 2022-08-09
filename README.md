@@ -13,10 +13,26 @@ The repository is layed out as follows
 ```
 Automatic-Power-Box-Tester
 ├───lib
+│   ├───Adafruit-GFX-Library
+│   ├───Adafruit_BusIO
+│   ├───Adafruit_RA8875
+│   ├───iodefs
+│   ├───PBTCheck
+│   ├───PBTGraphics
+│   └───PWM
 ├───main
 ├───tests
+│   ├───ADC_test
+│   └───PWM_Out
 └───util
     ├───Hardware Design Files
+    │   ├───AutoPowerBoxTesterv1.0
+    │   │   └───GerberFiles
+    │   ├───AutoPowerBoxTesterv1.1
+    │   │   └───GerberFiles
+    │   └───SparkWireInterfacev1.0
+    │       └───GerberFiles
+    ├───scripts
     └───images
 ```
 Opening it up, you'll be on the root of the repository.
@@ -39,8 +55,6 @@ Your new file structure will look something like this...
 ```
 Automatic-Power-Box-Tester
 ├───.arduino-cli
-|   ├───arduino-cli.exe
-|   └───LICENSE
 ├───lib
 │   ├───Adafruit-GFX-Library
 │   ├───Adafruit_BusIO
@@ -50,7 +64,6 @@ Automatic-Power-Box-Tester
 │   ├───PBTGraphics
 │   └───PWM
 ├───main
-|   └───main.ino
 ├───tests
 │   ├───ADC_test
 │   └───PWM_Out
@@ -62,6 +75,7 @@ Automatic-Power-Box-Tester
     │   │   └───GerberFiles
     │   └───SparkWireInterfacev1.0
     │       └───GerberFiles
+    ├───scripts
     └───images
 ```
 
