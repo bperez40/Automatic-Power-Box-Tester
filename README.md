@@ -7,7 +7,7 @@ Then, in a command-line shell (On Windows, Command Prompt and PowerShell are ins
 git clone https://github.com/bperez40/Arduino-Power-Box-Tester
 
 The repository is layed out as follows
-'''
+```
 C:.
 ├───lib
 │   ├───Adafruit-GFX-Library
@@ -30,7 +30,7 @@ C:.
     │   └───SparkWireInterfacev1.0
     │       └───GerberFiles
     └───images
-'''
+```
 Opening it up, you'll be on the root of the repository.
 # Arduino Setup Using VSCode Extension
 Install the Arduino extension. This can be natively installed with the extensions. More information here: https://github.com/microsoft/vscode-arduino.
