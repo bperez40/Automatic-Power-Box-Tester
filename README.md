@@ -1,9 +1,9 @@
 # Automatic Power Box Tester
 Summer 2022 ITW Vulcan Project
 
-The firmware portion of the guide assumes you're running Windows. You can easily do all this on other platforms, but some of the instructions will certainly be different, particularly anything using a batch script.
+## Firmware Guide
+This part of the guide will go over the setup steps for the firmware. This guide assumes you're running Windows, however, you can easily do all this on other platforms, but some of the steps will vary slightly, and you probably won't be using anything with a batch script on another platform (unless you really want to).
 
-## Firmware
 ### Cloning Repo (required)
 If you don't have git installed, go ahead and download it from here: https://git-scm.com/
 Then, in a command-line shell (On Windows, Command Prompt and PowerShell are installed by default), navigate to wherever you want to store the project and then run:
@@ -159,7 +159,7 @@ plink.exe -load {SAVED-PROFILE}
 
 Where the saved profile is one that you've previously set up. If plink.exe isn't found, make sure it's part of your PATH environment.
 
-## Hardware
+## Hardware Guide
 ### Power Box Tester Assembly
 Hardware design files can be found in util/HardwareDesignFiles.\
 They include the EAGLE EDA files, gerber files, BOM, and pick and place for each board.\
