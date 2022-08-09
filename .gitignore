@@ -1,4 +1,5 @@
 .arduino-cli/*
+.vscode/*
 .venv/*
 build/*
 !.vscode/settings.json
