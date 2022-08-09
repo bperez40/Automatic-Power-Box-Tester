@@ -2,8 +2,36 @@
 Summer 2022 ITW Vulcan Project
 
 # Cloning Repo
-When cloning this repo from GitHub, it is essential that you clone this into your Arduino's sketchbook folder. The batch scripts included assume you're operating in this folder and the Arduino compiler will look for the library files within the libraries folder of the sketchbook.
+If you don't have git installed, go ahead and download it from here: https://git-scm.com/
+Then, in a command-line shell (On Windows, Command Prompt and PowerShell are installed by default), navigate to wherever you want to store the project and then run:
+git clone https://github.com/bperez40/Arduino-Power-Box-Tester
 
+The repository is layed out as follows
+'''
+C:.
+├───lib
+│   ├───Adafruit-GFX-Library
+│   ├───Adafruit_BusIO
+│   ├───Adafruit_RA8875
+│   ├───iodefs
+│   ├───PBTCheck
+│   ├───PBTGraphics
+│   └───PWM
+├───main
+├───tests
+│   ├───ADC_test
+│   └───PWM_Out
+└───util
+    ├───Hardware Design Files
+    │   ├───AutoPowerBoxTesterv1.0
+    │   │   └───GerberFiles
+    │   ├───AutoPowerBoxTesterv1.1
+    │   │   └───GerberFiles
+    │   └───SparkWireInterfacev1.0
+    │       └───GerberFiles
+    └───images
+'''
+Opening it up, you'll be on the root of the repository.
 # Arduino Setup Using VSCode Extension
 Install the Arduino extension. This can be natively installed with the extensions. More information here: https://github.com/microsoft/vscode-arduino.
 
@@ -16,45 +44,13 @@ To run the script, either double click on setup.bat, or in a terminal move to th
 To compile and upload, select your target board type, the programmer and the communication port. In the command palette, type "Arduino: Upload" and press enter.
 
 # Using Arduino CLI (Instead of Arduino IDE w/ VSCode extension)
-If you want to use the Arduino CLI to make your own custom configuration, start by downloading the Arduino CLI from Arduino.
+If you want to use the Arduino CLI to make your own custom configuration, start by downloading the Arduino CLI from Arduino here: https://www.arduino.cc/pro/cli
 
-In my setup, I put the Arduino CLI in it's own gitignored folder within the root folder for this repo. So, C:/Arduino-Power-Box-Tester/.arduino-cli
+Extract it in the repository's root and rename the folder it's contained in to .arduino-cli. So, {top-of-repository}/.arduino-cli
 
-Next, you'll have to do some basic set up.
+The fast way to compile and upload the program is to run the CompileAndUpload.bat script in util.
 
-First, in your arduino-cli directory, make a file called arduino-cli.yaml and paste the following, changing the paths as necessary:
-
-COPY BELOW THE LINE
-***************
-board_manager:
-  additional_urls: []
-daemon:
-  port: "50051"
-directories:
-  data: {PATH-TO-ARUINO-CLI}
-  downloads: {PATH-TO-ARUINO-CLI}\staging
-  user: {PATH-TO-ARUINO-CLI}
-library:
-  enable_unsafe_install: true
-logging:
-  file: ""
-  format: text
-  level: info
-metrics:
-  addr: :9090
-  enabled: true
-output:
-  no_color: false
-sketch:
-  always_export_binaries: false
-updater:
-  enable_notification: true
-***************
-COPY ABOVE THE LINE
-
-This is essentially a configuration file for the CLI.
-
-If you don't want to be constantly annoyed, I recommend adding arduino-cli.exe to your PATH.
+If you want to compile it manually, you can do the following.
 
 To compile, run the following from your root folder:
 
@@ -64,17 +60,11 @@ To compile and upload, you can instead do:
 
 arduino-cli.exe compile --build-path ./build --libraries ./lib -b arduino:avr:mega -p COM4 -u main/main.ino
 
-The CLI will install some required libraries. Next, run the setup script in the util folder called setup.bat. This will take the packages in lib and put them in the folder that the Arduino CLI looks at to compile user libraries.
+Replacing COM4 with whatever your arduino is actually using. You can figure that out by running:
 
-Chances are at some point the CLI will give you an error and suggest that you install the avr-gcc compiler. Go ahead and run the command it suggests.
+arduino-cli.exe board list
 
-Now, to upload a program, use the following:
-
-arduino-cli.exe upload -p {PORT-ARDUINO-IS-CONNECTED-TO} {PATH-TO-main.ino}
-
-This is probably pretty intuitive, but every time you change main.ino, you have to run the compile command and then the upload command. If you adjust one of the libraries in the lib folder, run the setup script again (then compile and upload, yadda yadda yadda).
-
-If something here doesn't work, use your brain. Or Google.
+This is also how you can figure out an Arduino's FQBN.
 
 # Running Python Scripts
 This part assumes you're running Windows.
@@ -153,7 +143,7 @@ As a result, it will look something like this:\
 
 The idea here is we're trying to short the path that leads between the spark wire interface and the rectification circuit. Instead of that circuit being closed by a +3.3v relay (as it originally was supposed to be), it is being closed by a 120 VAC contactor. We had to change those out as the contactor could handle the higher voltage rating on its contacts (effectively, it prevented the high voltage line from arcing when in its open position due to the larger air gaps).
 
-Now, we need to make a few connections. Terminal for reference:\
+Now, we need to make a few connections. Terminal block for reference:\
 ![link](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/Screenshot%202022-08-04%20152729.png)
 
 Start by connecting the left most AGND to the interior of the chassis (requires a ring terminal crimp). Next, connect the right AGND to a wire nut. From that wire nut, you need to attach two more wires to two separate locations: One back to AGND OPT, and the other to one side of the contactor's coil (requires a quick connect crimp). You know this is done incorrectly if the device is never able to rectify the signal (no path to ground) or if there is arcing occuring between the AGND and AGND OPT traces (unequal potentials between these two signals).
@@ -167,7 +157,7 @@ The breadboard is a corrected circuit of what the spark interface board should h
 - [J104D2C3VDC.15S or equivalent 3.3v relay](https://www.digikey.com/en/products/detail/cit-relay-and-switch/J104D2C3VDC-15S/12502634)
 - [CPC1976Y, AQY212GHAX, or something similar](https://www.digikey.com/en/products/detail/ixys-integrated-circuits-division/CPC1976Y/1277138)
 
-Using these, you need to build the following circuit:\
+Using these, you need to build the following circuit. Pay heed to the comments:\
 ![Schematic](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/Screenshot%202022-08-05%20092843.png)
 
 To finish these connections, we need to connect the rest of the contactor's connections. We've already attached the necessary wires to the coil ends, but we need to set up the spark wire to connect to the terminal. One side of a terminal should by connected directly to the power box's spark wire (usually we connect the spark wire to a QC terminal on the workbench and have another wire leading into the Auto Power Box Tester's chassis, where it then connects to one of the contactor's terminal). The other side of that terminal should be connected to the quick connect labeled "SPARK WIRE CONNECT" on the spark wire interface board.
