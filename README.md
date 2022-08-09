@@ -182,7 +182,7 @@ First, start by assembling the required components of the spark interface board.
 - Quick connect tab on the holes labeled "spark wire connect"
 
 After those are assembled, you will also need to place a jumper wire in one location, with the solder joints being circled in this image:\
-![link](https://github.com/bperez40/Automatic-Power-Box-Tester/tree/main/util/imagesScreenshot%202022-08-04%20151634.png)
+![link](https://github.com/bperez40/Automatic-Power-Box-Tester/tree/main/util/images/Screenshot%202022-08-04%20151634.png)
 
 As a result, it will look something like this:\
 ![link](https://github.com/bperez40/Automatic-Power-Box-Tester/tree/main/util/images/PXL_20220804_192004840.jpg)
