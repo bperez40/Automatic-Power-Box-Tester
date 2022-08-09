@@ -182,15 +182,15 @@ First, start by assembling the required components of the spark interface board.
 - Quick connect tab on the holes labeled "spark wire connect"
 
 After those are assembled, you will also need to place a jumper wire in one location, with the solder joints being circled in this image:\
-![link](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/Screenshot%202022-08-04%20151634.png)
+![link](https://github.com/bperez40/Automatic-Power-Box-Tester/tree/main/util/imagesScreenshot%202022-08-04%20151634.png)
 
 As a result, it will look something like this:\
-![link](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/PXL_20220804_192004840.jpg)
+![link](https://github.com/bperez40/Automatic-Power-Box-Tester/tree/main/util/images/PXL_20220804_192004840.jpg)
 
 The idea here is we're trying to short the path that leads between the spark wire interface and the rectification circuit. Instead of that circuit being closed by a +3.3v relay (as it originally was supposed to be), it is being closed by a 120 VAC contactor. We had to change those out as the contactor could handle the higher voltage rating on its contacts (effectively, it prevented the high voltage line from arcing when in its open position due to the larger air gaps).
 
 Now, we need to make a few connections. Terminal block for reference:\
-![link](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/Screenshot%202022-08-04%20152729.png)
+![link](https://github.com/bperez40/Automatic-Power-Box-Tester/tree/main/util/images/Screenshot%202022-08-04%20152729.png)
 
 Start by connecting the left most AGND to the interior of the chassis (requires a ring terminal crimp). Next, connect the right AGND to a wire nut. From that wire nut, you need to attach two more wires to two separate locations: One back to AGND OPT, and the other to one side of the contactor's coil (requires a quick connect crimp). You know this is done incorrectly if the device is never able to rectify the signal (no path to ground) or if there is arcing occuring between the AGND and AGND OPT traces (unequal potentials between these two signals).
 
@@ -204,7 +204,7 @@ The breadboard is a corrected circuit of what the spark interface board should h
 - [CPC1976Y, AQY212GHAX, or something similar](https://www.digikey.com/en/products/detail/ixys-integrated-circuits-division/CPC1976Y/1277138)
 
 Using these, you need to build the following circuit. Pay heed to the comments:\
-![Schematic](https://github.com/bperez40/Arduino-Power-Box-Tester/blob/main/Util/images/Screenshot%202022-08-05%20092843.png)
+![Schematic](https://github.com/bperez40/Automatic-Power-Box-Tester/tree/main/util/images/Screenshot%202022-08-05%20092843.png)
 
 To finish these connections, we need to connect the rest of the contactor's connections. We've already attached the necessary wires to the coil ends, but we need to set up the spark wire to connect to the terminal. One side of a terminal should by connected directly to the power box's spark wire (usually we connect the spark wire to a QC terminal on the workbench and have another wire leading into the Auto Power Box Tester's chassis, where it then connects to one of the contactor's terminal). The other side of that terminal should be connected to the quick connect labeled "SPARK WIRE CONNECT" on the spark wire interface board.
 
