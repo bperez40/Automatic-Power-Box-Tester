@@ -1198,6 +1198,9 @@ void drawPreTestMenu(int state)
     case 12:
         tft.textWrite("Checking for right basket lift signal");
         break;
+    case 13:
+        tft.textWrite("Waiting for spark coil");
+        break;
     default:
         tft.textWrite("NULL");
         break;

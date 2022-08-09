@@ -9,6 +9,22 @@
 #define LDHB 0.24
 #define LDLB 0.18
 
+/* Time limit defines */
+#define PONTIMEOUT 3000
+#define BLPWRTIMEOUT 8000
+#define BLCTRLPWRTIMEOUT 8000
+#define BLPWRNEUTIMEOUT 8000
+#define GASVALVETIMEOUT 8000
+#define PWMLOWTIMEOUT 8000
+#define PWMHIGHTIMEOUT 8000
+#define ALARMTIMEOUT 1000
+#define PMPWRTIMEOUT 8000
+#define SVALVETIMEOUT 8000
+#define BSKTPWRTIMEOUT 8000
+#define LBSKTTIMEOUT 8000
+#define RBSKTTIMEOUT 8000
+#define SPARKTIME 4000
+
 
 /*
  * Defines how many samples the ADC should collect when sampling.

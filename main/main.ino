@@ -24,30 +24,19 @@ void loop()
     setActiveMenu(PRETEST);
     //  Function to setup fast ADC sampling
     ADCSetup();
-
     /* Reset test variables*/
     test_status = false; // Test is unsuccessful by default. Every test start, reset var
     /*
      * Start of PIM check
      */
     digitalWrite(POWERCTRL, HIGH);
-    setSignalTimeout(PIM_TIME_LIMIT, POWERONOP);
-    if (sampleAndAverage(PONSIG) == true)
-    {
-      setSignalAlarm(false, POWERONOP);
-    }
-    else
-    {
-      setSignalAlarm(true, POWERONOP);
-    }
-    waitUntilTriggered(PONSIG, getSignalTimeout(POWERONOP));
+    setSignalAlarm(waitUntilTriggered(PONSIG, PONTIMEOUT), POWERONOP);
 
     /* IMPORTANT
      * You must have an abort exception if the relay on the PBT board is not powered
      * this will cause a 24VAC path to draw high current through where it shouldn't,
      * notably in the left basket and right basket tests.
      */
-
     if (getSignalAlarm(POWERONOP))
     {
       digitalWrite(POWERCTRL, LOW);
@@ -62,85 +51,134 @@ void loop()
        * Check for blower power. Otherwise, wait.
        */
       drawPreTestMenu(2);
+      unsigned long ct = millis(); // timer variables, current time
+      unsigned long st = millis(); // start time
+      while (ct - st <= BLPWRTIMEOUT)
+      {
+        ct = millis();
+        if (sampleAndAverage(BLPWRSIG) == true)
+        {
+          setSignalAlarm(false, BLOWERPOWEROP);
+          break;
+        }
+        else
+        {
+          setSignalAlarm(true, BLOWERPOWEROP);
+        }
+      }
 
-      setSignalTimeout(PIM_TIME_LIMIT, BLOWERPOWEROP);
-      if (sampleAndAverage(BLOWERPOWEROP) == true)
+      ct = st = millis();
+      while (ct - st <= BLCTRLPWRTIMEOUT)
       {
-        setSignalAlarm(false, BLOWERPOWEROP);
+        ct = millis();
+        if (sampleAndAverage(BLCTRLPWRSIG) == true)
+        {
+          setSignalAlarm(false, BLOWERCONTROLOP);
+          break;
+        }
+        else
+        {
+          setSignalAlarm(true, BLOWERCONTROLOP);
+        }
       }
-      else
-      {
-        setSignalAlarm(true, BLOWERPOWEROP);
-      }
-      waitUntilTriggered(BLPWRSIG, getSignalTimeout(BLOWERPOWEROP));
 
-      setSignalTimeout(PIM_TIME_LIMIT, BLOWERCONTROLOP);
-      if (sampleAndAverage(BLCTRLPWRSIG) == true)
+      ct = st = millis();
+      while (ct - st <= BLPWRNEUTIMEOUT)
       {
-        setSignalAlarm(false, BLOWERCONTROLOP);
+        ct = millis();
+        if (sampleAndAverage(BLPWRNEUSIG) == true)
+        {
+          setSignalAlarm(false, BLOWERPOWERNEUTRALOP);
+          break;
+        }
+        else
+        {
+          setSignalAlarm(true, BLOWERPOWERNEUTRALOP);
+        }
       }
-      else
-      {
-        setSignalAlarm(true, BLOWERCONTROLOP);
-      }
-      waitUntilTriggered(BLCTRLPWRSIG, getSignalTimeout(BLOWERCONTROLOP));
-
-      setSignalTimeout(PIM_TIME_LIMIT, BLOWERPOWERNEUTRALOP);
-      if (sampleAndAverage(BLPWRNEUSIG) == true)
-      {
-        setSignalAlarm(false, BLOWERPOWERNEUTRALOP);
-      }
-      else
-      {
-        setSignalAlarm(true, BLOWERPOWERNEUTRALOP);
-      }
-      waitUntilTriggered(BLPWRNEUSIG, getSignalTimeout(BLOWERPOWERNEUTRALOP));
-
-      drawPreTestMenu(4);
-      setSignalTimeout(PIM_TIME_LIMIT, GASVALVEOP);
-      if (sampleAndAverage(GASVALVESIG) == true)
-      {
-        setSignalAlarm(false, GASVALVEOP);
-      }
-      else
-      {
-        setSignalAlarm(true, GASVALVEOP);
-      }
-      waitUntilTriggered(GASVALVESIG, getSignalTimeout(GASVALVEOP));
-
-      /* This is where spark detection would go */
 
       drawPreTestMenu(3);
-      setSignalTimeout(PIM_TIME_LIMIT, LOWDUTYCYCLEOP);
-      /* For this first parameter, you can either use dutyCheck or waitUntilTriggered.
-       * Wait until triggered will utilize the hardware PWM detection built into the board.
-       * dutyCheck will use the firmware DSP approach
-       * Generally recommend using waitUntilTriggered for now as it tend to be more reliable.
-       * dutyCheck(LDLB, LDHB, getSignalTimeout(HIGHDUTYCYCLEOP))
-       */
-      setSignalAlarm(dutyCheck(LDLB, LDHB), LOWDUTYCYCLEOP);
+      ct = st = millis();
+      int duty_met_sum = 0;
+      while (ct - st <= PWMLOWTIMEOUT)
+      {
+        ct = millis();
+        if (!dutyCheck(LDLB, LDHB))
+        {
+          duty_met_sum += 1;
+        }
+        if (duty_met_sum == 50)
+        {
+          setSignalAlarm(false, LOWDUTYCYCLEOP);
+          break;
+        }
+        else
+        {
+          setSignalAlarm(true, LOWDUTYCYCLEOP);
+        }
+      }
 
+      drawPreTestMenu(4);
+      ct = st = millis();
+      while (ct - st <= GASVALVETIMEOUT)
+      {
+        ct = millis();
+        if (sampleAndAverage(GASVALVESIG) == true)
+        {
+          setSignalAlarm(false, GASVALVEOP);
+          break;
+        }
+        else
+        {
+          setSignalAlarm(true, GASVALVEOP);
+        }
+      }
+
+      /* This is where spark detection would go */
+      drawPreTestMenu(13);
+      ct = st = millis();
+      while(ct - st <= SPARKTIME){
+        ct = millis();
+        // Experimentally determined time before the power box starts sparking after gas valve test
+        // Can't rectify the spark signal before this is ready, otherwise test will fail and alarm will be raised
+      }
+
+      digitalWrite(SPD1, HIGH);
       drawPreTestMenu(6);
-      setSignalTimeout(PIM_TIME_LIMIT, HIGHDUTYCYCLEOP);
-      /* For this first parameter, you can either use dutyCheck or waitUntilTriggered.
-       * Wait until triggered will utilize the hardware PWM detection built into the board.
-       * dutyCheck will use the firmware DSP approach
-       * Generally recommend using waitUntilTriggered for now as it tend to be more reliable.
-       * dutyCheck(HDLB, HDHB, getSignalTimeout(HIGHDUTYCYCLEOP))
-       */
-      setSignalAlarm(dutyCheck(HDLB, HDHB), HIGHDUTYCYCLEOP);
+      ct = st = millis();
+      duty_met_sum = 0;
+      while (ct - st <= PWMHIGHTIMEOUT)
+      {
+        ct = millis();
+        if (!dutyCheck(HDLB, HDHB))
+        {
+          duty_met_sum += 1;
+        }
+        if (duty_met_sum == 50)
+        {
+          setSignalAlarm(false, HIGHDUTYCYCLEOP);
+          break;
+        }
+        else
+        {
+          setSignalAlarm(true, HIGHDUTYCYCLEOP);
+        }
+      }
 
-      drawPreTestMenu(5);
-      setSignalTimeout(1000, ALARMOP); // Might require adjusting to wait for alarm signal to go high
-      if (sampleAndAverage(ALARMOP) == true)
+      ct = st = millis();
+      while (ct - st <= ALARMTIMEOUT)
       {
-        setSignalAlarm(false, ALARMOP);
+        ct = millis();
+        if (sampleAndAverage(ALARMSIG) == false) // Checking to see that this isn't up when we get here
+        {
+          setSignalAlarm(false, ALARMOP);
+          break;
+        }
+        else
+        {
+          setSignalAlarm(true, ALARMOP);
+        }
       }
-      else
-      {
-        setSignalAlarm(true, ALARMOP);
-      }
-      waitUntilTriggered(ALARMSIG, getSignalTimeout(ALARMOP));
       /*
        *
        * End of PIM check
@@ -161,17 +199,56 @@ void loop()
 
         digitalWrite(PUMPCTRL, HIGH); // Enable relay to provide pump motor power
 
-        setSignalTimeout(GLOBAL_TIME_LIMIT, PUMPPOWEROP);
-        setSignalAlarm(waitUntilTriggered(PMPWRSIG, getSignalTimeout(PUMPPOWEROP)), PUMPPOWEROP);
-        drawPreTestMenu(7);
-        digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
-        setSignalTimeout(GLOBAL_TIME_LIMIT, SOLENOIDVALVEOP);
-        setSignalAlarm(waitUntilTriggered(SVALVESIG, getSignalTimeout(SOLENOIDVALVEOP), HIGH), SOLENOIDVALVEOP);
+        ct = st = millis();
+        while (ct - st <= PMPWRTIMEOUT)
+        {
+          ct = millis();
+          if (sampleAndAverage(PMPWRSIG) == true)
+          {
+            setSignalAlarm(false, PUMPPOWEROP);
+            break;
+          }
+          else
+          {
+            setSignalAlarm(true, PUMPPOWEROP);
+          }
+        }
 
-        /* If this part succeeds, test will progress */
+        drawPreTestMenu(7);
+
+        digitalWrite(SVALVECTRL, HIGH); // Should make that SVALVESIG signal active
+
+        ct = st = millis();
+        while (ct - st <= SVALVETIMEOUT)
+        {
+          ct = millis();
+          if (sampleAndAverage(SVALVESIG) == false) // This is a little different. We're trying to see of it's inactive in this phase
+          {
+            setSignalAlarm(false, SOLENOIDVALVEOP);
+            break;
+          }
+          else
+          {
+            setSignalAlarm(true, SOLENOIDVALVEOP);
+          }
+        }
+
         drawPreTestMenu(8);
         digitalWrite(SVALVECTRL, LOW);
-        setSignalAlarm(waitUntilTriggered(SVALVESIG, getSignalTimeout(SOLENOIDVALVEOP)), SOLENOIDVALVEOP);
+        ct = st = millis();
+        while (ct - st <= SVALVETIMEOUT)
+        {
+          ct = millis();
+          if (sampleAndAverage(SVALVESIG) == true)
+          {
+            setSignalAlarm(false, SOLENOIDVALVEOP);
+            break;
+          }
+          else
+          {
+            setSignalAlarm(true, SOLENOIDVALVEOP);
+          }
+        }
         /* Note that this solenoid check needs to happen after
          * the pump relay is activated, otherwise, it
          * will not be powered — even if the pump motor relay
@@ -186,18 +263,54 @@ void loop()
 
       digitalWrite(BSKTCTRL, HIGH); // Activate basket control relay
 
-      setSignalTimeout(GLOBAL_TIME_LIMIT, BASKETPOWEROP);
-      setSignalAlarm(waitUntilTriggered(BSKTPWRSIG, getSignalTimeout(BASKETPOWEROP)), BASKETPOWEROP);
+      ct = st = millis();
+      while (ct - st <= BSKTPWRTIMEOUT)
+      {
+        ct = millis();
+        if (sampleAndAverage(BSKTPWRSIG) == true)
+        {
+          setSignalAlarm(false, BASKETPOWEROP);
+          break;
+        }
+        else
+        {
+          setSignalAlarm(true, BASKETPOWEROP);
+        }
+      }
 
       drawPreTestMenu(11);
 
-      setSignalTimeout(100, LEFTBASKETOP);
-      setSignalAlarm(waitUntilTriggered(LBSKTSIG, getSignalTimeout(LEFTBASKETOP)), LEFTBASKETOP);
+      ct = st = millis();
+      while (ct - st <= LBSKTTIMEOUT)
+      {
+        ct = millis();
+        if (sampleAndAverage(LBSKTSIG) == true)
+        {
+          setSignalAlarm(false, LEFTBASKETOP);
+          break;
+        }
+        else
+        {
+          setSignalAlarm(true, LEFTBASKETOP);
+        }
+      }
 
       drawPreTestMenu(12);
 
-      setSignalTimeout(100, RIGHTBASKETOP);
-      setSignalAlarm(waitUntilTriggered(RBSKTSIG, getSignalTimeout(RIGHTBASKETOP)), RIGHTBASKETOP);
+      ct = st = millis();
+      while (ct - st <= RBSKTTIMEOUT)
+      {
+        ct = millis();
+        if (sampleAndAverage(RBSKTSIG) == true)
+        {
+          setSignalAlarm(false, RIGHTBASKETOP);
+          break;
+        }
+        else
+        {
+          setSignalAlarm(true, RIGHTBASKETOP);
+        }
+      }
 
       /*
        * End of basket lift check
@@ -237,6 +350,7 @@ void loop()
       }
       /* Disable GPIO */
       digitalWrite(POWERCTRL, LOW);
+      digitalWrite(SPD1, LOW);
       digitalWrite(THCALLCTRL, LOW);
       digitalWrite(SVALVECTRL, LOW);
       digitalWrite(PUMPCTRL, LOW);
