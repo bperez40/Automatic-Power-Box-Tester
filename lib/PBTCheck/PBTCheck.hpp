@@ -16,7 +16,7 @@
 #define BLPWRNEUTIMEOUT 8000
 #define GASVALVETIMEOUT 8000
 #define PWMLOWTIMEOUT 8000
-#define PWMHIGHTIMEOUT 8000
+#define PWMHIGHTIMEOUT 15000 // Sometimes this takes a bit longer for this condition to be met
 #define ALARMTIMEOUT 1000
 #define PMPWRTIMEOUT 8000
 #define SVALVETIMEOUT 8000
