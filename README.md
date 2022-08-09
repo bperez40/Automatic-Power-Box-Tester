@@ -85,13 +85,13 @@ If you want to compile it manually and play around the the CLI a bit, you can do
 
 To compile, run the following from your root folder:
 
-arduino-cli.exe compile --build-path ./build --libraries ./lib -b arduino:avr:mega main/main.ino
+arduino-cli.exe compile --build-path ./build --libraries ./lib -b Arduino:avr:mega main/main.ino
 
 To compile and upload, you can instead do:
 
-arduino-cli.exe compile --build-path ./build --libraries ./lib -b arduino:avr:mega -p COM4 -u main/main.ino
+arduino-cli.exe compile --build-path ./build --libraries ./lib -b Arduino:avr:mega -p COM4 -u main/main.ino
 
-Replacing COM4 with whatever your arduino is actually using. You can figure that out by running:
+Replacing COM4 with whatever your Arduino is actually using. You can figure that out by running:
 
 arduino-cli.exe board list
 
@@ -107,7 +107,7 @@ To change the lockscreen password, navigate to PBTGraphics.cpp and change the li
 
 int actual_passcode[4] = {#, #, #, #}; /*!! SET PASSCODE HERE !!*/
 
-...by setting the # to whatever you want it to be, in the order you want them to be entered. Then build and upload the project to the arduino.
+...by setting the # to whatever you want it to be, in the order you want them to be entered. Then build and upload the project to the Arduino.
 
 
 ### Running Python Scripts (optional)
@@ -144,9 +144,9 @@ First, install PuTTY from here: https://www.putty.org/
 
 Match all the proper settings in the session tab, such as COM port, baud rate, so on so forth.
 
-In the logging tab, set session logging to "All session output." Name the file whatever you like and configure putty to store putty.log or whatever you want to call it in the util folder of the repository. When you start a session, PuTTY will then create a log in the util folder. You can run the visualizer python script to then visualize the file's output. This is useful for graphing ADC data.
+In the logging tab, set session logging to "All session output." Name the file whatever you like and configure PuTTY to store putty.log or whatever you want to call it in the util folder of the repository. When you start a session, PuTTY will then create a log in the util folder. You can run the visualizer python script to then visualize the file's output. This is useful for graphing ADC data.
 
-If you want to start putty in your terminal of choice, run the following command:
+If you want to start PuTTY using a terminal, run the following command:
 
 plink.exe -load {SAVED-PROFILE}
 
