@@ -11,7 +11,7 @@ git clone https://github.com/bperez40/Arduino-Power-Box-Tester
 
 The repository is layed out as follows
 ```
-C:.
+Automatic-Power-Box-Tester
 ├───lib
 │   ├───Adafruit-GFX-Library
 │   ├───Adafruit_BusIO
@@ -51,7 +51,7 @@ Extract it in the repository's root and rename the folder it's contained in to .
 
 Your new file structure will look something like this...
 ```
-C:.
+Automatic-Power-Box-Tester
 ├───.arduino-cli
 |   ├───arduino-cli.exe
 |   └───LICENSE
