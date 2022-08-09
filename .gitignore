@@ -2,6 +2,7 @@
 .vscode/*
 .venv/*
 build/*
+util/putty.log
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
