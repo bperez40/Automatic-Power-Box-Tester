@@ -97,6 +97,22 @@ void loop()
         }
       }
 
+      drawPreTestMenu(4);
+      ct = st = millis();
+      while (ct - st <= GASVALVETIMEOUT)
+      {
+        ct = millis();
+        if (sampleAndAverage(GASVALVESIG) == true)
+        {
+          setSignalAlarm(false, GASVALVEOP);
+          break;
+        }
+        else
+        {
+          setSignalAlarm(true, GASVALVEOP);
+        }
+      }
+
       drawPreTestMenu(3);
       ct = st = millis();
       int duty_met_sum = 0;
@@ -118,30 +134,7 @@ void loop()
         }
       }
 
-      drawPreTestMenu(4);
-      ct = st = millis();
-      while (ct - st <= GASVALVETIMEOUT)
-      {
-        ct = millis();
-        if (sampleAndAverage(GASVALVESIG) == true)
-        {
-          setSignalAlarm(false, GASVALVEOP);
-          break;
-        }
-        else
-        {
-          setSignalAlarm(true, GASVALVEOP);
-        }
-      }
-
       /* This is where spark detection would go */
-      drawPreTestMenu(13);
-      ct = st = millis();
-      while(ct - st <= SPARKTIME){
-        ct = millis();
-        // Experimentally determined time before the power box starts sparking after gas valve test
-        // Can't rectify the spark signal before this is ready, otherwise test will fail and alarm will be raised
-      }
 
       digitalWrite(SPD1, HIGH);
       drawPreTestMenu(6);
