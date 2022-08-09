@@ -1,4 +1,3 @@
-.vscode/*
 .arduino-cli/*
 .venv/*
 build/*
