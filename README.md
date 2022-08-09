@@ -41,10 +41,10 @@ Opening it up, you'll be on the root of the repository.
 - tests has some basic tests mostly used for debugging and not much else
 - util has images used in the readme as well as all the hardware design files for the PCBs
 
-Go ahead and run the
+Go ahead and run the update.bat script. This initializes all the submodules, which have dependencies that the firmware uses. Also run this whenever you want to pull the most recent version of the firmware.
 
 ### Arduino Setup (required)
-We're not quite ready to actually compile and upload firmware to the Arduino yet. We need to install a program to do so. You have three options for doing this.
+We're not quite ready to actually compile and upload firmware to the Arduino yet. We need to install a program to do so. You have a few ways to do this.
 
 #### 1. Using Arduino CLI (recommended)
 If you want to use the Arduino CLI to make your own custom configuration, start by downloading the Arduino CLI from Arduino here: https://www.arduino.cc/pro/cli
@@ -97,14 +97,7 @@ arduino-cli.exe board list
 
 This is also how you can figure out an Arduino's FQBN.
 
-#### 2. Arduino Using VSCode Extension
-Install the Arduino extension. This can be natively installed with the extensions. More information here: https://github.com/microsoft/vscode-arduino.
-
-Before compiling for the first time, run the setup.bat script in the util folder. To run the script, either double click on setup.bat, or in a terminal move to the directory where setup.bat is located and enter ".\setup.bat"
-
-To compile and upload, select your target board type, the programmer and the communication port. In the command palette, type "Arduino: Upload" and press enter.
-
-#### 3. Using Arduino IDE
+#### 2. Using Arduino IDE
 I haven't set this up on Arduino IDE, but I imagine this is what people are more familar with when using any Arduino platform. If you do this, you'll have to manually add the libraries using the GUI and set up the board type and COM port similar to option 2. If that's done correctly, all you have to do is press the run button and it should work fine.
 
 ### Changing the lock screen password (important, but optional)
