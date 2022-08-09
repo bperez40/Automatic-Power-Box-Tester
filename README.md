@@ -162,7 +162,7 @@ Where the saved profile is one that you've previously set up. If plink.exe isn't
 ## Hardware Guide
 ### Power Box Tester Assembly
 Hardware design files can be found in util/HardwareDesignFiles.\
-They include the EAGLE EDA files, gerber files, BOM, and pick and place for each board.\
+They include the EAGLE board and schematic files, gerber files, BOM, and pick and place for each board.\
 You can also view each board on AISLER with the following links.\
 [Auto Power Box Tester v1.1 (redirect)](https://aisler.net/p/JCLNWTRR)\
 [Spark Wire Interface Board v1.0 (redirect)](https://aisler.net/p/PQONZLWA)\
