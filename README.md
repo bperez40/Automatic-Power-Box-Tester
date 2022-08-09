@@ -13,26 +13,10 @@ The repository is layed out as follows
 ```
 Automatic-Power-Box-Tester
 ├───lib
-│   ├───Adafruit-GFX-Library
-│   ├───Adafruit_BusIO
-│   ├───Adafruit_RA8875
-│   ├───iodefs
-│   ├───PBTCheck
-│   ├───PBTGraphics
-│   └───PWM
 ├───main
-|   └───main.ino
 ├───tests
-│   ├───ADC_test
-│   └───PWM_Out
 └───util
     ├───Hardware Design Files
-    │   ├───AutoPowerBoxTesterv1.0
-    │   │   └───GerberFiles
-    │   ├───AutoPowerBoxTesterv1.1
-    │   │   └───GerberFiles
-    │   └───SparkWireInterfacev1.0
-    │       └───GerberFiles
     └───images
 ```
 Opening it up, you'll be on the root of the repository.
@@ -40,6 +24,8 @@ Opening it up, you'll be on the root of the repository.
 - lib has all the required external and custom libraries for the project
 - tests has some basic tests mostly used for debugging and not much else
 - util has images used in the readme as well as all the hardware design files for the PCBs
+
+Go ahead and run the
 
 ### Arduino Setup (required)
 We're not quite ready to actually compile and upload firmware to the Arduino yet. We need to install a program to do so. You have three options for doing this.
