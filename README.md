@@ -1,7 +1,10 @@
-# Arduino Power Box Tester
+# Automatic Power Box Tester
 Summer 2022 ITW Vulcan Project
 
-# Cloning Repo
+The firmware portion of the guide assumes you're running Windows. You can easily do all this on other platforms, but some of the instructions will certainly be different, particularly anything using a batch script.
+
+## Firmware
+### Cloning Repo (required)
 If you don't have git installed, go ahead and download it from here: https://git-scm.com/
 Then, in a command-line shell (On Windows, Command Prompt and PowerShell are installed by default), navigate to wherever you want to store the project and then run:
 git clone https://github.com/bperez40/Arduino-Power-Box-Tester
@@ -18,6 +21,7 @@ C:.
 │   ├───PBTGraphics
 │   └───PWM
 ├───main
+|   └───main.ino
 ├───tests
 │   ├───ADC_test
 │   └───PWM_Out
@@ -32,25 +36,52 @@ C:.
     └───images
 ```
 Opening it up, you'll be on the root of the repository.
-# Arduino Setup Using VSCode Extension
-Install the Arduino extension. This can be natively installed with the extensions. More information here: https://github.com/microsoft/vscode-arduino.
+- main stores the main program
+- lib has all the required external and custom libraries for the project
+- tests has some basic tests mostly used for debugging and not much else
+- util has images used in the readme as well as all the hardware design files for the PCBs
 
-Use the IntelliSense configuration outlined here (put this in .vscode/c_cpp_properties.json): https://learn.sparkfun.com/tutorials/efficient-arduino-programming-with-arduino-cli-and-visual-studio-code/all
+### Arduino Setup (required)
+We're not quite ready to actually compile and upload firmware to the Arduino yet. We need to install a program to do so. You have three options for doing this.
 
-Before compiling for the first time, run the setup.bat script in the util folder.
-
-To run the script, either double click on setup.bat, or in a terminal move to the directory where setup.bat is located and enter ".\setup.bat"
-
-To compile and upload, select your target board type, the programmer and the communication port. In the command palette, type "Arduino: Upload" and press enter.
-
-# Using Arduino CLI (Instead of Arduino IDE w/ VSCode extension)
+1. Using Arduino CLI (recommended)
 If you want to use the Arduino CLI to make your own custom configuration, start by downloading the Arduino CLI from Arduino here: https://www.arduino.cc/pro/cli
 
 Extract it in the repository's root and rename the folder it's contained in to .arduino-cli. So, {top-of-repository}/.arduino-cli
 
+Your new file structure will look something like this...
+```
+C:.
+├───.arduino-cli
+|   ├───arduino-cli.exe
+|   └───LICENSE
+├───lib
+│   ├───Adafruit-GFX-Library
+│   ├───Adafruit_BusIO
+│   ├───Adafruit_RA8875
+│   ├───iodefs
+│   ├───PBTCheck
+│   ├───PBTGraphics
+│   └───PWM
+├───main
+|   └───main.ino
+├───tests
+│   ├───ADC_test
+│   └───PWM_Out
+└───util
+    ├───Hardware Design Files
+    │   ├───AutoPowerBoxTesterv1.0
+    │   │   └───GerberFiles
+    │   ├───AutoPowerBoxTesterv1.1
+    │   │   └───GerberFiles
+    │   └───SparkWireInterfacev1.0
+    │       └───GerberFiles
+    └───images
+```
+
 The fast way to compile and upload the program is to run the CompileAndUpload.bat script in util.
 
-If you want to compile it manually, you can do the following.
+If you want to compile it manually and play around the the CLI a bit, you can do the following.
 
 To compile, run the following from your root folder:
 
@@ -66,14 +97,32 @@ arduino-cli.exe board list
 
 This is also how you can figure out an Arduino's FQBN.
 
-# Running Python Scripts
-This part assumes you're running Windows.
+2. Arduino Using VSCode Extension
+Install the Arduino extension. This can be natively installed with the extensions. More information here: https://github.com/microsoft/vscode-arduino.
 
-If you don't already have it installed, install Python.
+Before compiling for the first time, run the setup.bat script in the util folder. To run the script, either double click on setup.bat, or in a terminal move to the directory where setup.bat is located and enter ".\setup.bat"
 
-Once Python is installed, open a terminal in VSCode. 
+To compile and upload, select your target board type, the programmer and the communication port. In the command palette, type "Arduino: Upload" and press enter.
 
-In the workspace folder, run python -m venv .venv
+3. Using Arduino IDE
+I haven't set this up on Arduino IDE, but I imagine this is what people are more familar with when using any Arduino platform. If you do this, you'll have to manually add the libraries using the GUI and set up the board type and COM port similar to option 2. If that's done correctly, all you have to do is press the run button and it should work fine.
+
+### Changing the lock screen password (important, but optional)
+I recognize that this is incredibly insecure, but it's highly unlikely anyone who would abuse this would come looking here to do so.
+
+To change the lockscreen password, navigate to PBTGraphics.cpp and change the line with...
+
+int actual_passcode[4] = {#, #, #, #}; /*!! SET PASSCODE HERE !!*/
+
+...by setting the # to whatever you want it to be, in the order you want them to be entered. Then build and upload the project to the arduino.
+
+
+### Running Python Scripts (optional)
+If you don't already have it installed, install from their website: https://www.python.org/
+
+Once Python is installed, open a terminal. 
+
+In the repository's root folder, run python -m venv .venv
 .venv is gitignored by default, but if you want to name it something else, change the gitignore to reflect whatever you call it.
 
 VSCode should give a prompt that it has detected a new virtual environment. Confirm the prompt.
@@ -93,20 +142,16 @@ Once the virtual environment is activated, install whatever packages you want us
 pip install {package-name}
 If you get an error running a python script, chances are you're missing a package. Read the terminal output to see what exactly the error is.
 
-Whenever you're done working in the virtual environment, type deactivate.
+Whenever you're done working in the virtual environment, type deactivate and you'll leave the virtual environment and return to the global environment.
 
-# Logging Arduino output data using PuTTY
-If you want to log the Arduino's output data when it's connected over USB, you can do so using PuTTY.
+### Logging Arduino output data using PuTTY (optional)
+If you want to log the Arduino's output data when it's connected over USB, you can do so using PuTTY (or TeraTerm, or whatever other similar program).
 
-First, install PuTTY, yadda yadda yadda
+First, install PuTTY from here: https://www.putty.org/
 
 Match all the proper settings in the session tab, such as COM port, baud rate, so on so forth.
 
-In the logging tab, set session logging to "All session output." Name the file whatever you like and configure putty to store putty.log or whatever you want to call it in the util folder of the workspace.
-
-When you start a session, PuTTY will then create a log in the util folder.
-
-You can run the visualizer python script to then visualize the file's output, if you want to analyze ADC data in particular.
+In the logging tab, set session logging to "All session output." Name the file whatever you like and configure putty to store putty.log or whatever you want to call it in the util folder of the repository. When you start a session, PuTTY will then create a log in the util folder. You can run the visualizer python script to then visualize the file's output. This is useful for graphing ADC data.
 
 If you want to start putty in your terminal of choice, run the following command:
 
@@ -114,7 +159,8 @@ plink.exe -load {SAVED-PROFILE}
 
 Where the saved profile is one that you've previously set up. If plink.exe isn't found, make sure it's part of your PATH environment.
 
-# Power Box Tester Assembly
+## Hardware
+### Power Box Tester Assembly
 Hardware design files can be found in util/HardwareDesignFiles.\
 They include the EAGLE EDA files, gerber files, BOM, and pick and place for each board.\
 You can also view each board on AISLER with the following links.\
@@ -163,12 +209,3 @@ Using these, you need to build the following circuit. Pay heed to the comments:\
 To finish these connections, we need to connect the rest of the contactor's connections. We've already attached the necessary wires to the coil ends, but we need to set up the spark wire to connect to the terminal. One side of a terminal should by connected directly to the power box's spark wire (usually we connect the spark wire to a QC terminal on the workbench and have another wire leading into the Auto Power Box Tester's chassis, where it then connects to one of the contactor's terminal). The other side of that terminal should be connected to the quick connect labeled "SPARK WIRE CONNECT" on the spark wire interface board.
 
 Effectively, what all this was for was to allow the Arduino to be able to control when the spark wire's signal is being recitified or not. The circuit on the breadboard allows the Arduino to control a 120 VAC signal (on the pump motor connector's second wire), which in turn triggers the contactor on and off.
-
-# Changing the lock screen password
-I recognize that this is incredibly insecure, but it's highly unlikely anyone who would abuse this would come looking here to do so.
-
-To change the lockscreen password, navigate to PBTGraphics.cpp and change the line with...
-
-int actual_passcode[4] = {#, #, #, #}; /*!! SET PASSCODE HERE !!*/
-
-...by setting the # to whatever you want it to be, in the order you want them to be entered. Then build and upload the project to the arduino.
