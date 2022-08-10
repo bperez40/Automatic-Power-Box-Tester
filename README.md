@@ -153,7 +153,7 @@ plink.exe -load {SAVED-PROFILE}
 Where the saved profile is one that you've previously set up. If plink.exe isn't found, make sure it's part of your PATH environment.
 
 ## Hardware Guide
-### Power Box Tester Assembly
+### Power Box Tester Electronics Assembly
 Hardware design files can be found in util/HardwareDesignFiles.\
 They include the EAGLE board and schematic files, gerber files, BOM, and pick and place for each board.\
 You can also view each board on AISLER with the following links.\
@@ -163,7 +163,7 @@ You can also view each board on AISLER with the following links.\
 
 Originally, the power box tester was intended to be a single board to which you attach connectors to. Were it not for the 25 kV ignition, this would be possible. However, because we need to keep this seperate from the rest of the electronics and due to time limitations, the setup requires a great deal more complexity and care, so pay heed to this part of the guide.
 
-Setting up the main board is very straightforward. Assemble the board in its entirety. There are no minor adjustments required. Ideally, this board would be assembled by the PCB manufacturer. The connectors are also all assembled with each connection as is with the exception of the pump motor connector. Each of these connectors have a Mini-Fit Jr. receptacle on one end and a Mini-Fit Jr. panel mount plug on the other end.
+Setting up the main board is very straightforward. Assemble the board in its entirety. There are no minor adjustments required. Ideally, this board would be assembled by the PCB manufacturer. The connectors are also all assembled with each connection as is with the exception of the blower motor connector, which I will elaborate on later. Each of these connectors have a Mini-Fit Jr. receptacle on one end and a Mini-Fit Jr. panel mount plug on the other end.
 
 The spark interface board is a supplementary board to the main board. It required major adjustments after production, so this is where the complexity comes in.
 
@@ -185,7 +185,7 @@ The idea here is we're trying to short the path that leads between the spark wir
 Now, we need to make a few connections. Terminal block for reference:\
 ![link](util/images/terminal_block.png)
 
-Start by connecting the left most AGND to the interior of the chassis (requires a ring terminal crimp). Next, connect the right AGND to a wire nut. From that wire nut, you need to attach two more wires to two separate locations: One back to AGND OPT, and the other to one side of the contactor's coil (requires a quick connect crimp). You know this is done incorrectly if the device is never able to rectify the signal (no path to ground) or if there is arcing occuring between the AGND and AGND OPT traces (unequal potentials between these two signals).
+Start by connecting the left most AGND to the interior of the chassis (requires a ring terminal crimp). Next, connect the right AGND to a wire nut. From that wire nut, you need to attach two more wires to two separate locations: One back to AGND OPT, and the other to one side of the contactor's coil (requires a quick connect crimp). The other side of the contactor's coil should be connected to wire 2 on the blower motor connector. That way, the contactor now has both 120 VAC and GND connected to its coil.
 
 After the two boards are assembled properly, you'll need to make connections to the breadboard and contactor. Usually, the breadboard would be integrated onto the spark interface board, but since there wasn't enough time remaining in the internship to do so, we had to settle for this.
 
@@ -199,6 +199,9 @@ The breadboard is a corrected circuit of what the spark interface board should h
 Using these, you need to build the following circuit. Pay heed to the comments:\
 ![Schematic](/util/images/aux_schematic.png)
 
-To finish these connections, we need to connect the rest of the contactor's connections. We've already attached the necessary wires to the coil ends, but we need to set up the spark wire to connect to the terminal. One side of a terminal should by connected directly to the power box's spark wire (usually we connect the spark wire to a QC terminal on the workbench and have another wire leading into the Auto Power Box Tester's chassis, where it then connects to one of the contactor's terminal). The other side of that terminal should be connected to the quick connect labeled "SPARK WIRE CONNECT" on the spark wire interface board.
+To finish these connections, we need to connect the rest of the contactor's connections. We've already attached the necessary wires to the coil ends, but we need to set up the spark wire to connect to the terminal. One side of a terminal should by connected directly to the power box's spark wire (usually we connect the spark wire to a QC terminal on the workbench and have another wire leading into the Auto Power Box Tester's chassis, where it then connects to one of the contactor's terminal). The other side of that terminal should be connected to the quick connect labeled "SPARK WIRE CONNECT" on the spark wire interface board. After that, the device should be fully electrically assembled. You know this is done incorrectly if the device is never able to rectify the signal (no path to ground) or if there is arcing occuring between the AGND and AGND OPT traces (unequal potentials between these two signals).
+
+### Power Box Tester Mechanical Assembly
+
 
 Effectively, what all this was for was to allow the Arduino to be able to control when the spark wire's signal is being recitified or not. The circuit on the breadboard allows the Arduino to control a 120 VAC signal (on the pump motor connector's second wire), which in turn triggers the contactor on and off.
