@@ -1448,6 +1448,18 @@ void drawPIMInfoMenu()
         tft.textColor(RA8875_BLACK, RA8875_GREEN);
         tft.textWrite("Simulated blower reached high duty cycle");
     }
+    if (getSignalAlarm(ALARMOP)){
+        tft.textSetCursor(100, 360);
+        tft.textEnlarge(1);
+        tft.textColor(RA8875_BLACK, RA8875_RED);
+        tft.textWrite("Alarm was activated");
+    }
+    else{
+        tft.textSetCursor(100, 360);
+        tft.textEnlarge(1);
+        tft.textColor(RA8875_BLACK, RA8875_GREEN);
+        tft.textWrite("Alarm was not activated");
+    }
 }
 
 void drawPumpInfoMenu()

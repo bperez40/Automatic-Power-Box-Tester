@@ -143,6 +143,7 @@ void loop()
       while (ct - st <= PWMHIGHTIMEOUT)
       {
         ct = millis();
+        setSignalAlarm(false, ALARMOP); // Alarm's alarm is false by default
         if (!dutyCheck(HDLB, HDHB))
         {
           duty_met_sum += 1;
@@ -155,21 +156,10 @@ void loop()
         else
         {
           setSignalAlarm(true, HIGHDUTYCYCLEOP);
-        }
-      }
-
-      ct = st = millis();
-      while (ct - st <= ALARMTIMEOUT)
-      {
-        ct = millis();
-        if (sampleAndAverage(ALARMSIG) == false) // Checking to see that this isn't up when we get here
-        {
-          setSignalAlarm(false, ALARMOP);
-          break;
-        }
-        else
-        {
-          setSignalAlarm(true, ALARMOP);
+          if (sampleAndAverage(ALARMSIG) == true){
+            setSignalAlarm(true, ALARMOP); // Should break if alarm is raised during this time and indicate so
+            break;
+          }
         }
       }
       /*
