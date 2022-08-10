@@ -156,7 +156,8 @@ void loop()
         else
         {
           setSignalAlarm(true, HIGHDUTYCYCLEOP);
-          if (sampleAndAverage(ALARMSIG) == true){
+          if (sampleAndAverage(ALARMSIG) == true)
+          {
             setSignalAlarm(true, ALARMOP); // Should break if alarm is raised during this time and indicate so
             break;
           }
